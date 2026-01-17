@@ -26,5 +26,10 @@ export default defineConfig(({ mode }) => ({
   },
   define: {
     "process.env": process.env
+  },
+  css: {
+    modules: {
+      localsConvention: "camelCase"
+    }
   }
 }))

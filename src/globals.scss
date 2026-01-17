@@ -1,0 +1,268 @@
+/* Fonts */
+@font-face {
+  font-family: "Heebo";
+  src: url("/fonts/Heebo/Heebo-Thin.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Heebo";
+  src: url("/fonts/Heebo/Heebo-ExtraLight.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Heebo";
+  src: url("/fonts/Heebo/Heebo-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Heebo";
+  src: url("/fonts/Heebo/Heebo-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Heebo";
+  src: url("/fonts/Heebo/Heebo-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Heebo";
+  src: url("/fonts/Heebo/Heebo-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Heebo";
+  src: url("/fonts/Heebo/Heebo-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Heebo";
+  src: url("/fonts/Heebo/Heebo-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Heebo";
+  src: url("/fonts/Heebo/Heebo-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+}
+
+/* Noto */
+@font-face {
+  font-family: "Noto";
+  src: url("/fonts/Noto/NotoSans-Thin.ttf") format("truetype");
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Noto";
+  src: url("/fonts/Noto/NotoSans-ExtraLight.ttf") format("truetype");
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Noto";
+  src: url("/fonts/Noto/NotoSans-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Noto";
+  src: url("/fonts/Noto/NotoSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Noto";
+  src: url("/fonts/Noto/NotoSans-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Noto";
+  src: url("/fonts/Noto/NotoSans-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Noto";
+  src: url("/fonts/Noto/NotoSans-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Noto";
+  src: url("/fonts/Noto/NotoSans-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Noto";
+  src: url("/fonts/Noto/NotoSans-Black.ttf") format("truetype");
+  font-weight: 900;
+  font-style: normal;
+}
+
+:root {
+  width: 100%;
+  max-width: 100vw;
+
+  /* Font Sizes */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 3.75rem;
+
+  // Font Weights
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Typography */
+  --font-heebo: "Heebo", sans-serif;
+  --font-noto: "Noto", sans-serif;
+
+  --font-heading: var(--font-noto), serif;
+  --font-body: var(--font-heebo), var(--font-noto), sans-serif;
+  /* Colors */
+  --primary: 231 111 81;
+  --primary-foreground: 255 255 255;
+  --secondary: 244 162 97;
+  --secondary-foreground: 38 70 83;
+  --accent: 233 196 106;
+  --accent-foreground: 38 70 83;
+  --success: 42 157 143;
+  --success-foreground: 255 255 255;
+  --dark: 38 70 83;
+  --background: 255 255 255;
+  --foreground: 38 70 83;
+  --muted: 248 250 252;
+  --muted-foreground: 100 116 139;
+  --border: 226 232 240;
+  --input: 226 232 240;
+  --ring: 231 111 81;
+  --destructive: 220 38 38;
+  --destructive-foreground: 255 255 255;
+  --radius: 0.5rem;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  border-color: rgb(var(--border));
+}
+
+html,
+body {
+  font-family: var(--font-body);
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+}
+
+// Utility classes for fonts
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+/* Error Boundary Styles */
+.error-boundary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.error-boundary-content {
+  text-align: center;
+  max-width: 600px;
+}
+
+.error-boundary-content h2 {
+  color: #ff6b6b;
+  margin-bottom: 1rem;
+}
+
+.error-boundary-content p {
+  margin-bottom: 2rem;
+  opacity: 0.8;
+}
+
+.error-details {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 1rem 0;
+  text-align: left;
+}
+
+.error-details summary {
+  cursor: pointer;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.error-details pre {
+  font-size: 0.875rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.error-boundary-button {
+  background-color: #646cff;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.25s;
+}
+
+.error-boundary-button:hover {
+  background-color: #535bf2;
+}

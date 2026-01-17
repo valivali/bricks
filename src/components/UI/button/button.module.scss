@@ -1,0 +1,114 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  border-radius: var(--radius);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  transition: all 0.2s;
+  outline: none;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background-color: transparent;
+  color: inherit;
+  font-family: var(--font-body);
+
+  &:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px rgb(var(--background)),
+      0 0 0 4px rgb(var(--ring));
+  }
+
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  & :global(svg) {
+    pointer-events: none;
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+  }
+}
+
+/* Variants */
+.button--default {
+  background-color: rgb(var(--primary));
+  color: rgb(var(--primary-foreground));
+
+  &:hover {
+    background-color: rgb(var(--primary) / 0.9);
+  }
+}
+
+.button--destructive {
+  background-color: rgb(var(--destructive));
+  color: rgb(var(--destructive-foreground));
+
+  &:hover {
+    background-color: rgb(var(--destructive) / 0.9);
+  }
+}
+
+.button--outline {
+  border-color: rgb(var(--border));
+  background-color: rgb(var(--background));
+
+  &:hover {
+    background-color: rgb(var(--muted));
+    color: rgb(var(--foreground));
+  }
+}
+
+.button--secondary {
+  background-color: rgb(var(--secondary));
+  color: rgb(var(--secondary-foreground));
+
+  &:hover {
+    background-color: rgb(var(--secondary) / 0.8);
+  }
+}
+
+.button--ghost {
+  &:hover {
+    background-color: rgb(var(--muted));
+    color: rgb(var(--foreground));
+  }
+}
+
+.button--link {
+  color: rgb(var(--primary));
+  text-underline-offset: 4px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+/* Sizes */
+.button--size-default {
+  height: 2.5rem;
+  padding: 0.5rem 1rem;
+}
+
+.button--size-sm {
+  height: 2.25rem;
+  border-radius: calc(var(--radius) - 2px);
+  padding: 0 0.75rem;
+}
+
+.button--size-lg {
+  height: 3rem;
+  border-radius: var(--radius);
+  padding: 0 2rem;
+  font-size: var(--text-base);
+}
+
+.button--size-icon {
+  height: 2.5rem;
+  width: 2.5rem;
+}

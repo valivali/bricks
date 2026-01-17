@@ -1,0 +1,206 @@
+@use "@/styles/variables" as *;
+
+.create-skeleton-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  direction: rtl;
+  color: $foreground;
+
+  .page-header {
+    margin-bottom: 2.5rem;
+    text-align: center;
+  }
+
+  .wizard-progress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 3rem;
+    gap: 0.5rem;
+
+    .step-indicator {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgb(var(--border));
+      color: rgb(var(--dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      transition: all 0.3s;
+
+      &.active {
+        background: rgb(var(--primary));
+        color: white;
+        box-shadow: 0 0 0 4px rgb(var(--primary) / 0.2);
+      }
+    }
+
+    .line {
+      width: 60px;
+      height: 2px;
+      background: rgb(var(--border));
+    }
+  }
+
+  .wizard-content {
+    background: rgb(var(--background));
+    padding: 2.5rem;
+    border-radius: 1.5rem;
+    box-shadow: $shadow-lg;
+  }
+
+  .wizard-step {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    animation: fadeIn 0.4s ease-out;
+
+    .step-title {
+      font-size: 1.5rem;
+      color: rgb(var(--dark));
+      font-weight: 600;
+      border-right: 4px solid rgb(var(--secondary));
+      padding-right: 1rem;
+    }
+  }
+
+  .wizard-actions {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  .back-button {
+    padding: 0.75rem 2rem;
+    border: 1px solid rgb(var(--border));
+    background: rgb(var(--background));
+    color: rgb(var(--dark));
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s;
+
+    &:hover {
+      background: rgb(var(--secondary) / 0.1);
+      border-color: rgb(var(--secondary));
+    }
+  }
+
+  .selection-summary {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: rgb(var(--success) / 0.1);
+    border-radius: 0.75rem;
+    border: 1px solid rgb(var(--success));
+    color: rgb(var(--success));
+    text-align: center;
+    font-size: 1.125rem;
+  }
+
+  // Radio component overrides for this view
+  .smallerRadio {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .list {
+    flex-direction: column;
+  }
+
+  .components-container {
+    overflow-x: auto;
+    margin-top: 1rem;
+    border-radius: 1rem;
+    border: 1px solid rgb(var(--border));
+  }
+
+  .components-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: right;
+    font-size: 0.95rem;
+
+    th {
+      background: rgb(var(--secondary) / 0.1);
+      color: rgb(var(--dark));
+      padding: 1rem;
+      font-weight: 600;
+      border-bottom: 2px solid rgb(var(--border));
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid rgb(var(--border));
+      color: rgb(var(--foreground));
+      vertical-align: middle;
+
+      &:first-child {
+        font-weight: 600;
+        color: rgb(var(--primary));
+      }
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: rgb(var(--secondary) / 0.02);
+    }
+  }
+
+  .quantity-input {
+    width: 100px;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid rgb(var(--border));
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.2s;
+
+    &:focus {
+      border-color: rgb(var(--primary));
+      box-shadow: 0 0 0 2px rgb(var(--primary) / 0.1);
+    }
+
+    &::placeholder {
+      color: rgb(var(--muted));
+    }
+  }
+
+  .submit-button {
+    margin-right: auto;
+    padding: 0.75rem 2.5rem;
+    background: rgb(var(--primary));
+    color: white;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    transition: all 0.2s;
+
+    &:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

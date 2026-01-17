@@ -1,0 +1,115 @@
+@use "@/styles/variables" as *;
+
+.text {
+  font-family: var(--font-body);
+  line-height: 1.6;
+  color: rgb(var(--foreground));
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  margin: 0;
+}
+
+.subtitle {
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: rgb(var(--muted-foreground));
+}
+
+.blockquote {
+  margin: 0 1.5rem;
+
+  .quoteText {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.4;
+
+    @media (min-width: $breakpoint-md) {
+      font-size: var(--text-2xl);
+    }
+  }
+
+  .quoteAuthor {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: var(--text-sm);
+    color: rgb(var(--muted-foreground));
+    font-family: var(--font-body);
+    font-style: normal;
+    font-weight: var(--font-weight-medium);
+  }
+}
+
+.title--4xl {
+  font-size: var(--text-4xl);
+  font-weight: 700;
+  @media (min-width: $breakpoint-md) {
+    font-size: var(--text-5xl);
+  }
+  @media (min-width: $breakpoint-lg) {
+    font-size: var(--text-6xl);
+  }
+}
+
+.title--3xl {
+  font-size: var(--text-3xl);
+  @media (min-width: $breakpoint-md) {
+    font-size: var(--text-4xl);
+  }
+}
+
+.title--2xl {
+  font-size: var(--text-2xl);
+  @media (min-width: $breakpoint-md) {
+    font-size: var(--text-3xl);
+  }
+}
+
+.title--xl {
+  font-size: var(--text-xl);
+  font-weight: 500;
+  @media (min-width: $breakpoint-md) {
+    font-size: var(--text-2xl);
+  }
+}
+
+.text--md {
+  font-size: var(--text-base);
+  line-height: 1.625;
+}
+
+.text--lg {
+  font-size: var(--text-lg);
+  @media (min-width: $breakpoint-md) {
+    font-size: var(--text-xl);
+  }
+  line-height: 1.625;
+}
+
+.text--sm {
+  font-size: var(--text-sm);
+}
+.text--xs {
+  font-size: var(--text-xs);
+  color: rgb(var(--muted-foreground));
+}
+
+.text--2xl {
+  font-size: var(--text-2xl);
+}
+.text--3xl {
+  font-size: var(--text-3xl);
+}
+.text--4xl {
+  font-size: var(--text-4xl);
+}
+.text--5xl {
+  font-size: var(--text-5xl);
+}
+.text--6xl {
+  font-size: var(--text-6xl);
+}
