@@ -1,0 +1,33 @@
+.mainRow {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(var(--secondary), 0.02);
+  }
+
+  &.expanded {
+    background-color: rgba(var(--secondary), 0.05);
+  }
+}
+
+.expandableRow {
+  display: none;
+
+  &.visible {
+    display: table-row;
+  }
+}
+
+.expandableCell {
+  padding: 0 !important;
+  border-bottom: 1px solid rgb(var(--border));
+}
+
+.expandableContent {
+  will-change: height;
+}
+
+.innerContent {
+  // Any specific styles for the wrapper inside the expanded area
+}

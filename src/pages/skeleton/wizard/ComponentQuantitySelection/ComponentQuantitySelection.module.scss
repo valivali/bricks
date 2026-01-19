@@ -1,0 +1,75 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  border-radius: 1rem;
+  border: 1px solid rgb(var(--border));
+}
+
+.componentsTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: right;
+  font-size: 0.95rem;
+
+  th {
+    background: rgb(var(--secondary) / 0.1);
+    color: rgb(var(--dark));
+    padding: 1rem;
+    font-weight: 600;
+    border-bottom: 2px solid rgb(var(--border));
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 1rem;
+    border-bottom: 1px solid rgb(var(--border));
+    color: rgb(var(--foreground));
+    vertical-align: middle;
+
+    &:first-child {
+      font-weight: 600;
+      color: rgb(var(--primary));
+    }
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  tr:hover td {
+    background: rgb(var(--secondary) / 0.02);
+  }
+}
+
+.quantityInput {
+  width: 100px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid rgb(var(--border));
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.2s;
+
+  &:focus {
+    border-color: rgb(var(--primary));
+    box-shadow: 0 0 0 2px rgb(var(--primary) / 0.1);
+  }
+
+  &::placeholder {
+    color: rgb(var(--muted));
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.nextButton {
+  margin-right: auto;
+}

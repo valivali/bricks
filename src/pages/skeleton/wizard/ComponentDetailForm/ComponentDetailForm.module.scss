@@ -1,0 +1,220 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.statusLegend {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: rgb(var(--muted));
+  margin-bottom: 0.5rem;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  border-radius: 1rem;
+  border: 1px solid rgb(var(--border));
+}
+
+.componentsTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: right;
+  font-size: 0.95rem;
+
+  th {
+    background: rgb(var(--secondary) / 0.1);
+    color: rgb(var(--dark));
+    padding: 1rem;
+    font-weight: 600;
+    border-bottom: 2px solid rgb(var(--border));
+    white-space: nowrap;
+  }
+
+  tr {
+    transition: background-color 0.2s ease;
+
+    &.masterRow {
+      cursor: pointer;
+
+      &:hover td {
+        background: rgb(var(--secondary) / 0.05);
+      }
+    }
+  }
+
+  td {
+    padding: 1rem;
+    border-bottom: 1px solid rgb(var(--border));
+    color: rgb(var(--foreground));
+    vertical-align: middle;
+
+    &.calculatedCell {
+      font-weight: 600;
+      color: rgb(var(--primary));
+    }
+
+    &.masterCommentsCell {
+      width: 250px;
+    }
+
+    &.dateCell {
+      white-space: nowrap;
+      color: #777;
+      font-size: 0.85rem;
+    }
+  }
+}
+
+.statusIcon {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+
+  &.green {
+    background-color: #52c41a;
+    box-shadow: 0 0 5px rgba(82, 196, 26, 0.4);
+  }
+  &.yellow {
+    background-color: #faad14;
+    box-shadow: 0 0 5px rgba(250, 173, 20, 0.4);
+  }
+  &.red {
+    background-color: #ff4d4f;
+    box-shadow: 0 0 5px rgba(255, 77, 79, 0.4);
+  }
+}
+
+.detailHeader {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgb(var(--border));
+  margin-bottom: 0.5rem;
+}
+
+.componentTitle {
+  font-size: 1.1rem;
+  color: rgb(var(--foreground));
+
+  strong {
+    color: rgb(var(--primary));
+  }
+}
+
+.subTableContainer {
+  padding: 1.5rem;
+  background-color: #fafafa;
+  border-radius: 0.5rem;
+  margin: 0.5rem;
+  border: 1px solid rgba(var(--border), 0.5);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.subTable {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  font-size: 0.85rem;
+
+  th {
+    text-align: right;
+    padding: 0.5rem 1rem;
+    color: #777;
+    font-weight: 500;
+    border-bottom: 1px solid #eee;
+
+    &.quantityCell {
+      min-width: 100px;
+    }
+
+    &.unitCell {
+      min-width: 70px;
+      color: #777;
+    }
+  }
+
+  td {
+    padding: 0.5rem 0.6rem;
+    background: white;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+
+    &:first-child {
+      border-right: 1px solid #eee;
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+      font-weight: 600;
+      color: #999;
+    }
+
+    &.commentsCell {
+      width: 100%;
+      min-width: 200px;
+      max-width: 400px;
+    }
+
+    &.dateCell {
+      white-space: nowrap;
+      color: #777;
+    }
+
+    &:last-child {
+      border-left: 1px solid #eee;
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+    }
+  }
+}
+
+.tableInput {
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  background: white;
+
+  &[type="number"] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+
+  &.tableInput:is(textarea) {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.4;
+  }
+
+  &:focus {
+    border-color: rgb(var(--primary));
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(var(--primary), 0.1);
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.submitButton {
+  margin-right: auto;
+}

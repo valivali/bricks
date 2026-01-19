@@ -1,0 +1,29 @@
+.selectionStep {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.smallerRadio {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.nextButton {
+  margin-right: auto;
+}

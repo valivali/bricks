@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react"
+import React, { useState, useMemo, useCallback } from "react"
 import styles from "./create-skeleton.module.scss"
 import {
   SKELETON_STRUCTURE_TYPES,
@@ -11,22 +11,27 @@ import {
   type StructuralComponent,
   StructureType
 } from "@/config/skeleton-data"
-import Radio from "@/components/UI/Radio/Radio"
-import { Button } from "@/components/UI/button/button"
 import { Title } from "@/components/UI/Text/text"
 import { match } from "ts-pattern"
+import { type ComponentFormRecord, type FormValues, type SubComponentData } from "./types"
+
+import RadioSelectionStep from "./wizard/RadioSelectionStep/RadioSelectionStep"
+import ComponentQuantitySelection from "./wizard/ComponentQuantitySelection/ComponentQuantitySelection"
+import ComponentDetailForm from "./wizard/ComponentDetailForm/ComponentDetailForm"
 
 const STEP_METADATA = [
-  { title: "בחר מבנה", layout: styles.smallerRadio },
-  { title: "תיאור מבנה", layout: styles.grid },
-  { title: "בחר תת-סוג", layout: styles.list },
-  { title: "רכיבים", layout: styles.componentsTable }
+  { title: "בחר מבנה" },
+  { title: "תיאור מבנה" },
+  { title: "בחר תת-סוג" },
+  { title: "רכיבים" },
+  { title: "פירוט רכיבים" }
 ]
 
 const CreateSkeleton: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1)
   const [selectedPath, setSelectedPath] = useState<SkeletonOption[]>([])
   const [quantities, setQuantities] = useState<Record<string, string>>({})
+  const [formValues, setFormValues] = useState<FormValues>({ components: {} })
 
   const currentStepOptions = useMemo(() => {
     if (currentStep === 1) {
@@ -48,73 +53,131 @@ const CreateSkeleton: React.FC = () => {
 
     if (!finalSelection || currentStep < 4) return componentsList
 
-    return componentsList.map((comp: StructuralComponent, index: number) => {
-      if (rootSelection?.id === StructureType.BRIDGE || rootSelection?.id === StructureType.TUNNEL) {
-        if (index === 0 && finalSelection.mainComponentId) {
-          return {
-            ...comp,
-            componentId: finalSelection.mainComponentId,
-            description: finalSelection.mainComponent || comp.description,
-            basicMeasurementUnit: finalSelection.basicMeasurementUnit || comp.basicMeasurementUnit,
-            importanceLevel: ImportanceLevel.HIGH_VERY,
-            evaluationNeeded: true,
-            notes: ""
+    return componentsList
+      .map((comp: StructuralComponent, index: number) => {
+        if (rootSelection?.id === StructureType.BRIDGE || rootSelection?.id === StructureType.TUNNEL) {
+          if (index === 0 && finalSelection.mainComponentId) {
+            return {
+              ...comp,
+              componentId: finalSelection.mainComponentId,
+              description: finalSelection.mainComponent || comp.description,
+              basicMeasurementUnit: finalSelection.basicMeasurementUnit || comp.basicMeasurementUnit,
+              secondaryMeasurementUnit: finalSelection.secondaryMeasurementUnit || "-",
+              importanceLevel: ImportanceLevel.HIGH_VERY,
+              evaluationNeeded: true,
+              notes: ""
+            }
+          }
+          if (index === 2) {
+            if (finalSelection.secondaryComponentId) {
+              return {
+                ...comp,
+                componentId: finalSelection.secondaryComponentId,
+                description: finalSelection.secondaryComponent || comp.description,
+                basicMeasurementUnit: finalSelection.basicMeasurementUnit || comp.basicMeasurementUnit,
+                secondaryMeasurementUnit: finalSelection.secondaryMeasurementUnit || "-",
+                importanceLevel: ImportanceLevel.HIGH_VERY,
+                evaluationNeeded: true,
+                notes: ""
+              }
+            } else {
+              return null
+            }
           }
         }
-        if (index === 2 && finalSelection.secondaryComponentId) {
-          return {
-            ...comp,
-            componentId: finalSelection.secondaryComponentId,
-            description: finalSelection.secondaryComponent || comp.description,
-            basicMeasurementUnit: finalSelection.basicMeasurementUnit || comp.basicMeasurementUnit,
-            importanceLevel: ImportanceLevel.HIGH_VERY,
-            evaluationNeeded: true,
-            notes: ""
-          }
-        }
-      }
 
-      return comp
-    })
+        return comp
+      })
+      .filter((comp): comp is StructuralComponent => comp !== null)
   }, [selectedPath, currentStep])
 
-  const handleOptionSelect = (id: string) => {
-    const selectedOption = currentStepOptions.find(opt => opt.id === id)
-    if (!selectedOption) return
+  const filteredComponents = useMemo(() => {
+    return processedComponents.filter(comp => {
+      const g = quantities[comp.componentId]
+      return g && parseInt(g) > 0
+    })
+  }, [processedComponents, quantities])
 
-    const newPath = [...selectedPath.slice(0, currentStep - 1), selectedOption]
-    setSelectedPath(newPath)
+  const handleStepCommit = useCallback(
+    (id: string) => {
+      const selectedOption = currentStepOptions.find(opt => opt.id === id)
+      if (!selectedOption) return
 
-    if (selectedOption.subOptions && selectedOption.subOptions.length > 0) {
-      setCurrentStep(prev => prev + 1)
-    } else {
-      setCurrentStep(4)
-    }
-  }
+      const newPath = [...selectedPath.slice(0, currentStep - 1), selectedOption]
+      setSelectedPath(newPath)
 
-  const handleQuantityChange = (componentId: string, value: string) => {
-    setQuantities(prev => ({
-      ...prev,
-      [componentId]: value
-    }))
-  }
+      if (selectedOption.subOptions && selectedOption.subOptions.length > 0) {
+        setCurrentStep(prev => prev + 1)
+      } else {
+        setCurrentStep(4)
+      }
+    },
+    [currentStep, currentStepOptions, selectedPath]
+  )
 
-  const handleSubmit = () => {
-    const finalData = processedComponents.map((comp: StructuralComponent) => ({
-      ...comp,
-      quantity: quantities[comp.componentId] || ""
-    }))
-    console.log("Final Components with Quantities:", finalData)
-  }
-
-  const handleBack = () => {
+  const handleBack = useCallback(() => {
     if (currentStep > 1) {
-      setCurrentStep(prev => prev - 1)
+      const targetStep = currentStep === 4 ? selectedPath.length : currentStep - 1
+      setCurrentStep(targetStep)
+      // Note: We keep the selection path so user can see what they chose when going back
     }
-  }
+  }, [currentStep, selectedPath.length])
 
-  const currentSelection = selectedPath[currentStep - 1]
-  const isLeafSelected = currentSelection && currentSelection.structTypeId !== undefined
+  const onQuantityCommit = useCallback(
+    (newQuantities: Record<string, string>) => {
+      setQuantities(newQuantities)
+
+      // Initialize sub-components data for Step 5
+      const newComponentsData: Record<string, ComponentFormRecord> = {}
+
+      // We need to use the processed components to get correct metadata
+      const finalFiltered = processedComponents.filter(comp => {
+        const g = newQuantities[comp.componentId]
+        return g && parseInt(g) > 0
+      })
+
+      finalFiltered.forEach(comp => {
+        const qty = parseInt(newQuantities[comp.componentId] || "0")
+        const existingRecord = formValues.components[comp.componentId]
+        const existingSubData = existingRecord?.subComponents || []
+
+        const subData: SubComponentData[] = Array.from({ length: qty }).map((_, i) => {
+          if (existingSubData[i]) return existingSubData[i]
+
+          return {
+            id: i + 1,
+            name: String(i + 1),
+            basicQuantity: 0,
+            secondaryQuantity: 0,
+            comments: "",
+            updatedAt: new Date().toISOString().split("T")[0]
+          }
+        })
+        newComponentsData[comp.componentId] = {
+          subComponents: subData,
+          comments: existingRecord?.comments || "",
+          updatedAt: existingRecord?.updatedAt || new Date().toISOString().split("T")[0]
+        }
+      })
+
+      setFormValues({ components: newComponentsData })
+      setCurrentStep(5)
+    },
+    [formValues.components, processedComponents]
+  )
+
+  const onFinalSubmit = useCallback(
+    (data: FormValues) => {
+      setFormValues(data)
+      console.log("Final Wizard Data:", {
+        path: selectedPath,
+        quantities,
+        details: data.components
+      })
+      alert("המידע נשמר בהצלחה!")
+    },
+    [selectedPath, quantities]
+  )
 
   const metadata = STEP_METADATA[currentStep - 1] || STEP_METADATA[STEP_METADATA.length - 1]
 
@@ -138,76 +201,60 @@ const CreateSkeleton: React.FC = () => {
 
       <main className={styles.wizardContent}>
         <section className={styles.wizardStep}>
-          <Title className={styles.stepTitle} size="md">
-            {metadata.title}
-          </Title>
-
-          {currentStep < 4 ? (
-            <Radio
-              className={metadata.layout}
-              options={currentStepOptions.map(opt => ({
-                id: opt.id,
-                label: opt.label,
-                icon: opt.icon
-              }))}
-              value={currentSelection?.id || ""}
-              onChange={handleOptionSelect}
-            />
-          ) : (
-            <div className={styles.componentsContainer}>
-              <table className={styles.componentsTable}>
-                <thead>
-                  <tr>
-                    <th>מזהה רכיב</th>
-                    <th>תיאור</th>
-                    <th>רמת חשיבות</th>
-                    <th>יחידת מידה</th>
-                    <th>כמות</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {processedComponents.map((comp: StructuralComponent) => (
-                    <tr key={comp.componentId}>
-                      <td>{comp.componentId}</td>
-                      <td>{comp.description}</td>
-                      <td>{comp.importanceLevel}</td>
-                      <td>{comp.basicMeasurementUnit}</td>
-                      <td>
-                        <input
-                          type="number"
-                          className={styles.quantityInput}
-                          value={quantities[comp.componentId] || ""}
-                          onChange={e => handleQuantityChange(comp.componentId, e.target.value)}
-                          placeholder="0"
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-
-          <div className={styles.wizardActions}>
-            {currentStep > 1 && (
-              <Button variant="outline" className={styles.backButton} onClick={handleBack}>
-                חזור
-              </Button>
-            )}
-            {currentStep === 4 && (
-              <Button className={styles.submitButton} onClick={handleSubmit}>
-                שלח
-              </Button>
-            )}
+          <div className={styles.stepHeader}>
+            <Title className={styles.stepTitle} size="md">
+              {metadata.title}
+            </Title>
           </div>
 
-          {isLeafSelected && currentStep < 4 && (
-            <div className={styles.selectionSummary}>
-              <p>
-                קוד סוג מבנה: <strong>{currentSelection.structTypeId}</strong>
-              </p>
-            </div>
-          )}
+          <div className={styles.stepBody}>
+            {match(currentStep)
+              .with(1, () => (
+                <RadioSelectionStep
+                  options={currentStepOptions}
+                  initialValue={selectedPath[0]?.id}
+                  layout="smallerRadio"
+                  onNext={handleStepCommit}
+                  isFirstStep
+                />
+              ))
+              .with(2, () => (
+                <RadioSelectionStep
+                  options={currentStepOptions}
+                  initialValue={selectedPath[1]?.id}
+                  layout="grid"
+                  onNext={handleStepCommit}
+                  onBack={handleBack}
+                />
+              ))
+              .with(3, () => (
+                <RadioSelectionStep
+                  options={currentStepOptions}
+                  initialValue={selectedPath[2]?.id}
+                  layout="list"
+                  onNext={handleStepCommit}
+                  onBack={handleBack}
+                />
+              ))
+              .with(4, () => (
+                <ComponentQuantitySelection
+                  components={processedComponents}
+                  initialQuantities={quantities}
+                  onNext={onQuantityCommit}
+                  onBack={handleBack}
+                />
+              ))
+              .with(5, () => (
+                <ComponentDetailForm
+                  filteredComponents={filteredComponents}
+                  quantities={quantities}
+                  initialFormValues={formValues}
+                  onSubmit={onFinalSubmit}
+                  onBack={handleBack}
+                />
+              ))
+              .otherwise(() => null)}
+          </div>
         </section>
       </main>
     </div>
