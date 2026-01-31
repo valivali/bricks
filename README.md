@@ -1,8 +1,6 @@
-
-
 # Bricks App
 
-Full‑stack app with a React frontend and an Express backend. The project includes a production‑ready authentication system (signup, login, email verification, forgot/reset password), protected routes, and a layered backend architecture.
+Full-stack app with a React frontend and an Express backend. The project includes a production-ready authentication system (signup, login, email verification, forgot/reset password), protected routes, and a layered backend architecture.
 
 ## Architecture
 
@@ -33,9 +31,9 @@ frontend/     # React app
 
 ## Key Features
 
-- Email‑based auth flows (verify + reset)
+- Email-based auth flows (verify + reset)
 - Password policy enforced on both frontend and backend
-- JWT‑based session handling
+- JWT-based session handling
 - Protected routes and current‑user endpoint
 
 ## Getting Started

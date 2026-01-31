@@ -6,10 +6,12 @@ interface EnvConfig {
   port: number
   jwtSecret: string
   jwtExpiresIn: string
+  refreshTokenExpiresInDays: number
   resendApiKey: string
   fromEmail: string
   frontendUrl: string
   databaseUrl: string
+  exposeEmailTokens: boolean
 }
 
 function validateEnv(): EnvConfig {
@@ -28,10 +30,12 @@ function validateEnv(): EnvConfig {
     port: Number(process.env.PORT) || 4000,
     jwtSecret: process.env.JWT_SECRET!,
     jwtExpiresIn: process.env.JWT_EXPIRES_IN || "7d",
+    refreshTokenExpiresInDays: Number(process.env.REFRESH_TOKEN_EXPIRES_IN_DAYS) || 30,
     resendApiKey: process.env.RESEND_API_KEY!,
     fromEmail: process.env.FROM_EMAIL || "noreply@example.com",
     frontendUrl: process.env.FRONTEND_URL || "http://localhost:5173",
-    databaseUrl: process.env.DATABASE_URL!
+    databaseUrl: process.env.DATABASE_URL!,
+    exposeEmailTokens: process.env.EXPOSE_EMAIL_TOKENS === "true"
   }
 }
 

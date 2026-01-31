@@ -32,6 +32,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     if (error) {
       localStorage.removeItem("auth_token")
+      localStorage.removeItem("refresh_token")
     }
   }, [error])
 

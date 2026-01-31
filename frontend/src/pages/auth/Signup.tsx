@@ -1,56 +1,62 @@
 import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useSignup } from "@/hooks/useAuth"
+import { useToast } from "@/hooks/useToast"
 import { signupSchema, type SignupFormData } from "@/schemas/auth.schema"
 import { Button } from "@/components/UI/button/button"
 import { Text, Title, Subtitle } from "@/components/UI/Text/text"
 import styles from "./auth.module.scss"
 
 export const Signup = () => {
-  const navigate = useNavigate()
   const signupMutation = useSignup()
-  const [errorMessage, setErrorMessage] = useState("")
+  const toast = useToast()
   const [successMessage, setSuccessMessage] = useState("")
+  const [focusedField, setFocusedField] = useState<"email" | "password" | null>(null)
 
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors, touchedFields, submitCount }
   } = useForm<SignupFormData>({
-    resolver: zodResolver(signupSchema)
+    resolver: zodResolver(signupSchema),
+    mode: "onBlur"
   })
 
   const onSubmit = async (data: SignupFormData) => {
-    setErrorMessage("")
     setSuccessMessage("")
     try {
       const response = await signupMutation.mutateAsync(data)
       setSuccessMessage(response.message)
-      setTimeout(() => navigate("/auth/login"), 3000)
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "Signup failed")
+      toast.error(error instanceof Error ? error.message : "ההרשמה נכשלה")
     }
   }
+  const onInvalid = () => {
+    toast.error("נא לתקן את השדות המסומנים")
+  }
+
+  const emailHasError = Boolean(errors.email) && (touchedFields.email || submitCount > 0)
+  const passwordHasError = Boolean(errors.password) && (touchedFields.password || submitCount > 0)
+  const showEmailError = emailHasError && focusedField !== "email"
+  const showPasswordError = passwordHasError && focusedField !== "password"
+  const emailErrorMessage = errors.email?.message
+  const passwordErrorMessage = errors.password?.message
+  const emailField = register("email")
+  const passwordField = register("password")
 
   return (
     <div className={styles.authContainer}>
       <div className={styles.authCard}>
         <div className={styles.authHeader}>
-          <Title className={styles.authTitle}>Create Account</Title>
+          <Title className={styles.authTitle}>יצירת חשבון</Title>
           <Subtitle className={styles.authSubtitle} variant="p">
-            Sign up to get started
+            הירשמו כדי להתחיל
           </Subtitle>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className={styles.authForm}>
-          {errorMessage && (
-            <div className={styles.errorAlert}>
-              <Text variant="p">{errorMessage}</Text>
-            </div>
-          )}
-          
+        <form onSubmit={handleSubmit(onSubmit, onInvalid)} className={styles.authForm}>
           {successMessage && (
             <div className={styles.successAlert}>
               <Text variant="p">{successMessage}</Text>
@@ -59,40 +65,50 @@ export const Signup = () => {
 
           <div className={styles.formGroup}>
             <label htmlFor="email" className={styles.label}>
-              <Text variant="span">Email Address</Text>
+              <Text variant="span">כתובת אימייל</Text>
             </label>
             <input
               id="email"
               type="email"
-              {...register("email")}
-              className={styles.input}
+              {...emailField}
+              className={`${styles.input} ${emailHasError ? styles.inputError : ""}`}
               placeholder="you@example.com"
+              onFocus={() => setFocusedField("email")}
+              onBlur={(event) => {
+                emailField.onBlur(event)
+                setFocusedField(null)
+              }}
             />
-            {errors.email && (
+            {showEmailError && emailErrorMessage && (
               <Text variant="span" className={styles.errorText}>
-                {errors.email.message}
+                {emailErrorMessage}
               </Text>
             )}
           </div>
 
           <div className={styles.formGroup}>
             <label htmlFor="password" className={styles.label}>
-              <Text variant="span">Password</Text>
+              <Text variant="span">סיסמה</Text>
             </label>
             <input
               id="password"
               type="password"
-              {...register("password")}
-              className={styles.input}
+              {...passwordField}
+              className={`${styles.input} ${passwordHasError ? styles.inputError : ""}`}
               placeholder="••••••••"
+              onFocus={() => setFocusedField("password")}
+              onBlur={(event) => {
+                passwordField.onBlur(event)
+                setFocusedField(null)
+              }}
             />
-            {errors.password && (
+            {showPasswordError && passwordErrorMessage && (
               <Text variant="span" className={styles.errorText}>
-                {errors.password.message}
+                {passwordErrorMessage}
               </Text>
             )}
             <Text variant="p" className={styles.helperText}>
-              Must be 8+ characters with uppercase, lowercase, number, and special character
+              חייבת להיות לפחות 8 תווים עם אות גדולה, אות קטנה, מספר ותו מיוחד
             </Text>
           </div>
 
@@ -102,13 +118,13 @@ export const Signup = () => {
             className={styles.submitButton}
             isLoading={signupMutation.isPending}
           >
-            <Text variant="span">Sign Up</Text>
+            <Text variant="span">הרשמה</Text>
           </Button>
 
           <div className={styles.authFooter}>
-            <Text variant="span">Already have an account?</Text>
+            <Text variant="span">כבר יש לכם חשבון?</Text>
             <Link to="/auth/login" className={styles.link}>
-              <Text variant="span">Sign in</Text>
+              <Text variant="span">התחברות</Text>
             </Link>
           </div>
         </form>

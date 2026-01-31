@@ -21,6 +21,7 @@ export const useLogin = () => {
     mutationFn: async (data: LoginRequest) => {
       const response = await authApi.login(data)
       localStorage.setItem("auth_token", response.token)
+      localStorage.setItem("refresh_token", response.refreshToken)
       return response
     },
     onSuccess: (data) => {
@@ -61,6 +62,7 @@ export const useLogout = () => {
   
   return () => {
     localStorage.removeItem("auth_token")
+    localStorage.removeItem("refresh_token")
     queryClient.setQueryData(["currentUser"], null)
     queryClient.clear()
   }

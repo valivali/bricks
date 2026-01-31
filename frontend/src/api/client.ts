@@ -12,6 +12,38 @@ export class ApiClient {
     return token ? { Authorization: `Bearer ${token}` } : {}
   }
 
+  private hasRefreshAttempt(options?: RequestInit): boolean {
+    const headers = new Headers(options?.headers)
+    return headers.get("X-Refresh-Attempt") === "1"
+  }
+
+  private async refreshAccessToken(): Promise<string | null> {
+    const refreshToken = localStorage.getItem("refresh_token")
+    if (!refreshToken) {
+      return null
+    }
+
+    const response = await fetch(`${this.baseUrl}/auth/refresh`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-Refresh-Attempt": "1"
+      },
+      body: JSON.stringify({ refreshToken })
+    })
+
+    if (!response.ok) {
+      localStorage.removeItem("auth_token")
+      localStorage.removeItem("refresh_token")
+      return null
+    }
+
+    const data = await response.json() as { token: string; refreshToken: string }
+    localStorage.setItem("auth_token", data.token)
+    localStorage.setItem("refresh_token", data.refreshToken)
+    return data.token
+  }
+
   async request<T>(
     endpoint: string,
     options: RequestInit = {}
@@ -27,7 +59,21 @@ export class ApiClient {
       },
     }
 
-    const response = await fetch(url, config)
+    let response = await fetch(url, config)
+
+    if (response.status === 401 && !this.hasRefreshAttempt(options)) {
+      const newToken = await this.refreshAccessToken()
+      if (newToken) {
+        const retryConfig: RequestInit = {
+          ...config,
+          headers: {
+            ...config.headers,
+            Authorization: `Bearer ${newToken}`
+          }
+        }
+        response = await fetch(url, retryConfig)
+      }
+    }
     
     if (!response.ok) {
       const error = await response.json().catch(() => ({ 

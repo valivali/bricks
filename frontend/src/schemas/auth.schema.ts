@@ -3,32 +3,32 @@ import { z } from "zod"
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
 
 export const signupSchema = z.object({
-  email: z.email("Invalid email address"),
+  email: z.email("כתובת אימייל לא תקינה"),
   password: z
     .string()
-    .min(8, "Password must be at least 8 characters")
+    .min(8, "הסיסמה חייבת להיות לפחות 8 תווים")
     .regex(
       passwordRegex,
-      "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character"
+      "הסיסמה חייבת לכלול לפחות אות קטנה, אות גדולה, מספר ותו מיוחד"
     )
 })
 
 export const loginSchema = z.object({
-  email: z.email("Invalid email address"),
-  password: z.string().min(1, "Password is required")
+  email: z.email("כתובת אימייל לא תקינה"),
+  password: z.string().min(1, "נדרשת סיסמה")
 })
 
 export const forgotPasswordSchema = z.object({
-  email: z.email("Invalid email address")
+  email: z.email("כתובת אימייל לא תקינה")
 })
 
 export const resetPasswordSchema = z.object({
   password: z
     .string()
-    .min(8, "Password must be at least 8 characters")
+    .min(8, "הסיסמה חייבת להיות לפחות 8 תווים")
     .regex(
       passwordRegex,
-      "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character"
+      "הסיסמה חייבת לכלול לפחות אות קטנה, אות גדולה, מספר ותו מיוחד"
     )
 })
 

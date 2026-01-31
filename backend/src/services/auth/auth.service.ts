@@ -1,4 +1,5 @@
 import bcrypt from "bcrypt"
+import crypto from "crypto"
 import { v4 as uuidv4 } from "uuid"
 import type { PrismaClient } from "../../generated/prisma/client.js"
 import type { AuthResponseDto, UserDto } from "../../dto/auth.dto.js"
@@ -7,6 +8,7 @@ import { JwtProvider, JwtProviderInterface } from "../../providers/jwt.provider.
 import { AuthServiceInterface } from "./auth.interface.js"
 import { EmailProviderInterface, ResendEmailProvider } from "../../providers/resend.provider.js"
 import { prisma } from "../../lib/prisma.js"
+import { env } from "../../config/env.config.js"
 
 export class AuthService implements AuthServiceInterface {
   constructor(
@@ -15,11 +17,14 @@ export class AuthService implements AuthServiceInterface {
     private readonly jwtProvider: JwtProviderInterface
   ) {}
 
-  async signup(email: string, password: string): Promise<{ message: string }> {
+  async signup(
+    email: string,
+    password: string
+  ): Promise<{ message: string; verificationUrl?: string }> {
     const existingUser = await this.prisma.user.findUnique({ where: { email } })
     
     if (existingUser) {
-      throw new Error("User already exists")
+      throw new Error("משתמש כבר קיים")
     }
 
     const hashedPassword = await bcrypt.hash(password, 10)
@@ -34,27 +39,41 @@ export class AuthService implements AuthServiceInterface {
       }
     })
 
+    const verificationUrl = `${env.frontendUrl}/auth/verify-email?token=${verificationToken}`
     await this.emailProvider.sendVerificationEmail(email, verificationToken)
 
-    return { message: "Signup successful. Please check your email to verify your account." }
+    return {
+      message: "ההרשמה הושלמה. בדקו את האימייל כדי לאמת את החשבון.",
+      verificationUrl: env.exposeEmailTokens ? verificationUrl : undefined
+    }
   }
 
   async login(email: string, password: string): Promise<AuthResponseDto> {
     const user = await this.prisma.user.findUnique({ where: { email } })
 
     if (!user) {
-      throw new Error("Invalid credentials")
+      throw new Error("פרטי התחברות שגויים")
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password)
 
     if (!isPasswordValid) {
-      throw new Error("Invalid credentials")
+      throw new Error("פרטי התחברות שגויים")
     }
 
     if (!user.isVerified) {
-      throw new Error("Please verify your email before logging in")
+      throw new Error("יש לאמת את כתובת האימייל לפני התחברות")
     }
+
+    const { refreshToken, refreshTokenHash, refreshTokenExpiry } = this.createRefreshToken()
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        refreshTokenHash,
+        refreshTokenExpiry
+      }
+    })
 
     const token = this.jwtProvider.sign({
       userId: user.id,
@@ -63,7 +82,43 @@ export class AuthService implements AuthServiceInterface {
 
     return {
       user: UserMapper.toDto(user),
-      token
+      token,
+      refreshToken
+    }
+  }
+
+  async refresh(refreshToken: string): Promise<{ token: string; refreshToken: string }> {
+    const refreshTokenHash = this.hashToken(refreshToken)
+    const user = await this.prisma.user.findUnique({
+      where: { refreshTokenHash }
+    })
+
+    if (!user || !user.refreshTokenExpiry) {
+      throw new Error("אסימון רענון לא תקין")
+    }
+
+    if (user.refreshTokenExpiry < new Date()) {
+      throw new Error("תוקף אסימון הרענון פג")
+    }
+
+    const rotated = this.createRefreshToken()
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        refreshTokenHash: rotated.refreshTokenHash,
+        refreshTokenExpiry: rotated.refreshTokenExpiry
+      }
+    })
+
+    const token = this.jwtProvider.sign({
+      userId: user.id,
+      email: user.email
+    })
+
+    return {
+      token,
+      refreshToken: rotated.refreshToken
     }
   }
 
@@ -73,11 +128,11 @@ export class AuthService implements AuthServiceInterface {
     })
 
     if (!user) {
-      throw new Error("Invalid verification token")
+      throw new Error("אסימון אימות לא תקין")
     }
 
     if (user.isVerified) {
-      throw new Error("Email already verified")
+      throw new Error("האימייל כבר אומת")
     }
 
     await this.prisma.user.update({
@@ -88,14 +143,16 @@ export class AuthService implements AuthServiceInterface {
       }
     })
 
-    return { message: "Email verified successfully. You can now log in." }
+    return { message: "האימייל אומת בהצלחה. אפשר להתחבר." }
   }
 
-  async forgotPassword(email: string): Promise<{ message: string }> {
+  async forgotPassword(
+    email: string
+  ): Promise<{ message: string; resetUrl?: string }> {
     const user = await this.prisma.user.findUnique({ where: { email } })
 
     if (!user) {
-      return { message: "If an account with that email exists, a password reset link has been sent." }
+      return { message: "אם קיים חשבון עם האימייל הזה, נשלח קישור לאיפוס סיסמה." }
     }
 
     const resetToken = uuidv4()
@@ -109,9 +166,13 @@ export class AuthService implements AuthServiceInterface {
       }
     })
 
+    const resetUrl = `${env.frontendUrl}/auth/reset-password?token=${resetToken}`
     await this.emailProvider.sendPasswordResetEmail(email, resetToken)
 
-    return { message: "If an account with that email exists, a password reset link has been sent." }
+    return {
+      message: "אם קיים חשבון עם האימייל הזה, נשלח קישור לאיפוס סיסמה.",
+      resetUrl: env.exposeEmailTokens ? resetUrl : undefined
+    }
   }
 
   async resetPassword(token: string, newPassword: string): Promise<{ message: string }> {
@@ -120,11 +181,11 @@ export class AuthService implements AuthServiceInterface {
     })
 
     if (!user || !user.resetTokenExpiry) {
-      throw new Error("Invalid or expired reset token")
+      throw new Error("אסימון האיפוס לא תקין או שפג תוקפו")
     }
 
     if (user.resetTokenExpiry < new Date()) {
-      throw new Error("Reset token has expired")
+      throw new Error("תוקף אסימון האיפוס פג")
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 10)
@@ -134,11 +195,13 @@ export class AuthService implements AuthServiceInterface {
       data: {
         password: hashedPassword,
         resetToken: null,
-        resetTokenExpiry: null
+        resetTokenExpiry: null,
+        refreshTokenHash: null,
+        refreshTokenExpiry: null
       }
     })
 
-    return { message: "Password reset successful. You can now log in with your new password." }
+    return { message: "איפוס הסיסמה הצליח. אפשר להתחבר עם הסיסמה החדשה." }
   }
 
   async getCurrentUser(userId: string): Promise<UserDto> {
@@ -147,7 +210,7 @@ export class AuthService implements AuthServiceInterface {
     })
 
     if (!user) {
-      throw new Error("User not found")
+      throw new Error("משתמש לא נמצא")
     }
 
     return UserMapper.toDto(user)
@@ -157,5 +220,27 @@ export class AuthService implements AuthServiceInterface {
     const emailProvider = ResendEmailProvider.build()
     const jwtProvider = JwtProvider.build()
     return new AuthService(prisma, emailProvider, jwtProvider)
+  }
+
+  private createRefreshToken(): {
+    refreshToken: string
+    refreshTokenHash: string
+    refreshTokenExpiry: Date
+  } {
+    const refreshToken = uuidv4()
+    const refreshTokenHash = this.hashToken(refreshToken)
+    const refreshTokenExpiry = new Date(
+      Date.now() + env.refreshTokenExpiresInDays * 24 * 60 * 60 * 1000
+    )
+
+    return {
+      refreshToken,
+      refreshTokenHash,
+      refreshTokenExpiry
+    }
+  }
+
+  private hashToken(token: string): string {
+    return crypto.createHash("sha256").update(token).digest("hex")
   }
 }

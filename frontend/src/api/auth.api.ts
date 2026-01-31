@@ -11,10 +11,13 @@ export interface UserDto {
 export interface AuthResponse {
   user: UserDto
   token: string
+  refreshToken: string
 }
 
 export interface MessageResponse {
   message: string
+  verificationUrl?: string
+  resetUrl?: string
 }
 
 export interface SignupRequest {
@@ -40,6 +43,15 @@ export interface VerifyEmailRequest {
   token: string
 }
 
+export interface RefreshTokenRequest {
+  refreshToken: string
+}
+
+export interface RefreshTokenResponse {
+  token: string
+  refreshToken: string
+}
+
 export const authApi = {
   signup: (data: SignupRequest): Promise<MessageResponse> => {
     return apiClient.post<MessageResponse>("/auth/signup", data)
@@ -47,6 +59,10 @@ export const authApi = {
 
   login: (data: LoginRequest): Promise<AuthResponse> => {
     return apiClient.post<AuthResponse>("/auth/login", data)
+  },
+
+  refresh: (data: RefreshTokenRequest): Promise<RefreshTokenResponse> => {
+    return apiClient.post<RefreshTokenResponse>("/auth/refresh", data)
   },
 
   verifyEmail: (data: VerifyEmailRequest): Promise<MessageResponse> => {

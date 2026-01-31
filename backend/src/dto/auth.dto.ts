@@ -9,6 +9,7 @@ export interface UserDto {
 export interface AuthResponseDto {
   user: UserDto
   token: string
+  refreshToken: string
 }
 
 export interface SignupRequestDto {
@@ -36,4 +37,13 @@ export interface VerifyEmailRequestDto {
 
 export interface MessageResponseDto {
   message: string
+}
+
+export interface RefreshTokenRequestDto {
+  refreshToken: string
+}
+
+export interface RefreshTokenResponseDto {
+  token: string
+  refreshToken: string
 }

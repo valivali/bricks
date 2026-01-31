@@ -24,9 +24,6 @@ export default defineConfig(({ mode }) => ({
       "@/contexts": path.resolve(__dirname, "./src/contexts")
     }
   },
-  define: {
-    "process.env": process.env
-  },
   css: {
     modules: {
       localsConvention: "camelCase"

@@ -1,7 +1,7 @@
 import type { Request, Response, NextFunction } from "express"
 import { JwtProvider } from "../providers/jwt.provider.js"
 
-const jwtProvider = new JwtProvider()
+const jwtProvider = JwtProvider.build()
 
 export const authMiddleware = (
   req: Request,

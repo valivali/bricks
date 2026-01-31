@@ -23,7 +23,7 @@ export const VerifyEmail = () => {
 
   const verifyEmail = async () => {
     if (!token) {
-      setErrorMessage("Invalid or missing verification token")
+      setErrorMessage("אסימון אימות לא תקין או חסר")
       return
     }
 
@@ -31,7 +31,7 @@ export const VerifyEmail = () => {
       const response = await verifyEmailMutation.mutateAsync({ token })
       setSuccessMessage(response.message)
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "Verification failed")
+      setErrorMessage(error instanceof Error ? error.message : "האימות נכשל")
     }
   }
 
@@ -39,13 +39,13 @@ export const VerifyEmail = () => {
     <div className={styles.authContainer}>
       <div className={styles.authCard}>
         <div className={styles.authHeader}>
-          <Title className={styles.authTitle}>Email Verification</Title>
+          <Title className={styles.authTitle}>אימות אימייל</Title>
         </div>
 
         <div className={styles.authForm}>
           {verifyEmailMutation.isPending && (
             <div className={styles.infoAlert}>
-              <Text variant="p">Verifying your email...</Text>
+              <Text variant="p">מאמתים את האימייל שלך...</Text>
             </div>
           )}
 
@@ -67,7 +67,7 @@ export const VerifyEmail = () => {
               className={styles.submitButton}
               onClick={() => navigate("/auth/login")}
             >
-              <Text variant="span">Go to Login</Text>
+              <Text variant="span">מעבר להתחברות</Text>
             </Button>
           )}
 
@@ -78,7 +78,7 @@ export const VerifyEmail = () => {
               className={styles.submitButton}
               onClick={() => navigate("/auth/signup")}
             >
-              <Text variant="span">Back to Signup</Text>
+              <Text variant="span">חזרה להרשמה</Text>
             </Button>
           )}
         </div>
