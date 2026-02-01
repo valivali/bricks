@@ -25,6 +25,61 @@ model User {
   refreshTokenExpiry DateTime?
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
+  profile            UserProfile?
+  inspections        Inspection[]
 
   @@map("users")
+}
+
+model UserProfile {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName      String?  @db.VarChar(50)
+  lastName       String?  @db.VarChar(50)
+  idNumber       String?  @db.VarChar(9)
+  phone          String?  @db.VarChar(15)
+  companyName    String?  @db.VarChar(100)
+  companyId      String?  @db.VarChar(9)
+  companyAddress String?  @db.VarChar(200)
+  profileImage   String?  @db.Text
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("user_profiles")
+}
+
+model Inspection {
+  id                          String   @id @default(uuid())
+  userId                      String
+  user                        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lastUpdated                 DateTime?
+  structureType               String
+  generalDescription          String?  @db.Text
+  inspectionType              String?
+  companyName                 String?
+  inspectorName               String?
+  structureNumber             String?
+  structureName               String?
+  structureMarking            String?
+  roadNumber                  String?
+  runningDistance             String?
+  area                        String?
+  fullStructureIncluded       Boolean  @default(true)
+  fullStructureNotes          String?
+  spanCount                   Int?
+  spanCountNotes              String?
+  adjacentStructures          Int?
+  adjacentStructuresNotes     String?
+  siteRestrictions            String?
+  inspectionDate              DateTime?
+  nextInspectionType          String?
+  nextInspectionDate          DateTime?
+  classificationForInspection String?
+  coordinateNorth             Float?
+  coordinateEast              Float?
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+
+  @@map("inspections")
 }

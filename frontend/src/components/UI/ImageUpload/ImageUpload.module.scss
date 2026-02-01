@@ -1,0 +1,80 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.label {
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+.viewport {
+  position: relative;
+  border-radius: var(--radius);
+  background-color: var(--muted);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+}
+
+.image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform-origin: center;
+  user-select: none;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted-foreground);
+  font-size: var(--text-sm);
+}
+
+.mask,
+.maskRect {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 2px solid var(--primary);
+}
+
+.mask {
+  border-radius: 999px;
+}
+
+.maskRect {
+  border-radius: var(--radius);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.input {
+  display: none;
+}
+
+.slider {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sliderLabel {
+  color: var(--muted-foreground);
+  font-size: var(--text-sm);
+}
+
+.helper {
+  color: var(--muted-foreground);
+}

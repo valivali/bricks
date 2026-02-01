@@ -154,25 +154,55 @@
 
   --font-heading: var(--font-noto), serif;
   --font-body: var(--font-heebo), var(--font-noto), sans-serif;
+
   /* Colors */
-  --primary: 231 111 81;
-  --primary-foreground: 255 255 255;
-  --secondary: 244 162 97;
-  --secondary-foreground: 38 70 83;
-  --accent: 233 196 106;
-  --accent-foreground: 38 70 83;
-  --success: 42 157 143;
-  --success-foreground: 255 255 255;
-  --dark: 38 70 83;
-  --background: 255 255 255;
-  --foreground: 38 70 83;
-  --muted: 248 250 252;
-  --muted-foreground: 100 116 139;
-  --border: 226 232 240;
-  --input: 226 232 240;
-  --ring: 231 111 81;
-  --destructive: 220 38 38;
-  --destructive-foreground: 255 255 255;
+  --primary: rgba(79, 120, 168, 1);
+  --primary-foreground: rgba(255, 255, 255, 1);
+  --secondary: rgba(92, 140, 92, 1);
+  --secondary-foreground: rgba(255, 255, 255, 1);
+  --accent: rgba(102, 119, 97, 1);
+  --accent-foreground: rgba(234, 225, 223, 1);
+  --success: rgba(58, 160, 88, 1);
+  --success-foreground: rgba(255, 255, 255, 1);
+  --dark: rgba(84, 94, 86, 1);
+  --background: rgba(250, 248, 246, 1);
+  --foreground: rgba(84, 94, 86, 1);
+  --muted: rgba(234, 225, 223, 1);
+  --muted-foreground: rgba(145, 124, 120, 1);
+  --border: rgba(210, 200, 195, 1);
+  --input: rgba(234, 225, 223, 1);
+  --ring: rgba(79, 120, 168, 1);
+  --destructive: rgba(201, 71, 63, 1);
+  --destructive-foreground: rgba(255, 255, 255, 1);
+  --primary-90: rgba(79, 120, 168, 0.9);
+  --primary-80: rgba(79, 120, 168, 0.8);
+  --primary-30: rgba(79, 120, 168, 0.3);
+  --primary-25: rgba(79, 120, 168, 0.25);
+  --primary-20: rgba(79, 120, 168, 0.2);
+  --primary-12: rgba(79, 120, 168, 0.12);
+  --primary-10: rgba(79, 120, 168, 0.1);
+  --primary-06: rgba(79, 120, 168, 0.06);
+  --primary-05: rgba(79, 120, 168, 0.05);
+  --secondary-80: rgba(92, 140, 92, 0.8);
+  --secondary-10: rgba(92, 140, 92, 0.1);
+  --secondary-05: rgba(92, 140, 92, 0.05);
+  --secondary-02: rgba(92, 140, 92, 0.02);
+  --success-35: rgba(58, 160, 88, 0.35);
+  --success-30: rgba(58, 160, 88, 0.3);
+  --success-12: rgba(58, 160, 88, 0.12);
+  --success-10: rgba(58, 160, 88, 0.1);
+  --destructive-90: rgba(201, 71, 63, 0.9);
+  --destructive-35: rgba(201, 71, 63, 0.35);
+  --destructive-30: rgba(201, 71, 63, 0.3);
+  --destructive-15: rgba(201, 71, 63, 0.15);
+  --destructive-12: rgba(201, 71, 63, 0.12);
+  --destructive-10: rgba(201, 71, 63, 0.1);
+  --disabled: rgba(214, 214, 214, 1);
+  --disabled-foreground: rgba(125, 125, 125, 1);
+  --disabled-border: rgba(200, 200, 200, 1);
+  --border-40: rgba(210, 200, 195, 0.4);
+  --border-30: rgba(210, 200, 195, 0.3);
+  --ring-30: rgba(183, 148, 146, 0.3);
   --radius: 0.5rem;
 }
 
@@ -180,7 +210,7 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  border-color: rgb(var(--border));
+  border-color: var(--border);
 }
 
 html,
@@ -271,50 +301,53 @@ h6 {
 .app-toast {
   width: 100%;
   max-width: 360px;
-  background: rgb(var(--background));
-  border: 1px solid rgb(var(--border));
+  background: var(--muted);
+  border: 1px solid var(--border);
   border-radius: 0.75rem;
   padding: 0.75rem 1rem;
-  box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.1);
+  box-shadow: 0 10px 25px -5px rgba(0 0 0 / 0.1);
   position: relative;
   will-change: transform, opacity;
-    
+
   &.app-toast--error {
-    border-color: rgb(var(--destructive) / 0.35);
+    background: var(--destructive-10);
+    border-color: var(--destructive-35);
 
     .app-toast__icon-container {
-      border-left-color: rgb(var(--destructive));
-      
+      border-left-color: var(--destructive);
+
       div.app-toast__icon-box {
-        color: rgb(var(--destructive));
-        background: rgb(var(--destructive) / 0.12);
+        color: var(--destructive);
+        background: var(--destructive-12);
       }
     }
   }
-  
+
   &.app-toast--success {
-    border-color: rgb(var(--success) / 0.35);
+    background: var(--success);
+    border-color: var(--success-35);
 
     .app-toast__icon-container {
-      border-left-color: rgb(var(--success));
-      
+      border-left-color: var(--success);
+
       .app-toast__icon-box {
-        color: rgb(var(--success));
-        background: rgb(var(--success) / 0.12);
+        color: var(--success);
+        background: var(--success-12);
       }
     }
   }
-  
+
   &.app-toast--loading,
   &.app-toast--default {
-    border-color: rgb(var(--primary) / 0.25);
+    background: var(--primary-05);
+    border-color: var(--primary-25);
 
     .app-toast__icon-container {
-      border-left-color: rgb(var(--primary));
-      
+      border-left-color: var(--primary);
+
       .app-toast__icon-box {
-        color: rgb(var(--primary));
-        background: rgb(var(--primary) / 0.12);
+        color: var(--primary);
+        background: var(--primary-12);
       }
     }
   }
@@ -336,7 +369,7 @@ h6 {
     border: none;
     border-radius: 999px;
     background: transparent;
-    color: rgb(var(--muted-foreground));
+    color: var(--foreground);
     cursor: pointer;
     display: inline-flex;
     align-items: center;
@@ -344,25 +377,25 @@ h6 {
     font-size: 1rem;
     line-height: 1;
     &:hover {
-      background: rgb(var(--border) / 0.4);
-      color: rgb(var(--foreground));
+      background: var(--border-40);
+      color: var(--foreground);
     }
   }
-  
+
   .app-toast__layout {
     height: 100%;
     display: flex;
     align-items: flex-start;
     gap: 0.5rem;
-    
+
     .app-toast__icon-container {
       display: flex;
       align-items: center;
       justify-content: center;
       padding-left: 0.5rem;
       height: 100%;
-      border-left: 2px solid rgb(var(--border));
-      
+      border-left: 2px solid var(--border);
+
       .app-toast__icon-box {
         width: 3.25rem;
         height: 3.25rem;
@@ -371,21 +404,20 @@ h6 {
         align-items: center;
         justify-content: center;
         color: inherit;
-        background: rgb(var(--border) / 0.3);
+        background: var(--border-30);
       }
     }
-    
+
     .app-toast__content {
       display: flex;
       flex-direction: column;
       gap: 0.25rem;
-      
+
       .app-toast__title {
         font-weight: 600;
       }
-      
+
       .app-toast__message {
-        color: rgb(var(--foreground));
         font-size: var(--text-sm);
         line-height: 1.4;
         display: flex;

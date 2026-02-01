@@ -278,7 +278,7 @@ const ComponentDetailForm: React.FC<ComponentDetailFormProps> = ({
           חזור
         </Button>
         <Button onClick={handleSubmit(onSubmit)} className={styles.submitButton}>
-          שלח
+          המשך
         </Button>
       </div>
     </div>

@@ -1,0 +1,42 @@
+.wrapper {
+  position: relative;
+  display: inline-flex;
+
+  .trigger {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    min-width: 180px;
+    background-color: var(--background);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    padding: 0.5rem;
+    z-index: 50;
+
+    .item {
+      display: block;
+      width: 100%;
+      text-align: right;
+      padding: 0.5rem 0.75rem;
+      border-radius: calc(var(--radius) - 2px);
+      color: var(--foreground);
+      background: none;
+      border: none;
+      text-decoration: none;
+      font-size: var(--text-sm);
+      cursor: pointer;
+
+      &:hover {
+        background-color: var(--muted);
+      }
+    }
+  }
+}

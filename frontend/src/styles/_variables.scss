@@ -5,37 +5,23 @@ $breakpoint-lg: 1024px;
 $breakpoint-xl: 1280px;
 $breakpoint-2xl: 1536px;
 
-// Colors (raw components for use with rgb/rgba)
-$primary-raw: var(--primary);
-$secondary-raw: var(--secondary);
-$accent-raw: var(--accent);
-$success-raw: var(--success);
-$dark-raw: var(--dark);
-$background-raw: var(--background);
-$foreground-raw: var(--foreground);
-$muted-raw: var(--muted);
-$muted-foreground-raw: var(--muted-foreground);
-$border-raw: var(--border);
-$input-raw: var(--input);
-$ring-raw: var(--ring);
-
-// Helper variables using rgb()
-$primary: rgb($primary-raw);
-$primary-foreground: rgb(var(--primary-foreground));
-$secondary: rgb($secondary-raw);
-$secondary-foreground: rgb(var(--secondary-foreground));
-$accent: rgb($accent-raw);
-$accent-foreground: rgb(var(--accent-foreground));
-$success: rgb($success-raw);
-$success-foreground: rgb(var(--success-foreground));
-$dark: rgb($dark-raw);
-$background: rgb($background-raw);
-$foreground: rgb($foreground-raw);
-$muted: rgb($muted-raw);
-$muted-foreground: rgb($muted-foreground-raw);
-$border: rgb($border-raw);
-$input: rgb($input-raw);
-$ring: rgb($ring-raw);
+// Colors
+$primary: var(--primary);
+$primary-foreground: var(--primary-foreground);
+$secondary: var(--secondary);
+$secondary-foreground: var(--secondary-foreground);
+$accent: var(--accent);
+$accent-foreground: var(--accent-foreground);
+$success: var(--success);
+$success-foreground: var(--success-foreground);
+$dark: var(--dark);
+$background: var(--background);
+$foreground: var(--foreground);
+$muted: var(--muted);
+$muted-foreground: var(--muted-foreground);
+$border: var(--border);
+$input: var(--input);
+$ring: var(--ring);
 
 // Shadows
 $shadow-2xs: var(--shadow-2xs);

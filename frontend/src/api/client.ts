@@ -38,25 +38,22 @@ export class ApiClient {
       return null
     }
 
-    const data = await response.json() as { token: string; refreshToken: string }
+    const data = (await response.json()) as { token: string; refreshToken: string }
     localStorage.setItem("auth_token", data.token)
     localStorage.setItem("refresh_token", data.refreshToken)
     return data.token
   }
 
-  async request<T>(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<T> {
+  async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`
-    
+
     const config: RequestInit = {
       ...options,
       headers: {
         "Content-Type": "application/json",
         ...this.getAuthHeader(),
-        ...options.headers,
-      },
+        ...options.headers
+      }
     }
 
     let response = await fetch(url, config)
@@ -74,10 +71,10 @@ export class ApiClient {
         response = await fetch(url, retryConfig)
       }
     }
-    
+
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ 
-        error: "An error occurred" 
+      const error = await response.json().catch(() => ({
+        error: "An error occurred"
       }))
       throw new Error(error.error || error.message || "Request failed")
     }
@@ -93,7 +90,7 @@ export class ApiClient {
     return this.request<T>(endpoint, {
       ...options,
       method: "POST",
-      body: JSON.stringify(data),
+      body: JSON.stringify(data)
     })
   }
 
@@ -101,7 +98,15 @@ export class ApiClient {
     return this.request<T>(endpoint, {
       ...options,
       method: "PUT",
-      body: JSON.stringify(data),
+      body: JSON.stringify(data)
+    })
+  }
+
+  async patch<T>(endpoint: string, data?: unknown, options?: RequestInit): Promise<T> {
+    return this.request<T>(endpoint, {
+      ...options,
+      method: "PATCH",
+      body: JSON.stringify(data)
     })
   }
 

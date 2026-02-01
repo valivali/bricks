@@ -14,20 +14,47 @@ import {
 import { Title } from "@/components/UI/Text/text"
 import { match } from "ts-pattern"
 import { type ComponentFormRecord, type FormValues, type SubComponentData } from "./types"
+import { useUserProfileContext } from "@/contexts/UserProfileContext"
+import { useToast } from "@/hooks/useToast"
+import { inspectionApi } from "@/api/inspection.api"
+import { type InspectionFormValues } from "@/schemas/inspection.schema"
 
 import RadioSelectionStep from "./wizard/RadioSelectionStep/RadioSelectionStep"
 import ComponentQuantitySelection from "./wizard/ComponentQuantitySelection/ComponentQuantitySelection"
 import ComponentDetailForm from "./wizard/ComponentDetailForm/ComponentDetailForm"
+import InspectionForm from "./wizard/InspectionForm/InspectionForm"
 
 const STEP_METADATA = [
   { title: "בחר מבנה" },
   { title: "תיאור מבנה" },
   { title: "בחר תת-סוג" },
   { title: "רכיבים" },
-  { title: "פירוט רכיבים" }
+  { title: "פירוט רכיבים" },
+  { title: "טופס סקירת גשרים ומבני דרך" }
 ]
 
+const toNull = (value?: string) => {
+  const trimmed = value?.trim() || ""
+  return trimmed ? trimmed : null
+}
+
+const toIntOrNull = (value?: string) => {
+  const trimmed = value?.trim() || ""
+  if (!trimmed) return null
+  const parsed = Number.parseInt(trimmed, 10)
+  return Number.isNaN(parsed) ? null : parsed
+}
+
+const toFloatOrNull = (value?: string) => {
+  const trimmed = value?.trim() || ""
+  if (!trimmed) return null
+  const parsed = Number.parseFloat(trimmed)
+  return Number.isNaN(parsed) ? null : parsed
+}
+
 const CreateSkeleton: React.FC = () => {
+  const toast = useToast()
+  const { profile } = useUserProfileContext()
   const [currentStep, setCurrentStep] = useState(1)
   const [selectedPath, setSelectedPath] = useState<SkeletonOption[]>([])
   const [quantities, setQuantities] = useState<Record<string, string>>({})
@@ -169,14 +196,84 @@ const CreateSkeleton: React.FC = () => {
   const onFinalSubmit = useCallback(
     (data: FormValues) => {
       setFormValues(data)
-      console.log("Final Wizard Data:", {
-        path: selectedPath,
-        quantities,
-        details: data.components
-      })
-      alert("המידע נשמר בהצלחה!")
+      setCurrentStep(6)
     },
     [selectedPath, quantities]
+  )
+
+  const inspectionDefaults = useMemo<InspectionFormValues>(() => {
+    const companyName = profile?.companyName || ""
+    const inspectorName = [profile?.firstName, profile?.lastName].filter(Boolean).join(" ")
+    const structureType = selectedPath[1]?.label || selectedPath[0]?.label || ""
+
+    return {
+      lastUpdated: "",
+      structureType,
+      generalDescription: "",
+      inspectionType: "",
+      companyName,
+      inspectorName,
+      structureNumber: "",
+      structureName: "",
+      structureMarking: "",
+      roadNumber: "",
+      runningDistance: "",
+      area: "",
+      fullStructureIncluded: true,
+      fullStructureNotes: "",
+      spanCount: "",
+      spanCountNotes: "",
+      adjacentStructures: "",
+      adjacentStructuresNotes: "",
+      siteRestrictions: "",
+      inspectionDate: "",
+      nextInspectionType: "",
+      nextInspectionDate: "",
+      classificationForInspection: "",
+      coordinateNorth: "",
+      coordinateEast: ""
+    }
+  }, [profile, selectedPath])
+
+  const onInspectionSubmit = useCallback(
+    async (values: InspectionFormValues) => {
+      try {
+        const inspection = await inspectionApi.createInspection({
+          lastUpdated: toNull(values.lastUpdated),
+          structureType: values.structureType,
+          generalDescription: toNull(values.generalDescription),
+          inspectionType: toNull(values.inspectionType),
+          companyName: toNull(values.companyName),
+          inspectorName: toNull(values.inspectorName),
+          structureNumber: toNull(values.structureNumber),
+          structureName: toNull(values.structureName),
+          structureMarking: toNull(values.structureMarking),
+          roadNumber: toNull(values.roadNumber),
+          runningDistance: toNull(values.runningDistance),
+          area: toNull(values.area),
+          fullStructureIncluded: values.fullStructureIncluded,
+          fullStructureNotes: toNull(values.fullStructureNotes),
+          spanCount: toIntOrNull(values.spanCount),
+          spanCountNotes: toNull(values.spanCountNotes),
+          adjacentStructures: toIntOrNull(values.adjacentStructures),
+          adjacentStructuresNotes: toNull(values.adjacentStructuresNotes),
+          siteRestrictions: toNull(values.siteRestrictions),
+          inspectionDate: toNull(values.inspectionDate),
+          nextInspectionType: toNull(values.nextInspectionType),
+          nextInspectionDate: toNull(values.nextInspectionDate),
+          classificationForInspection: toNull(values.classificationForInspection),
+          coordinateNorth: toFloatOrNull(values.coordinateNorth),
+          coordinateEast: toFloatOrNull(values.coordinateEast)
+        })
+
+        toast.success("טופס הסקירה נשמר בהצלחה")
+        console.log("Inspection created:", inspection)
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "שגיאה בשמירת טופס הסקירה"
+        toast.error(message)
+      }
+    },
+    [toast]
   )
 
   const metadata = STEP_METADATA[currentStep - 1] || STEP_METADATA[STEP_METADATA.length - 1]
@@ -252,6 +349,9 @@ const CreateSkeleton: React.FC = () => {
                   onSubmit={onFinalSubmit}
                   onBack={handleBack}
                 />
+              ))
+              .with(6, () => (
+                <InspectionForm defaultValues={inspectionDefaults} onSubmit={onInspectionSubmit} onBack={() => setCurrentStep(5)} />
               ))
               .otherwise(() => null)}
           </div>

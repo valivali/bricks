@@ -9,11 +9,11 @@
 .radio-option {
   cursor: pointer;
   position: relative;
-  border: 2px solid rgb(var(--border));
+  border: 2px solid var(--border);
   border-radius: 1rem;
   padding: 1.5rem;
   transition: all 0.2s ease-in-out;
-  background: rgb(var(--background));
+  background: var(--background);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -28,19 +28,19 @@
   }
 
   &:hover {
-    border-color: rgb(var(--secondary));
-    background: rgb(var(--secondary) / 0.1);
+    border-color: var(--secondary);
+    background: var(--secondary-10);
   }
 
   &.selected {
-    border-color: rgb(var(--primary));
-    background: rgb(var(--primary) / 0.1);
+    border-color: var(--primary);
+    background: var(--primary-10);
     box-shadow:
-      0 4px 6px -1px rgb(var(--primary) / 0.1),
-      0 2px 4px -1px rgb(var(--primary) / 0.06);
+      0 4px 6px -1px var(--primary-10),
+      0 2px 4px -1px var(--primary-06);
 
     .radio-label {
-      color: rgb(var(--primary));
+      color: var(--primary);
       font-weight: 600;
     }
   }
@@ -58,9 +58,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgb(var(--border));
+    background: var(--border);
     border-radius: 0.75rem;
-    color: rgb(var(--dark));
+    color: var(--dark);
 
     .placeholder-icon {
       font-size: 0.75rem;
@@ -69,7 +69,7 @@
 
   .radio-label {
     font-size: 1.125rem;
-    color: rgb(var(--dark));
+    color: var(--dark);
     transition: color 0.2s;
   }
 }

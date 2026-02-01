@@ -3,7 +3,7 @@
 .text {
   font-family: var(--font-body);
   line-height: 1.6;
-  color: rgb(var(--foreground));
+  color: var(--foreground);
 }
 
 .title {
@@ -15,7 +15,7 @@
 .subtitle {
   font-family: var(--font-body);
   font-weight: 500;
-  color: rgb(var(--muted-foreground));
+  color: var(--muted-foreground);
 }
 
 .blockquote {
@@ -37,7 +37,7 @@
     display: block;
     margin-top: 0.5rem;
     font-size: var(--text-sm);
-    color: rgb(var(--muted-foreground));
+    color: var(--muted-foreground);
     font-family: var(--font-body);
     font-style: normal;
     font-weight: var(--font-weight-medium);
@@ -95,7 +95,7 @@
 }
 .text--xs {
   font-size: var(--text-xs);
-  color: rgb(var(--muted-foreground));
+  color: var(--muted-foreground);
 }
 
 .text--2xl {

@@ -1,6 +1,8 @@
 import { Router } from "express"
 import { pingSchema } from "../schemas/index.js"
 import authRoutes from "./auth.routes.js"
+import inspectionRoutes from "./inspection.routes.js"
+import profileRoutes from "./profile.routes.js"
 
 const router = Router()
 
@@ -19,6 +21,7 @@ router.post("/ping", (req, res) => {
 })
 
 router.use("/auth", authRoutes)
+router.use("/inspection", inspectionRoutes)
+router.use("/profile", profileRoutes)
 
 export default router
-

@@ -21,7 +21,7 @@
 
 .expandableCell {
   padding: 0 !important;
-  border-bottom: 1px solid rgb(var(--border));
+  border-bottom: 1px solid var(--border);
 }
 
 .expandableContent {

@@ -18,13 +18,16 @@
   &:focus-visible {
     outline: none;
     box-shadow:
-      0 0 0 2px rgb(var(--background)),
-      0 0 0 4px rgb(var(--ring));
+      0 0 0 2px var(--background),
+      0 0 0 4px var(--ring);
   }
 
   &:disabled {
     pointer-events: none;
-    opacity: 0.5;
+    opacity: 1;
+    background-color: var(--disabled);
+    border-color: var(--disabled-border);
+    color: var(--disabled-foreground);
   }
 
   & :global(svg) {
@@ -37,51 +40,51 @@
 
 /* Variants */
 .button--default {
-  background-color: rgb(var(--primary));
-  color: rgb(var(--primary-foreground));
+  background-color: var(--primary);
+  color: var(--primary-foreground);
 
   &:hover {
-    background-color: rgb(var(--primary) / 0.9);
+    background-color: var(--primary-90);
   }
 }
 
 .button--destructive {
-  background-color: rgb(var(--destructive));
-  color: rgb(var(--destructive-foreground));
+  background-color: var(--destructive);
+  color: var(--destructive-foreground);
 
   &:hover {
-    background-color: rgb(var(--destructive) / 0.9);
+    background-color: var(--destructive-90);
   }
 }
 
 .button--outline {
-  border-color: rgb(var(--border));
-  background-color: rgb(var(--background));
+  border-color: var(--border);
+  background-color: var(--background);
 
   &:hover {
-    background-color: rgb(var(--muted));
-    color: rgb(var(--foreground));
+    background-color: var(--muted);
+    color: var(--foreground);
   }
 }
 
 .button--secondary {
-  background-color: rgb(var(--secondary));
-  color: rgb(var(--secondary-foreground));
+  background-color: var(--secondary);
+  color: var(--secondary-foreground);
 
   &:hover {
-    background-color: rgb(var(--secondary) / 0.8);
+    background-color: var(--secondary-80);
   }
 }
 
 .button--ghost {
   &:hover {
-    background-color: rgb(var(--muted));
-    color: rgb(var(--foreground));
+    background-color: var(--muted);
+    color: var(--foreground);
   }
 }
 
 .button--link {
-  color: rgb(var(--primary));
+  color: var(--primary);
   text-underline-offset: 4px;
 
   &:hover {

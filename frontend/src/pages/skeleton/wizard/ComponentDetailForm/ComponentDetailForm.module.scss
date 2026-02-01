@@ -8,7 +8,7 @@
   display: flex;
   gap: 1rem;
   font-size: 0.85rem;
-  color: rgb(var(--muted));
+  color: var(--muted);
   margin-bottom: 0.5rem;
 }
 
@@ -21,7 +21,7 @@
 .tableWrapper {
   overflow-x: auto;
   border-radius: 1rem;
-  border: 1px solid rgb(var(--border));
+  border: 1px solid var(--border);
 }
 
 .componentsTable {
@@ -31,11 +31,11 @@
   font-size: 0.95rem;
 
   th {
-    background: rgb(var(--secondary) / 0.1);
-    color: rgb(var(--dark));
+    background: var(--secondary-10);
+    color: var(--dark);
     padding: 1rem;
     font-weight: 600;
-    border-bottom: 2px solid rgb(var(--border));
+    border-bottom: 2px solid var(--border);
     white-space: nowrap;
   }
 
@@ -46,20 +46,20 @@
       cursor: pointer;
 
       &:hover td {
-        background: rgb(var(--secondary) / 0.05);
+        background: var(--secondary-05);
       }
     }
   }
 
   td {
     padding: 1rem;
-    border-bottom: 1px solid rgb(var(--border));
-    color: rgb(var(--foreground));
+    border-bottom: 1px solid var(--border);
+    color: var(--foreground);
     vertical-align: middle;
 
     &.calculatedCell {
       font-weight: 600;
-      color: rgb(var(--primary));
+      color: var(--primary);
     }
 
     &.masterCommentsCell {
@@ -99,16 +99,16 @@
   align-items: center;
   gap: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid rgb(var(--border));
+  border-bottom: 1px solid var(--border);
   margin-bottom: 0.5rem;
 }
 
 .componentTitle {
   font-size: 1.1rem;
-  color: rgb(var(--foreground));
+  color: var(--foreground);
 
   strong {
-    color: rgb(var(--primary));
+    color: var(--primary);
   }
 }
 
@@ -204,9 +204,9 @@
   }
 
   &:focus {
-    border-color: rgb(var(--primary));
+    border-color: var(--primary);
     outline: none;
-    box-shadow: 0 0 0 2px rgba(var(--primary), 0.1);
+    box-shadow: 0 0 0 2px var(--primary-10);
   }
 }
 
