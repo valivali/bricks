@@ -4,6 +4,8 @@ import { ProtectedRoute } from "@/components/auth/ProtectedRoute"
 import { ProtectedLayout } from "@/components/layout/ProtectedLayout/ProtectedLayout"
 import CreateSkeleton from "@/pages/skeleton/create-skeleton"
 import { Profile } from "@/pages/profile/Profile"
+import { Structures } from "@/pages/structures/Structures"
+import { StructureIdForm } from "@/pages/structure-id/StructureIdForm"
 import { Login } from "@/pages/auth/Login"
 import { Signup } from "@/pages/auth/Signup"
 import { ForgotPassword } from "@/pages/auth/ForgotPassword"
@@ -38,6 +40,36 @@ function App() {
             <ProtectedRoute>
               <ProtectedLayout>
                 <Profile />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/structures"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <Structures />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/structure-id/new"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <StructureIdForm />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/structure-id/:id"
+          element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <StructureIdForm />
               </ProtectedLayout>
             </ProtectedRoute>
           }

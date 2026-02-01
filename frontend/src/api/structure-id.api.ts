@@ -1,0 +1,181 @@
+import { apiClient } from "./client"
+
+export interface StructureIdDto {
+  id: string
+  userId: string
+  structureNumber: string | null
+  structureName: string | null
+  structureMarking: string | null
+  generalDescription: string | null
+  area: string | null
+  belongsToRoad: string | null
+  runningDistanceKm: string | null
+  runningDistanceStart: string | null
+  runningDistanceEnd: string | null
+  coordinateNorth: string | null
+  coordinateEast: string | null
+  primaryClassificationGroup: string | null
+  secondaryClassificationGroup: string | null
+  trafficFunctionClass: string | null
+  emergencyClass: string | null
+  builtBy: string | null
+  owner: string | null
+  maintenanceResponsibility: string | null
+  tollRoad: string | null
+  specialTransport: string | null
+  historicalValue: string | null
+  temporaryStructure: string | null
+  constructionYear: string | null
+  lastRehabYear: string | null
+  primaryUsageAbove: string | null
+  primaryRoadNumberAbove: string | null
+  secondaryUsageAbove: string | null
+  secondaryRoadNumberAbove: string | null
+  tracksOrRailwaysAbove: number | null
+  lanesAbove: number | null
+  trafficDirectionAbove: string | null
+  primaryUsageBelow: string | null
+  primaryRoadNumberBelow: string | null
+  secondaryUsageBelow: string | null
+  secondaryRoadNumberBelow: string | null
+  tracksOrRailwaysBelow: number | null
+  lanesBelow: number | null
+  trafficDirectionBelow: string | null
+  aadt: number | null
+  aadtYear: string | null
+  aadtt: number | null
+  bypassPossible: string | null
+  bypassLength: number | null
+  bypassDescription: string | null
+  localBypass: string | null
+  localBypassMethod: string | null
+  localBypassMethodOther: string | null
+  originalPlanner: string | null
+  rehabPlanner: string | null
+  spanCount: number | null
+  maxSpanLength: number | null
+  totalLength: number | null
+  lengthRight: number | null
+  lengthLeft: number | null
+  spanDistribution: string | null
+  widthChange: string | null
+  minWidthPerpendicular: number | null
+  maxWidthPerpendicular: number | null
+  maxExternalWidth: number | null
+  minExternalWidth: number | null
+  rightSidewalkWidth: number | null
+  leftSidewalkWidth: number | null
+  minRoadwayWidth: number | null
+  totalRoadwayWidth: number | null
+  separatorType: string | null
+  separatorTypeOther: string | null
+  skewAngle: number | null
+  minVerticalClearanceBelow: number | null
+  verticalClearanceDrainage: number | null
+  minVerticalClearanceAbove: number | null
+  heightSignageValue: number | null
+  minHorizontalClearance: number | null
+  maxPierHeight: number | null
+  maxWallHeight: number | null
+  avgJointSpacing: number | null
+  minDistanceYellowLineTop: number | null
+  minDistanceYellowLineBottom: number | null
+  wallFaceArea: number | null
+  deckArea: number | null
+  maxTheoreticalVerticalDim: number | null
+  maxHorizontalDim: number | null
+  minVerticalClearanceTunnel: number | null
+  minHorizontalClearanceTunnel: number | null
+  deckTypeCount: number | null
+  deckTypes: string | null
+  deckTypesOther: string | null
+  floorType: string | null
+  floorTypeOther: string | null
+  abutment1Type: string | null
+  abutment1TypeOther: string | null
+  abutment2Type: string | null
+  abutment2TypeOther: string | null
+  pierTypeCount: number | null
+  pierTypes: string | null
+  pierTypesOther: string | null
+  prestressingType: string | null
+  prestressingTypeOther: string | null
+  bearingTypes: string | null
+  bearingTypesOther: string | null
+  jointTypes: string | null
+  jointTypesOther: string | null
+  deckMaterials: string | null
+  deckMaterialsOther: string | null
+  beamMaterials: string | null
+  beamMaterialsOther: string | null
+  abutmentMaterials: string | null
+  abutmentMaterialsOther: string | null
+  pierMaterials: string | null
+  pierMaterialsOther: string | null
+  slopeProtectionMaterials: string | null
+  slopeProtectionMaterialsOther: string | null
+  vehicleBarrierMaterials: string | null
+  vehicleBarrierMaterialsOther: string | null
+  pedestrianRailingMaterials: string | null
+  pedestrianRailingMaterialsOther: string | null
+  deckCoveringMaterials: string | null
+  deckCoveringMaterialsOther: string | null
+  deckSealingMaterials: string | null
+  deckSealingMaterialsOther: string | null
+  curbMaterials: string | null
+  curbMaterialsOther: string | null
+  loadRatingMethod: string | null
+  loadRatingResult: string | null
+  loadRatingDate: string | null
+  seismicRatingMethod: string | null
+  seismicRatingResult: string | null
+  seismicRatingDate: string | null
+  approvedLoadLimits: number | null
+  loadSignage: number | null
+  infrastructureTypes: string | null
+  infrastructureTypesOther: string | null
+  maxRelativeLevel: number | null
+  designReturnPeriod: number | null
+  hydraulicAdequacy: string | null
+  conditionPIav: number | null
+  conditionPIcrit: number | null
+  availabilityPI: number | null
+  reliabilityPI: number | null
+  inspectionClassification: string | null
+  initialInspectionDate: string | null
+  lastRoutineInspectionDate: string | null
+  routineInspectionFrequency: number | null
+  damageControlInspectionDate: string | null
+  underwaterInspectionDate: string | null
+  thoroughInspectionDate: string | null
+  specialInspectionDate: string | null
+  createdAt: string
+  updatedAt: string
+}
+
+type WritableStructureIdFields = Omit<StructureIdDto, "id" | "userId" | "createdAt" | "updatedAt">
+type WriteField<T> = T extends number | null ? T | string : T
+
+export type CreateStructureIdRequest = Partial<{
+  [K in keyof WritableStructureIdFields]: WriteField<WritableStructureIdFields[K]>
+}>
+
+export type UpdateStructureIdRequest = Partial<CreateStructureIdRequest>
+
+export const structureIdApi = {
+  createStructureId: (data: CreateStructureIdRequest): Promise<StructureIdDto> => {
+    return apiClient.post<StructureIdDto>("/structure-id", data)
+  },
+  updateStructureId: (id: string, data: UpdateStructureIdRequest): Promise<StructureIdDto> => {
+    return apiClient.put<StructureIdDto>(`/structure-id/${id}`, data)
+  },
+  getStructureIdById: (id: string): Promise<StructureIdDto> => {
+    return apiClient.get<StructureIdDto>(`/structure-id/${id}`)
+  },
+  getUserStructureIds: (): Promise<StructureIdDto[]> => {
+    return apiClient.get<StructureIdDto[]>("/structure-id")
+  },
+  deleteStructureId: (id: string): Promise<void> => {
+    return apiClient.delete(`/structure-id/${id}`)
+  }
+}
