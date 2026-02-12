@@ -7,6 +7,7 @@ const inspectionController = InspectionController.build()
 
 router.post("/", authMiddleware, inspectionController.createInspection)
 router.get("/user", authMiddleware, inspectionController.getUserInspections)
+router.get("/structure/:structureId", authMiddleware, inspectionController.getStructureInspections)
 router.get("/:id", authMiddleware, inspectionController.getInspectionById)
 router.put("/:id", authMiddleware, inspectionController.updateInspection)
 

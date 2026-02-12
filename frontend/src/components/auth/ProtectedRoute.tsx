@@ -1,4 +1,5 @@
 import { Navigate } from "react-router-dom"
+
 import { useAuthContext } from "@/contexts/AuthContext"
 
 interface ProtectedRouteProps {
@@ -10,12 +11,13 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
   if (isLoading) {
     return (
-      <div style={{ 
-        display: "flex", 
-        alignItems: "center", 
-        justifyContent: "center", 
-        minHeight: "100vh" 
-      }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "100vh"
+        }}>
         Loading...
       </div>
     )

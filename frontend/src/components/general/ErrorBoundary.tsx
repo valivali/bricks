@@ -1,5 +1,6 @@
 import type { ErrorInfo, ReactNode } from "react"
 import { Component } from "react"
+
 import { Button } from "@/components/UI/button/button"
 
 interface Props {

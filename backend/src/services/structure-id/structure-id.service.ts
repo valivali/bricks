@@ -1,12 +1,11 @@
-import type { PrismaClient } from "../../generated/prisma/client.js"
 import type { StructureId } from "../../generated/prisma/client.js"
 import type { StructureIdDto } from "../../dto/structure-id.dto.js"
 import type { CreateStructureIdInput, UpdateStructureIdInput } from "../../schemas/structure-id.schema.js"
-import { prisma } from "../../lib/prisma.js"
+import { prisma, type PrismaDbClient } from "../../lib/prisma.js"
 import { StructureIdServiceInterface } from "./structure-id.interface.js"
 
 export class StructureIdService implements StructureIdServiceInterface {
-  constructor(private readonly prismaClient: PrismaClient) {}
+  constructor(private readonly prismaClient: PrismaDbClient) {}
 
   async createStructureId(userId: string, data: CreateStructureIdInput): Promise<StructureIdDto> {
     const structureId = await this.prismaClient.structureId.create({
@@ -90,6 +89,15 @@ export class StructureIdService implements StructureIdServiceInterface {
       runningDistanceEnd: structureId.runningDistanceEnd,
       coordinateNorth: structureId.coordinateNorth,
       coordinateEast: structureId.coordinateEast,
+      structureType: structureId.structureType,
+      structureSubType: structureId.structureSubType,
+      structureDetailType: structureId.structureDetailType,
+      inventoryComponentName: structureId.inventoryComponentName,
+      inspectionType: structureId.inspectionType,
+      plannedInspectionDate: structureId.plannedInspectionDate?.toISOString() ?? null,
+      inspector: structureId.inspector,
+      inspectionCompany: structureId.inspectionCompany,
+      inspectionStatus: structureId.inspectionStatus,
       primaryClassificationGroup: structureId.primaryClassificationGroup,
       secondaryClassificationGroup: structureId.secondaryClassificationGroup,
       trafficFunctionClass: structureId.trafficFunctionClass,
@@ -123,6 +131,7 @@ export class StructureIdService implements StructureIdServiceInterface {
       bypassPossible: structureId.bypassPossible,
       bypassLength: structureId.bypassLength,
       bypassDescription: structureId.bypassDescription,
+      bypassDescriptionImage: structureId.bypassDescriptionImage,
       localBypass: structureId.localBypass,
       localBypassMethod: structureId.localBypassMethod,
       localBypassMethodOther: structureId.localBypassMethodOther,

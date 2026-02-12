@@ -12,6 +12,15 @@ export type StructureIdDto = {
   runningDistanceEnd: string | null
   coordinateNorth: string | null
   coordinateEast: string | null
+  structureType: string | null
+  structureSubType: string | null
+  structureDetailType: string | null
+  inventoryComponentName: string | null
+  inspectionType: string | null
+  plannedInspectionDate: string | null
+  inspector: string | null
+  inspectionCompany: string | null
+  inspectionStatus: string | null
   primaryClassificationGroup: string | null
   secondaryClassificationGroup: string | null
   trafficFunctionClass: string | null
@@ -45,6 +54,7 @@ export type StructureIdDto = {
   bypassPossible: string | null
   bypassLength: number | null
   bypassDescription: string | null
+  bypassDescriptionImage: string | null
   localBypass: string | null
   localBypassMethod: string | null
   localBypassMethodOther: string | null

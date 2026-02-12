@@ -1,6 +1,8 @@
-import React, { useState } from "react"
-import { type StructuralComponent } from "@/config/skeleton-data"
+import React, { useEffect, useState } from "react"
+
 import { Button } from "@/components/UI/button/button"
+import { type StructuralComponent } from "@/config/skeleton-data"
+
 import styles from "./ComponentQuantitySelection.module.scss"
 
 interface ComponentQuantitySelectionProps {
@@ -12,6 +14,9 @@ interface ComponentQuantitySelectionProps {
 
 const ComponentQuantitySelection: React.FC<ComponentQuantitySelectionProps> = ({ components, initialQuantities, onNext, onBack }) => {
   const [quantities, setQuantities] = useState<Record<string, string>>(initialQuantities)
+  useEffect(() => {
+    setQuantities(initialQuantities)
+  }, [initialQuantities])
 
   const handleQuantityChange = (componentId: string, value: string) => {
     setQuantities(prev => ({

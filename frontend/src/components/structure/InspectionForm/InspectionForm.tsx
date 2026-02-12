@@ -1,8 +1,10 @@
+import { zodResolver } from "@hookform/resolvers/zod"
 import React, { useEffect } from "react"
 import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
+
 import { Button } from "@/components/UI/button/button"
-import { inspectionSchema, type InspectionFormValues } from "@/schemas/inspection.schema"
+import { type InspectionFormValues, inspectionSchema } from "@/schemas/inspection.schema"
+
 import styles from "./InspectionForm.module.scss"
 
 const nextInspectionOptions = [

@@ -1,4 +1,5 @@
 import type { FieldErrors, UseFormRegister } from "react-hook-form"
+
 import type { StructureIdFormValues } from "@/schemas/structure-id.schema"
 
 export type StructureIdSectionBaseProps = {

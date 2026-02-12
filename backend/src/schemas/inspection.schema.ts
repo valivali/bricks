@@ -60,6 +60,7 @@ const optionalBoolean = z.preprocess(value => {
 }, z.boolean().optional())
 
 export const createInspectionSchema = z.object({
+  structureId: z.string().uuid().nullable().optional(),
   lastUpdated: optionalDate,
   structureType: stringNoHtml(200),
   generalDescription: optionalString(1000),

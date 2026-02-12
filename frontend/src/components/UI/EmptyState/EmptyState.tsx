@@ -1,7 +1,8 @@
 import React from "react"
-import styles from "./EmptyState.module.scss"
-import { Title, Text } from "../Text/text"
+
 import { Button } from "../button/button"
+import { Text, Title } from "../Text/text"
+import styles from "./EmptyState.module.scss"
 
 interface EmptyStateProps {
   title: string

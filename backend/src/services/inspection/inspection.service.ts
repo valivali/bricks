@@ -1,12 +1,11 @@
-import type { PrismaClient } from "../../generated/prisma/client.js"
 import type { Inspection } from "../../generated/prisma/client.js"
 import type { InspectionDto } from "../../dto/inspection.dto.js"
 import type { CreateInspectionInput, UpdateInspectionInput } from "../../schemas/inspection.schema.js"
-import { prisma } from "../../lib/prisma.js"
+import { prisma, type PrismaDbClient } from "../../lib/prisma.js"
 import { InspectionServiceInterface } from "./inspection.interface.js"
 
 export class InspectionService implements InspectionServiceInterface {
-  constructor(private readonly prismaClient: PrismaClient) {}
+  constructor(private readonly prismaClient: PrismaDbClient) {}
 
   async createInspection(userId: string, data: CreateInspectionInput): Promise<InspectionDto> {
     const inspection = await this.prismaClient.inspection.create({
@@ -57,6 +56,23 @@ export class InspectionService implements InspectionServiceInterface {
     return inspections.map(inspection => this.toDto(inspection))
   }
 
+  async getStructureInspections(userId: string, structureId: string): Promise<InspectionDto[]> {
+    const structure = await this.prismaClient.structureId.findFirst({
+      where: { id: structureId, userId }
+    })
+
+    if (!structure) {
+      throw new Error("Structure not found")
+    }
+
+    const inspections = await this.prismaClient.inspection.findMany({
+      where: { structureId },
+      orderBy: { createdAt: "desc" }
+    })
+
+    return inspections.map(inspection => this.toDto(inspection))
+  }
+
   static build(): InspectionService {
     return new InspectionService(prisma)
   }
@@ -65,6 +81,7 @@ export class InspectionService implements InspectionServiceInterface {
     return {
       id: inspection.id,
       userId: inspection.userId,
+      structureId: inspection.structureId ?? null,
       lastUpdated: inspection.lastUpdated?.toISOString() ?? null,
       structureType: inspection.structureType,
       generalDescription: inspection.generalDescription ?? null,

@@ -7,10 +7,7 @@ export const signupSchema = z.object({
   password: z
     .string()
     .min(8, "הסיסמה חייבת להיות לפחות 8 תווים")
-    .regex(
-      passwordRegex,
-      "הסיסמה חייבת לכלול לפחות אות קטנה, אות גדולה, מספר ותו מיוחד"
-    )
+    .regex(passwordRegex, "הסיסמה חייבת לכלול לפחות אות קטנה, אות גדולה, מספר ותו מיוחד")
 })
 
 export const loginSchema = z.object({
@@ -26,10 +23,7 @@ export const resetPasswordSchema = z.object({
   password: z
     .string()
     .min(8, "הסיסמה חייבת להיות לפחות 8 תווים")
-    .regex(
-      passwordRegex,
-      "הסיסמה חייבת לכלול לפחות אות קטנה, אות גדולה, מספר ותו מיוחד"
-    )
+    .regex(passwordRegex, "הסיסמה חייבת לכלול לפחות אות קטנה, אות גדולה, מספר ותו מיוחד")
 })
 
 export type SignupFormData = z.infer<typeof signupSchema>

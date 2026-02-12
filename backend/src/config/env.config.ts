@@ -4,6 +4,8 @@ dotenv.config()
 
 interface EnvConfig {
   port: number
+  logProvider: string
+  logLevel: string
   jwtSecret: string
   jwtExpiresIn: string
   refreshTokenExpiresInDays: number
@@ -15,11 +17,7 @@ interface EnvConfig {
 }
 
 function validateEnv(): EnvConfig {
-  const requiredVars = [
-    "JWT_SECRET",
-    "RESEND_API_KEY",
-    "DATABASE_URL"
-  ]
+  const requiredVars = ["JWT_SECRET", "RESEND_API_KEY", "DATABASE_URL"]
 
   const missing = requiredVars.filter(v => !process.env[v])
   if (missing.length > 0) {
@@ -28,6 +26,8 @@ function validateEnv(): EnvConfig {
 
   return {
     port: Number(process.env.PORT) || 4000,
+    logProvider: process.env.LOG_PROVIDER || "console",
+    logLevel: process.env.LOG_LEVEL || "info",
     jwtSecret: process.env.JWT_SECRET!,
     jwtExpiresIn: process.env.JWT_EXPIRES_IN || "7d",
     refreshTokenExpiresInDays: Number(process.env.REFRESH_TOKEN_EXPIRES_IN_DAYS) || 30,

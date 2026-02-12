@@ -1,5 +1,6 @@
-import React, { createContext, useContext } from "react"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import React, { createContext, useContext } from "react"
+
 import type { UpdateProfileRequest, UserProfileDto } from "@/api/profile.api"
 import { profileApi } from "@/api/profile.api"
 import { useAuthContext } from "@/contexts/AuthContext"

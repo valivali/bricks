@@ -1,12 +1,14 @@
-import { useState } from "react"
-import { Link } from "react-router-dom"
-import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { Link } from "react-router-dom"
+
+import { Button } from "@/components/UI/button/button"
+import { Subtitle, Text, Title } from "@/components/UI/Text/text"
 import { useForgotPassword } from "@/hooks/useAuth"
 import { useToast } from "@/hooks/useToast"
-import { forgotPasswordSchema, type ForgotPasswordFormData } from "@/schemas/auth.schema"
-import { Button } from "@/components/UI/button/button"
-import { Text, Title, Subtitle } from "@/components/UI/Text/text"
+import { type ForgotPasswordFormData, forgotPasswordSchema } from "@/schemas/auth.schema"
+
 import styles from "./auth.module.scss"
 
 export const ForgotPassword = () => {
@@ -66,8 +68,7 @@ export const ForgotPassword = () => {
           {resetUrl && (
             <div className={styles.infoAlert}>
               <Text variant="p">
-                קישור לאיפוס סיסמה (פיתוח):{" "}
-                <a href={resetUrl}>{resetUrl}</a>
+                קישור לאיפוס סיסמה (פיתוח): <a href={resetUrl}>{resetUrl}</a>
               </Text>
             </div>
           )}
@@ -83,7 +84,7 @@ export const ForgotPassword = () => {
               className={`${styles.input} ${emailHasError ? styles.inputError : ""}`}
               placeholder="you@example.com"
               onFocus={() => setFocusedField("email")}
-              onBlur={(event) => {
+              onBlur={event => {
                 emailField.onBlur(event)
                 setFocusedField(null)
               }}
@@ -95,12 +96,7 @@ export const ForgotPassword = () => {
             )}
           </div>
 
-          <Button
-            type="submit"
-            size="lg"
-            className={styles.submitButton}
-            isLoading={forgotPasswordMutation.isPending}
-          >
+          <Button type="submit" size="lg" className={styles.submitButton} isLoading={forgotPasswordMutation.isPending}>
             <Text variant="span">שליחת קישור לאיפוס</Text>
           </Button>
 

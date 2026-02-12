@@ -1,6 +1,11 @@
 import React from "react"
+
+import { FieldError } from "@/components/structure-id/FieldError"
+import { ImageUpload } from "@/components/UI/ImageUpload/ImageUpload"
 import { Text, Title } from "@/components/UI/Text/text"
 import styles from "@/pages/structure-id/structure-id.module.scss"
+
+import type { StructureIdSectionBaseProps } from "../sectionTypes"
 import {
   BYPASS_POSSIBLE_OPTIONS,
   LOCAL_BYPASS_METHOD_OPTIONS,
@@ -8,13 +13,21 @@ import {
   TRAFFIC_DIRECTION_OPTIONS,
   USAGE_OPTIONS
 } from "../structureIdOptions"
-import type { StructureIdSectionBaseProps } from "../sectionTypes"
 
 type MainServiceDataSectionProps = StructureIdSectionBaseProps & {
   localBypassMethodValue?: string
+  bypassDescriptionImageValue?: string
+  onBypassDescriptionImageChange: (value: string | null) => void
 }
 
-export const MainServiceDataSection: React.FC<MainServiceDataSectionProps> = ({ register, isReadonly, localBypassMethodValue }) => (
+export const MainServiceDataSection: React.FC<MainServiceDataSectionProps> = ({
+  register,
+  errors,
+  isReadonly,
+  localBypassMethodValue,
+  bypassDescriptionImageValue,
+  onBypassDescriptionImageChange
+}) => (
   <section className={styles.section}>
     <Title level={3} className={styles.sectionTitle}>
       נתוני שירות עיקריים
@@ -31,11 +44,13 @@ export const MainServiceDataSection: React.FC<MainServiceDataSectionProps> = ({ 
           maxLength={4}
           placeholder="YYYY"
         />
+        <FieldError errors={errors} name="constructionYear" />
       </label>
 
       <label className={styles.field}>
         <span className={styles.label}>3.2 שנת שיקום אחרון</span>
         <input type="text" {...register("lastRehabYear")} className={styles.input} disabled={isReadonly} maxLength={4} placeholder="YYYY" />
+        <FieldError errors={errors} name="lastRehabYear" />
       </label>
 
       <label className={styles.field}>
@@ -48,11 +63,13 @@ export const MainServiceDataSection: React.FC<MainServiceDataSectionProps> = ({ 
             </option>
           ))}
         </select>
+        <FieldError errors={errors} name="primaryUsageAbove" />
       </label>
 
       <label className={styles.field}>
         <span className={styles.label}>3.3.1 מספר כביש עיקרי מעל</span>
         <input type="text" {...register("primaryRoadNumberAbove")} className={styles.input} disabled={isReadonly} />
+        <FieldError errors={errors} name="primaryRoadNumberAbove" />
       </label>
 
       <label className={styles.field}>
@@ -65,21 +82,25 @@ export const MainServiceDataSection: React.FC<MainServiceDataSectionProps> = ({ 
             </option>
           ))}
         </select>
+        <FieldError errors={errors} name="secondaryUsageAbove" />
       </label>
 
       <label className={styles.field}>
         <span className={styles.label}>3.4.1 מספר כביש משני מעל</span>
         <input type="text" {...register("secondaryRoadNumberAbove")} className={styles.input} disabled={isReadonly} />
+        <FieldError errors={errors} name="secondaryRoadNumberAbove" />
       </label>
 
       <label className={styles.field}>
         <span className={styles.label}>3.5 מספר מסלולים ו/או מסילות רכבת מעל</span>
         <input type="text" {...register("tracksOrRailwaysAbove")} className={styles.input} disabled={isReadonly} />
+        <FieldError errors={errors} name="tracksOrRailwaysAbove" />
       </label>
 
       <label className={styles.field}>
         <span className={styles.label}>3.6 מספר נתיבים מעל</span>
         <input type="text" {...register("lanesAbove")} className={styles.input} disabled={isReadonly} />
+        <FieldError errors={errors} name="lanesAbove" />
       </label>
 
       <label className={styles.field}>
@@ -92,6 +113,7 @@ export const MainServiceDataSection: React.FC<MainServiceDataSectionProps> = ({ 
             </option>
           ))}
         </select>
+        <FieldError errors={errors} name="trafficDirectionAbove" />
       </label>
 
       <label className={styles.field}>
@@ -104,11 +126,13 @@ export const MainServiceDataSection: React.FC<MainServiceDataSectionProps> = ({ 
             </option>
           ))}
         </select>
+        <FieldError errors={errors} name="primaryUsageBelow" />
       </label>
 
       <label className={styles.field}>
         <span className={styles.label}>3.8.1 מספר כביש עיקרי מתחת</span>
         <input type="text" {...register("primaryRoadNumberBelow")} className={styles.input} disabled={isReadonly} />
+        <FieldError errors={errors} name="primaryRoadNumberBelow" />
       </label>
 
       <label className={styles.field}>
@@ -121,21 +145,25 @@ export const MainServiceDataSection: React.FC<MainServiceDataSectionProps> = ({ 
             </option>
           ))}
         </select>
+        <FieldError errors={errors} name="secondaryUsageBelow" />
       </label>
 
       <label className={styles.field}>
         <span className={styles.label}>3.9.1 מספר כביש משני מתחת</span>
         <input type="text" {...register("secondaryRoadNumberBelow")} className={styles.input} disabled={isReadonly} />
+        <FieldError errors={errors} name="secondaryRoadNumberBelow" />
       </label>
 
       <label className={styles.field}>
         <span className={styles.label}>3.10 מספר מסלולים ו/או מסילות רכבת מתחת</span>
         <input type="text" {...register("tracksOrRailwaysBelow")} className={styles.input} disabled={isReadonly} />
+        <FieldError errors={errors} name="tracksOrRailwaysBelow" />
       </label>
 
       <label className={styles.field}>
         <span className={styles.label}>3.11 מספר נתיבים מתחת</span>
         <input type="text" {...register("lanesBelow")} className={styles.input} disabled={isReadonly} />
+        <FieldError errors={errors} name="lanesBelow" />
       </label>
 
       <label className={styles.field}>
@@ -148,6 +176,7 @@ export const MainServiceDataSection: React.FC<MainServiceDataSectionProps> = ({ 
             </option>
           ))}
         </select>
+        <FieldError errors={errors} name="trafficDirectionBelow" />
       </label>
 
       <label className={styles.field}>
@@ -178,17 +207,44 @@ export const MainServiceDataSection: React.FC<MainServiceDataSectionProps> = ({ 
             </option>
           ))}
         </select>
+        <FieldError errors={errors} name="bypassPossible" />
       </label>
 
       <label className={styles.field}>
         <span className={styles.label}>3.17 אורך מעקף (ק״מ)</span>
         <input type="text" {...register("bypassLength")} className={styles.input} disabled={isReadonly} />
+        <FieldError errors={errors} name="bypassLength" />
       </label>
 
       <label className={`${styles.field} ${styles.fullWidth}`}>
         <span className={styles.label}>3.18 תיאור תוואי מעקף מועדף</span>
         <textarea {...register("bypassDescription")} className={styles.textarea} disabled={isReadonly} rows={3} />
+        <FieldError errors={errors} name="bypassDescription" />
       </label>
+
+      <div className={`${styles.field} ${styles.fullWidth}`}>
+        {isReadonly ? (
+          <>
+            <span className={styles.label}>תמונה לתיאור תוואי מעקף מועדף</span>
+            {bypassDescriptionImageValue ? (
+              <img src={bypassDescriptionImageValue} alt="תמונת מעקף מועדף" className={styles.bypassImagePreview} />
+            ) : (
+              <Text className={styles.restricted}>לא הועלתה תמונה</Text>
+            )}
+          </>
+        ) : (
+          <>
+            <ImageUpload
+              label="תמונה לתיאור תוואי מעקף מועדף"
+              value={bypassDescriptionImageValue || null}
+              onChange={onBypassDescriptionImageChange}
+              helperText="פורמטים נתמכים: JPG, PNG, WEBP (עד 2MB)"
+              shape="rect"
+            />
+            <FieldError errors={errors} name="bypassDescriptionImage" />
+          </>
+        )}
+      </div>
 
       <label className={styles.field}>
         <span className={styles.label}>3.19 מעקף מקומי</span>
@@ -200,6 +256,7 @@ export const MainServiceDataSection: React.FC<MainServiceDataSectionProps> = ({ 
             </option>
           ))}
         </select>
+        <FieldError errors={errors} name="localBypass" />
       </label>
 
       <label className={styles.field}>
@@ -212,23 +269,27 @@ export const MainServiceDataSection: React.FC<MainServiceDataSectionProps> = ({ 
             </option>
           ))}
         </select>
+        <FieldError errors={errors} name="localBypassMethod" />
       </label>
 
       {localBypassMethodValue === "3.20-6" && (
         <label className={styles.field}>
           <span className={styles.label}>3.20 פירוט אחר</span>
           <textarea {...register("localBypassMethodOther")} className={styles.textarea} disabled={isReadonly} rows={2} />
+          <FieldError errors={errors} name="localBypassMethodOther" />
         </label>
       )}
 
       <label className={styles.field}>
         <span className={styles.label}>3.21 מתכנן מקורי</span>
         <input type="text" {...register("originalPlanner")} className={styles.input} disabled={isReadonly} />
+        <FieldError errors={errors} name="originalPlanner" />
       </label>
 
       <label className={styles.field}>
         <span className={styles.label}>3.22 מתכנן שיקום / הרחבה</span>
         <input type="text" {...register("rehabPlanner")} className={styles.input} disabled={isReadonly} />
+        <FieldError errors={errors} name="rehabPlanner" />
       </label>
     </div>
   </section>

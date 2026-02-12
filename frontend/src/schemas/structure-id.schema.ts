@@ -1,37 +1,60 @@
 import { z } from "zod"
 
-const stringNoHtml = (max: number) =>
-  z
-    .string()
-    .trim()
-    .max(max, `עד ${max} תווים`)
-    .refine(value => !/[<>]/.test(value), "תווים לא תקינים")
-
 const optionalString = (max: number) =>
-  stringNoHtml(max)
+  z
+    .union([z.string(), z.number(), z.null(), z.undefined()])
     .optional()
-    .transform(value => (value && value.length > 0 ? value : undefined))
+    .transform(value => {
+      if (value === undefined || value === null || value === "") return undefined
+      return String(value).trim()
+    })
+    .refine(value => value === undefined || !/[<>]/.test(value), "תווים לא תקינים")
+    .refine(value => value === undefined || value.length <= max, {
+      message: `עד ${max} תווים`
+    })
+
+const optionalImage = z
+  .union([z.string(), z.null(), z.undefined()])
+  .optional()
+  .transform(value => {
+    if (value === undefined || value === null || value === "") return undefined
+    return value.trim()
+  })
+  .refine(value => value === undefined || value.startsWith("data:image/"), "קובץ תמונה לא תקין")
+  .refine(value => value === undefined || value.length <= 3_000_000, "התמונה גדולה מדי")
 
 const optionalInt = z
-  .string()
-  .trim()
+  .union([z.string(), z.number(), z.null(), z.undefined()])
   .optional()
-  .transform(value => (value && value.length > 0 ? value : undefined))
-  .refine(value => value === undefined || /^\d+$/.test(value), "ערך לא תקין")
+  .transform(value => {
+    if (value === undefined || value === null || value === "") return undefined
+    if (typeof value === "number") return value
+    const parsed = parseInt(value, 10)
+    return isNaN(parsed) ? undefined : parsed
+  })
+  .refine(value => value === undefined || Number.isInteger(value), "חובה להזין מספר שלם")
 
 const optionalFloat = z
-  .string()
-  .trim()
+  .union([z.string(), z.number(), z.null(), z.undefined()])
   .optional()
-  .transform(value => (value && value.length > 0 ? value : undefined))
-  .refine(value => value === undefined || /^-?\d+(\.\d+)?$/.test(value), "ערך לא תקין")
+  .transform(value => {
+    if (value === undefined || value === null || value === "") return undefined
+    if (typeof value === "number") return value
+    const parsed = parseFloat(value)
+    return isNaN(parsed) ? undefined : parsed
+  })
+  .refine(value => value === undefined || !isNaN(value), "חובה להזין מספר תקין")
 
 const optionalDate = z
-  .string()
-  .trim()
+  .union([z.string(), z.date(), z.null(), z.undefined()])
   .optional()
-  .transform(value => (value && value.length > 0 ? value : undefined))
-  .refine(value => value === undefined || /^\d{4}-\d{2}-\d{2}$/.test(value), "תאריך לא תקין")
+  .transform(value => {
+    if (!value) return undefined
+    if (value instanceof Date) return value.toISOString().slice(0, 10)
+    const trimmed = value.trim()
+    return trimmed.length > 0 ? trimmed : undefined
+  })
+  .refine(value => value === undefined || /^\d{4}-\d{2}-\d{2}$/.test(value), "תאריך לא תקין (YYYY-MM-DD)")
 
 export const structureIdSchema = z.object({
   structureNumber: optionalString(50),
@@ -45,6 +68,16 @@ export const structureIdSchema = z.object({
   runningDistanceEnd: optionalString(10),
   coordinateNorth: optionalString(10),
   coordinateEast: optionalString(10),
+
+  structureType: optionalString(50),
+  structureSubType: optionalString(50),
+  structureDetailType: optionalString(50),
+  inventoryComponentName: optionalString(200),
+  inspectionType: optionalString(50),
+  plannedInspectionDate: optionalDate,
+  inspector: optionalString(200),
+  inspectionCompany: optionalString(200),
+  inspectionStatus: optionalString(50),
 
   primaryClassificationGroup: optionalString(10),
   secondaryClassificationGroup: optionalString(10),
@@ -80,6 +113,7 @@ export const structureIdSchema = z.object({
   bypassPossible: optionalString(10),
   bypassLength: optionalInt,
   bypassDescription: optionalString(1000),
+  bypassDescriptionImage: optionalImage,
   localBypass: optionalString(10),
   localBypassMethod: optionalString(10),
   localBypassMethodOther: optionalString(1000),
@@ -195,3 +229,12 @@ export const structureIdSchema = z.object({
 })
 
 export type StructureIdFormValues = z.input<typeof structureIdSchema>
+export type StructureIdValidatedValues = z.output<typeof structureIdSchema>
+
+export const normalizeDateForForm = (value: string | null): string | null => {
+  if (!value) return null
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value
+  const parsed = new Date(value)
+  if (Number.isNaN(parsed.getTime())) return null
+  return parsed.toISOString().slice(0, 10)
+}

@@ -1,6 +1,7 @@
 export type InspectionDto = {
   id: string
   userId: string
+  structureId: string | null
   lastUpdated: string | null
   structureType: string
   generalDescription: string | null

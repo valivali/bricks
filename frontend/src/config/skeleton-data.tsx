@@ -1,5 +1,6 @@
 import React from "react"
-import { BridgeIcon, WallIcon, SignageIcon, TunnelIcon } from "@/components/icons"
+
+import { BridgeIcon, SignageIcon, TunnelIcon, WallIcon } from "@/components/icons"
 
 export interface SkeletonOption {
   id: string

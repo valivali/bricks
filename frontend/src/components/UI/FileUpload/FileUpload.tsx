@@ -1,22 +1,30 @@
 import React, { useState } from "react"
+
+import { FileIcon, UploadIcon, XIcon } from "@/components/icons"
+
 import styles from "./FileUpload.module.scss"
-import { FileIcon, XIcon, UploadIcon } from "@/components/icons"
 
 interface FileUploadProps {
-  onFileSelect: (file: File | null) => void
+  onFilesSelect: (files: File[]) => void
   accept?: string
-  value?: string | null // Current file name or URL
-  onRemove?: () => void
+  values?: string[] // Current file names or URLs
+  onRemove?: (index: number) => void
+  multiple?: boolean
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, accept = "image/*,.pdf,.doc,.docx", value, onRemove }) => {
+const FileUpload: React.FC<FileUploadProps> = ({
+  onFilesSelect,
+  accept = "image/*,.pdf,.doc,.docx",
+  values = [],
+  onRemove,
+  multiple = true
+}) => {
   const [isDragging, setIsDragging] = useState(false)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0]
-      console.log("file uploaded", file.name)
-      onFileSelect(file)
+    if (e.target.files && e.target.files.length > 0) {
+      const selectedFiles = Array.from(e.target.files)
+      onFilesSelect(selectedFiles)
     }
   }
 
@@ -32,46 +40,52 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, accept = "image/*
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
     setIsDragging(false)
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      const file = e.dataTransfer.files[0]
-      console.log("file uploaded", file.name)
-      onFileSelect(file)
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const droppedFiles = Array.from(e.dataTransfer.files)
+      onFilesSelect(droppedFiles)
     }
   }
 
-  if (value) {
-    return (
-      <div className={styles.filePreview}>
-        <div className={styles.fileIcon}>
-          <FileIcon size={20} />
-        </div>
-        <span className={styles.fileName}>{value}</span>
-        <button
-          type="button"
-          className={styles.removeButton}
-          onClick={e => {
-            e.stopPropagation()
-            onRemove?.()
-          }}
-          title="הסר קובץ">
-          <XIcon size={16} />
-        </button>
-      </div>
-    )
-  }
-
   return (
-    <div
-      className={`${styles.uploadContainer} ${isDragging ? styles.dragging : ""}`}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}>
-      <label className={styles.uploadLabel}>
-        <input type="file" className={styles.hiddenInput} accept={accept} onChange={handleFileChange} />
-        <div className={styles.uploadIcon}>
-          <UploadIcon size={20} />
+    <div className={styles.multiUploadContainer}>
+      <div className={styles.previewsGrid}>
+        {values.map((file, index) => (
+          <div key={index} className={styles.filePreview}>
+            <div className={styles.fileIcon}>
+              {file.match(/\.(jpg|jpeg|png|gif|webp)$/i) ? (
+                <img src={file} alt="preview" className={styles.imagePreview} />
+              ) : (
+                <FileIcon size={20} />
+              )}
+            </div>
+            <span className={styles.fileName}>{file.split("/").pop()}</span>
+            <button
+              type="button"
+              className={styles.removeButton}
+              onClick={e => {
+                e.stopPropagation()
+                onRemove?.(index)
+              }}
+              title="הסר קובץ">
+              <XIcon size={14} />
+            </button>
+          </div>
+        ))}
+
+        <div
+          className={`${styles.uploadBox} ${isDragging ? styles.dragging : ""}`}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}>
+          <label className={styles.uploadLabel}>
+            <input type="file" className={styles.hiddenInput} accept={accept} onChange={handleFileChange} multiple={multiple} />
+            <div className={styles.uploadIcon}>
+              <UploadIcon size={20} />
+              <span>הוסף קובץ</span>
+            </div>
+          </label>
         </div>
-      </label>
+      </div>
     </div>
   )
 }

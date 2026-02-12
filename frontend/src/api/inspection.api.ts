@@ -3,6 +3,7 @@ import { apiClient } from "./client"
 export interface InspectionDto {
   id: string
   userId: string
+  structureId: string | null
   lastUpdated: string | null
   structureType: string
   generalDescription: string | null
@@ -33,6 +34,7 @@ export interface InspectionDto {
 }
 
 export interface CreateInspectionRequest {
+  structureId?: string | null
   lastUpdated?: string | null
   structureType: string
   generalDescription?: string | null
@@ -74,5 +76,8 @@ export const inspectionApi = {
   },
   getUserInspections: (): Promise<InspectionDto[]> => {
     return apiClient.get<InspectionDto[]>("/inspection/user")
+  },
+  getStructureInspections: (structureId: string): Promise<InspectionDto[]> => {
+    return apiClient.get<InspectionDto[]>(`/inspection/structure/${structureId}`)
   }
 }

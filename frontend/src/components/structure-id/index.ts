@@ -1,3 +1,5 @@
 export * from "./sections"
 export * from "./structureIdOptions"
+export * from "./structureTypeOptions"
 export * from "./sectionTypes"
+export * from "./FieldError"

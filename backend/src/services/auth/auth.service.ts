@@ -1,28 +1,24 @@
 import bcrypt from "bcrypt"
 import crypto from "crypto"
 import { v4 as uuidv4 } from "uuid"
-import type { PrismaClient } from "../../generated/prisma/client.js"
 import type { AuthResponseDto, UserDto } from "../../dto/auth.dto.js"
 import { UserMapper } from "../../mappers/user.mapper.js"
 import { JwtProvider, JwtProviderInterface } from "../../providers/jwt.provider.js"
 import { AuthServiceInterface } from "./auth.interface.js"
 import { EmailProviderInterface, ResendEmailProvider } from "../../providers/resend.provider.js"
-import { prisma } from "../../lib/prisma.js"
+import { prisma, type PrismaDbClient } from "../../lib/prisma.js"
 import { env } from "../../config/env.config.js"
 
 export class AuthService implements AuthServiceInterface {
   constructor(
-    private readonly prisma: PrismaClient,
+    private readonly prisma: PrismaDbClient,
     private readonly emailProvider: EmailProviderInterface,
     private readonly jwtProvider: JwtProviderInterface
   ) {}
 
-  async signup(
-    email: string,
-    password: string
-  ): Promise<{ message: string; verificationUrl?: string }> {
+  async signup(email: string, password: string): Promise<{ message: string; verificationUrl?: string }> {
     const existingUser = await this.prisma.user.findUnique({ where: { email } })
-    
+
     if (existingUser) {
       throw new Error("משתמש כבר קיים")
     }
@@ -146,9 +142,7 @@ export class AuthService implements AuthServiceInterface {
     return { message: "האימייל אומת בהצלחה. אפשר להתחבר." }
   }
 
-  async forgotPassword(
-    email: string
-  ): Promise<{ message: string; resetUrl?: string }> {
+  async forgotPassword(email: string): Promise<{ message: string; resetUrl?: string }> {
     const user = await this.prisma.user.findUnique({ where: { email } })
 
     if (!user) {
@@ -229,9 +223,7 @@ export class AuthService implements AuthServiceInterface {
   } {
     const refreshToken = uuidv4()
     const refreshTokenHash = this.hashToken(refreshToken)
-    const refreshTokenExpiry = new Date(
-      Date.now() + env.refreshTokenExpiresInDays * 24 * 60 * 60 * 1000
-    )
+    const refreshTokenExpiry = new Date(Date.now() + env.refreshTokenExpiresInDays * 24 * 60 * 60 * 1000)
 
     return {
       refreshToken,

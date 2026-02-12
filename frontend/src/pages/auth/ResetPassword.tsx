@@ -1,12 +1,14 @@
-import { useState, useEffect } from "react"
-import { useNavigate, useSearchParams } from "react-router-dom"
-import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
+import { useNavigate, useSearchParams } from "react-router-dom"
+
+import { Button } from "@/components/UI/button/button"
+import { Subtitle, Text, Title } from "@/components/UI/Text/text"
 import { useResetPassword } from "@/hooks/useAuth"
 import { useToast } from "@/hooks/useToast"
-import { resetPasswordSchema, type ResetPasswordFormData } from "@/schemas/auth.schema"
-import { Button } from "@/components/UI/button/button"
-import { Text, Title, Subtitle } from "@/components/UI/Text/text"
+import { type ResetPasswordFormData, resetPasswordSchema } from "@/schemas/auth.schema"
+
 import styles from "./auth.module.scss"
 
 export const ResetPassword = () => {
@@ -52,8 +54,7 @@ export const ResetPassword = () => {
     toast.error("נא לתקן את השדות המסומנים")
   }
 
-  const passwordHasError =
-    Boolean(errors.password) && (touchedFields.password || submitCount > 0)
+  const passwordHasError = Boolean(errors.password) && (touchedFields.password || submitCount > 0)
   const showPasswordError = passwordHasError && focusedField !== "password"
   const passwordErrorMessage = errors.password?.message
   const passwordField = register("password")
@@ -87,7 +88,7 @@ export const ResetPassword = () => {
               placeholder="••••••••"
               disabled={!token}
               onFocus={() => setFocusedField("password")}
-              onBlur={(event) => {
+              onBlur={event => {
                 passwordField.onBlur(event)
                 setFocusedField(null)
               }}
@@ -102,13 +103,7 @@ export const ResetPassword = () => {
             </Text>
           </div>
 
-          <Button
-            type="submit"
-            size="lg"
-            className={styles.submitButton}
-            isLoading={resetPasswordMutation.isPending}
-            disabled={!token}
-          >
+          <Button type="submit" size="lg" className={styles.submitButton} isLoading={resetPasswordMutation.isPending} disabled={!token}>
             <Text variant="span">איפוס סיסמה</Text>
           </Button>
         </form>

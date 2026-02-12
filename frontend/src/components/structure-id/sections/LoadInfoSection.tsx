@@ -1,9 +1,12 @@
 import React from "react"
+
+import { FieldError } from "@/components/structure-id/FieldError"
 import { Text, Title } from "@/components/UI/Text/text"
 import styles from "@/pages/structure-id/structure-id.module.scss"
+
 import type { StructureIdSectionBaseProps } from "../sectionTypes"
 
-export const LoadInfoSection: React.FC<StructureIdSectionBaseProps> = ({ register, isReadonly }) => (
+export const LoadInfoSection: React.FC<StructureIdSectionBaseProps> = ({ register, errors, isReadonly }) => (
   <section className={styles.section}>
     <Title level={3} className={styles.sectionTitle}>
       מידע בנושא עומסים
@@ -26,16 +29,19 @@ export const LoadInfoSection: React.FC<StructureIdSectionBaseProps> = ({ registe
         <span className={styles.label}>7.3 תאריך דירוג עומסים אחרון *</span>
         <input type="date" {...register("loadRatingDate")} className={styles.input} disabled={true} />
         <Text className={styles.restricted}>שדה מוגבל</Text>
+        <FieldError errors={errors} name="loadRatingDate" />
       </label>
 
       <label className={styles.field}>
         <span className={styles.label}>7.7 מגבלות עומס מאושרות (טון)</span>
         <input type="text" {...register("approvedLoadLimits")} className={styles.input} disabled={isReadonly} />
+        <FieldError errors={errors} name="approvedLoadLimits" />
       </label>
 
       <label className={styles.field}>
         <span className={styles.label}>7.8 שילוט הגבלת עומס (טון)</span>
         <input type="text" {...register("loadSignage")} className={styles.input} disabled={isReadonly} />
+        <FieldError errors={errors} name="loadSignage" />
       </label>
     </div>
   </section>

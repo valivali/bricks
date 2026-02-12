@@ -1,6 +1,7 @@
 import type { Request, Response } from "express"
 import { AuthServiceInterface } from "../services/auth/auth.interface.js"
 import { AuthService } from "../services/auth/auth.service.js"
+import { handleApiError } from "../lib/http/error-handler.js"
 import {
   signupSchema,
   loginSchema,
@@ -11,7 +12,6 @@ import {
 } from "../schemas/auth.schema.js"
 
 export class AuthController {
-
   constructor(private readonly authService: AuthServiceInterface) {}
 
   static build(): AuthController {
@@ -21,54 +21,40 @@ export class AuthController {
   signup = async (req: Request, res: Response): Promise<void> => {
     try {
       const parsed = signupSchema.safeParse(req.body)
-      
+
       if (!parsed.success) {
-        res.status(400).json({ 
+        res.status(400).json({
           error: "Validation failed",
-          details: parsed.error.format() 
+          details: parsed.error.format()
         })
         return
       }
 
-      const result = await this.authService.signup(
-        parsed.data.email,
-        parsed.data.password
-      )
+      const result = await this.authService.signup(parsed.data.email, parsed.data.password)
 
       res.status(201).json(result)
     } catch (error) {
-      if (error instanceof Error) {
-        res.status(400).json({ error: error.message })
-      } else {
-        res.status(500).json({ error: "Internal server error" })
-      }
+      handleApiError(res, error, { operation: "auth.signup", knownErrorStatus: 400 })
     }
   }
 
   login = async (req: Request, res: Response): Promise<void> => {
     try {
       const parsed = loginSchema.safeParse(req.body)
-      
+
       if (!parsed.success) {
-        res.status(400).json({ 
+        res.status(400).json({
           error: "Validation failed",
-          details: parsed.error.format() 
+          details: parsed.error.format()
         })
         return
       }
 
-      const result = await this.authService.login(
-        parsed.data.email,
-        parsed.data.password
-      )
+      const result = await this.authService.login(parsed.data.email, parsed.data.password)
 
       res.status(200).json(result)
     } catch (error) {
-      if (error instanceof Error) {
-        res.status(401).json({ error: error.message })
-      } else {
-        res.status(500).json({ error: "Internal server error" })
-      }
+      handleApiError(res, error, { operation: "auth.login", knownErrorStatus: 401 })
     }
   }
 
@@ -88,22 +74,18 @@ export class AuthController {
 
       res.status(200).json(result)
     } catch (error) {
-      if (error instanceof Error) {
-        res.status(401).json({ error: error.message })
-      } else {
-        res.status(500).json({ error: "Internal server error" })
-      }
+      handleApiError(res, error, { operation: "auth.refresh", knownErrorStatus: 401 })
     }
   }
 
   verifyEmail = async (req: Request, res: Response): Promise<void> => {
     try {
       const parsed = verifyEmailSchema.safeParse(req.body)
-      
+
       if (!parsed.success) {
-        res.status(400).json({ 
+        res.status(400).json({
           error: "Validation failed",
-          details: parsed.error.format() 
+          details: parsed.error.format()
         })
         return
       }
@@ -112,22 +94,18 @@ export class AuthController {
 
       res.status(200).json(result)
     } catch (error) {
-      if (error instanceof Error) {
-        res.status(400).json({ error: error.message })
-      } else {
-        res.status(500).json({ error: "Internal server error" })
-      }
+      handleApiError(res, error, { operation: "auth.verify-email", knownErrorStatus: 400 })
     }
   }
 
   forgotPassword = async (req: Request, res: Response): Promise<void> => {
     try {
       const parsed = forgotPasswordSchema.safeParse(req.body)
-      
+
       if (!parsed.success) {
-        res.status(400).json({ 
+        res.status(400).json({
           error: "Validation failed",
-          details: parsed.error.format() 
+          details: parsed.error.format()
         })
         return
       }
@@ -136,41 +114,34 @@ export class AuthController {
 
       res.status(200).json(result)
     } catch (error) {
-      res.status(500).json({ error: "Internal server error" })
+      handleApiError(res, error, { operation: "auth.forgot-password", knownErrorStatus: 500 })
     }
   }
 
   resetPassword = async (req: Request, res: Response): Promise<void> => {
     try {
       const parsed = resetPasswordSchema.safeParse(req.body)
-      
+
       if (!parsed.success) {
-        res.status(400).json({ 
+        res.status(400).json({
           error: "Validation failed",
-          details: parsed.error.format() 
+          details: parsed.error.format()
         })
         return
       }
 
-      const result = await this.authService.resetPassword(
-        parsed.data.token,
-        parsed.data.password
-      )
+      const result = await this.authService.resetPassword(parsed.data.token, parsed.data.password)
 
       res.status(200).json(result)
     } catch (error) {
-      if (error instanceof Error) {
-        res.status(400).json({ error: error.message })
-      } else {
-        res.status(500).json({ error: "Internal server error" })
-      }
+      handleApiError(res, error, { operation: "auth.reset-password", knownErrorStatus: 400 })
     }
   }
 
   getCurrentUser = async (req: Request, res: Response): Promise<void> => {
     try {
       const userId = (req as any).userId
-      
+
       if (!userId) {
         res.status(401).json({ error: "Unauthorized" })
         return
@@ -180,11 +151,7 @@ export class AuthController {
 
       res.status(200).json(user)
     } catch (error) {
-      if (error instanceof Error) {
-        res.status(404).json({ error: error.message })
-      } else {
-        res.status(500).json({ error: "Internal server error" })
-      }
+      handleApiError(res, error, { operation: "auth.current-user", knownErrorStatus: 404 })
     }
   }
 }

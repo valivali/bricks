@@ -10,7 +10,7 @@ export const Text = ({ children, className, size, variant = "span" }: TextProps)
 }
 
 export const Title = ({ children, className, size, level = 1 }: TitleProps) => {
-  const Tag = `h${level}` as "h1" | "h2" | "h3" | "h4" | "h5" | "h6"
+  const Tag = `h${level}`
   const sizeClass = size ? `title--${size}` : undefined
   const classes = [styles.title, sizeClass && styles[sizeClass], className].filter(Boolean).join(" ")
 
@@ -18,7 +18,7 @@ export const Title = ({ children, className, size, level = 1 }: TitleProps) => {
 }
 
 export const Subtitle = ({ children, className, size, variant = "div" }: SubtitleProps) => {
-  const Tag = variant as "div" | "span" | "p"
+  const Tag = variant
   const sizeClass = size ? `subtitle--${size}` : undefined
   const classes = [styles.subtitle, sizeClass && styles[sizeClass], className].filter(Boolean).join(" ")
 

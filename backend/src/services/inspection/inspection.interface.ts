@@ -6,4 +6,5 @@ export interface InspectionServiceInterface {
   updateInspection(userId: string, inspectionId: string, data: UpdateInspectionInput): Promise<InspectionDto>
   getInspectionById(userId: string, inspectionId: string): Promise<InspectionDto>
   getUserInspections(userId: string): Promise<InspectionDto[]>
+  getStructureInspections(userId: string, structureId: string): Promise<InspectionDto[]>
 }

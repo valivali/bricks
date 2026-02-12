@@ -1,12 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+
+import type { ForgotPasswordRequest, LoginRequest, ResetPasswordRequest, SignupRequest, VerifyEmailRequest } from "@/api/auth.api"
 import { authApi } from "@/api/auth.api"
-import type {
-  SignupRequest,
-  LoginRequest,
-  ForgotPasswordRequest,
-  ResetPasswordRequest,
-  VerifyEmailRequest
-} from "@/api/auth.api"
 
 export const useSignup = () => {
   return useMutation({
@@ -16,7 +11,7 @@ export const useSignup = () => {
 
 export const useLogin = () => {
   const queryClient = useQueryClient()
-  
+
   return useMutation({
     mutationFn: async (data: LoginRequest) => {
       const response = await authApi.login(data)
@@ -24,7 +19,7 @@ export const useLogin = () => {
       localStorage.setItem("refresh_token", response.refreshToken)
       return response
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       queryClient.setQueryData(["currentUser"], data.user)
     }
   })
@@ -59,7 +54,7 @@ export const useCurrentUser = () => {
 
 export const useLogout = () => {
   const queryClient = useQueryClient()
-  
+
   return () => {
     localStorage.removeItem("auth_token")
     localStorage.removeItem("refresh_token")

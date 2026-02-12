@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react"
-import { useCurrentUser, useLogout } from "@/hooks/useAuth"
+
 import type { UserDto } from "@/api/auth.api"
+import { useCurrentUser, useLogout } from "@/hooks/useAuth"
 
 interface AuthContextType {
   user: UserDto | null
@@ -45,12 +46,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   if (!isReady) {
     return (
-      <div style={{ 
-        display: "flex", 
-        alignItems: "center", 
-        justifyContent: "center", 
-        minHeight: "100vh" 
-      }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "100vh"
+        }}>
         Loading...
       </div>
     )

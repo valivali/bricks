@@ -1,22 +1,22 @@
-import { Routes, Route, Navigate } from "react-router-dom"
-import ErrorBoundary from "@/components/general/ErrorBoundary"
+import { Navigate, Route, Routes } from "react-router-dom"
+
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute"
+import ErrorBoundary from "@/components/general/ErrorBoundary"
 import { ProtectedLayout } from "@/components/layout/ProtectedLayout/ProtectedLayout"
-import CreateSkeleton from "@/pages/skeleton/create-skeleton"
-import { Profile } from "@/pages/profile/Profile"
-import { Structures } from "@/pages/structures/Structures"
-import { StructureIdForm } from "@/pages/structure-id/StructureIdForm"
-import { Login } from "@/pages/auth/Login"
-import { Signup } from "@/pages/auth/Signup"
 import { ForgotPassword } from "@/pages/auth/ForgotPassword"
+import { Login } from "@/pages/auth/Login"
 import { ResetPassword } from "@/pages/auth/ResetPassword"
+import { Signup } from "@/pages/auth/Signup"
 import { VerifyEmail } from "@/pages/auth/VerifyEmail"
+import { Profile } from "@/pages/profile/Profile"
+import { StructureIdForm } from "@/pages/structure-id/StructureIdForm"
+import { Structures } from "@/pages/structures/Structures"
 
 function App() {
   return (
     <ErrorBoundary>
       <Routes>
-        <Route path="/" element={<Navigate to="/create-skeleton" replace />} />
+        <Route path="/" element={<Navigate to="/structures" replace />} />
 
         <Route path="/auth/login" element={<Login />} />
         <Route path="/auth/signup" element={<Signup />} />
@@ -24,16 +24,6 @@ function App() {
         <Route path="/auth/reset-password" element={<ResetPassword />} />
         <Route path="/auth/verify-email" element={<VerifyEmail />} />
 
-        <Route
-          path="/create-skeleton"
-          element={
-            <ProtectedRoute>
-              <ProtectedLayout>
-                <CreateSkeleton />
-              </ProtectedLayout>
-            </ProtectedRoute>
-          }
-        />
         <Route
           path="/profile"
           element={

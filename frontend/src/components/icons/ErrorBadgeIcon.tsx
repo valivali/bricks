@@ -5,14 +5,7 @@ export interface IconProps extends React.SVGProps<SVGSVGElement> {
 }
 
 export const ErrorBadgeIcon: React.FC<IconProps> = ({ size = 20, ...props }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width={size}
-    height={size}
-    fill="none"
-    viewBox="0 0 48 48"
-    {...props}
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} fill="none" viewBox="0 0 48 48" {...props}>
     <path
       fill="currentColor"
       fillRule="evenodd"

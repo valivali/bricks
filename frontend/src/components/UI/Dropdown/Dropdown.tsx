@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
-import styles from "./Dropdown.module.scss"
+
 import { Button } from "../button/button"
+import styles from "./Dropdown.module.scss"
 
 export type DropdownItem = {
   label: string

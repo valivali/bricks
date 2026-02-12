@@ -51,12 +51,14 @@ model UserProfile {
 }
 
 model Inspection {
-  id                          String   @id @default(uuid())
+  id                          String       @id @default(uuid())
   userId                      String
-  user                        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user                        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  structureId                 String?
+  structure                   StructureId? @relation(fields: [structureId], references: [id])
   lastUpdated                 DateTime?
   structureType               String
-  generalDescription          String?  @db.Text
+  generalDescription          String?      @db.Text
   inspectionType              String?
   companyName                 String?
   inspectorName               String?
@@ -66,7 +68,7 @@ model Inspection {
   roadNumber                  String?
   runningDistance             String?
   area                        String?
-  fullStructureIncluded       Boolean  @default(true)
+  fullStructureIncluded       Boolean      @default(true)
   fullStructureNotes          String?
   spanCount                   Int?
   spanCountNotes              String?
@@ -79,8 +81,8 @@ model Inspection {
   classificationForInspection String?
   coordinateNorth             Float?
   coordinateEast              Float?
-  createdAt                   DateTime @default(now())
-  updatedAt                   DateTime @updatedAt
+  createdAt                   DateTime     @default(now())
+  updatedAt                   DateTime     @updatedAt
 
   @@map("inspections")
 }
@@ -101,6 +103,16 @@ model StructureId {
   runningDistanceEnd              String?   @db.VarChar(10)
   coordinateNorth                 String?   @db.VarChar(10)
   coordinateEast                  String?   @db.VarChar(10)
+  
+  structureType                   String?   @db.VarChar(50)
+  structureSubType                String?   @db.VarChar(50)
+  structureDetailType             String?   @db.VarChar(50)
+  inventoryComponentName          String?   @db.VarChar(200)
+  inspectionType                  String?   @db.VarChar(50)
+  plannedInspectionDate           DateTime?
+  inspector                       String?   @db.VarChar(200)
+  inspectionCompany               String?   @db.VarChar(200)
+  inspectionStatus                String?   @db.VarChar(50)
   
   primaryClassificationGroup      String?   @db.VarChar(10)
   secondaryClassificationGroup    String?   @db.VarChar(10)
@@ -136,6 +148,7 @@ model StructureId {
   bypassPossible                  String?   @db.VarChar(10)
   bypassLength                    Int?
   bypassDescription               String?   @db.Text
+  bypassDescriptionImage          String?   @db.Text
   localBypass                     String?   @db.VarChar(10)
   localBypassMethod               String?   @db.VarChar(10)
   localBypassMethodOther          String?   @db.Text
@@ -251,6 +264,45 @@ model StructureId {
   
   createdAt                       DateTime  @default(now())
   updatedAt                       DateTime  @updatedAt
+  
+  components                      StructureComponent[]
+  inspections                     Inspection[]
 
   @@map("structure_ids")
+}
+
+model StructureComponent {
+  id                       String         @id @default(uuid())
+  structureId              String
+  structure                StructureId    @relation(fields: [structureId], references: [id], onDelete: Cascade)
+  componentCode            String
+  description              String
+  importanceLevel          String
+  basicMeasurementUnit     String
+  secondaryMeasurementUnit String?
+  quantity                 Int
+  evaluationNeeded         Boolean        @default(false)
+  notes                    String?        @db.Text
+  comments                 String?        @db.Text
+  subComponents            SubComponent[]
+  createdAt                DateTime       @default(now())
+  updatedAt                DateTime       @updatedAt
+
+  @@map("structure_components")
+}
+
+model SubComponent {
+  id                String             @id @default(uuid())
+  componentId       String
+  component         StructureComponent @relation(fields: [componentId], references: [id], onDelete: Cascade)
+  index             Int
+  name              String
+  basicQuantity     Float              @default(0)
+  secondaryQuantity Float              @default(0)
+  comments          String?            @db.Text
+  attachment        String?            @db.Text
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  @@map("sub_components")
 }

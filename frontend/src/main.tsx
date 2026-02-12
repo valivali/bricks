@@ -2,15 +2,15 @@ import "./index.css"
 import "./globals.scss"
 import "./components/i18n"
 
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
-import { BrowserRouter } from "react-router-dom"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { Toaster } from "react-hot-toast"
-import { AuthProvider } from "./contexts/AuthContext"
-import { UserProfileProvider } from "./contexts/UserProfileContext"
+import { BrowserRouter } from "react-router-dom"
 
 import App from "./App.tsx"
+import { AuthProvider } from "./contexts/AuthContext"
+import { UserProfileProvider } from "./contexts/UserProfileContext"
 
 const queryClient = new QueryClient({
   defaultOptions: {

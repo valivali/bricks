@@ -1,14 +1,13 @@
 import { v4 as uuidv4 } from "uuid"
-import type { PrismaClient } from "../../generated/prisma/client.js"
 import type { UserProfileDto } from "../../dto/profile.dto.js"
 import type { UpdateProfileInput } from "../../schemas/profile.schema.js"
-import { prisma } from "../../lib/prisma.js"
+import { prisma, type PrismaDbClient } from "../../lib/prisma.js"
 import { ResendEmailProvider, type EmailProviderInterface } from "../../providers/resend.provider.js"
 import { ProfileServiceInterface } from "./profile.interface.js"
 
 export class ProfileService implements ProfileServiceInterface {
   constructor(
-    private readonly prismaClient: PrismaClient,
+    private readonly prismaClient: PrismaDbClient,
     private readonly emailProvider: EmailProviderInterface
   ) {}
 

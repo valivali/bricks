@@ -1,8 +1,10 @@
 import React from "react"
 import { useNavigate } from "react-router-dom"
+
 import { Dropdown } from "@/components/UI/Dropdown/Dropdown"
 import { useAuthContext } from "@/contexts/AuthContext"
 import { useUserProfileContext } from "@/contexts/UserProfileContext"
+
 import styles from "./Header.module.scss"
 
 const getInitials = (firstName?: string | null, lastName?: string | null, email?: string | null) => {

@@ -1,6 +1,7 @@
-import { useEffect, useMemo } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useEffect, useMemo } from "react"
 import { useForm } from "react-hook-form"
+
 import { Button } from "@/components/UI/button/button"
 import { ImageUpload } from "@/components/UI/ImageUpload/ImageUpload"
 import { Text, Title } from "@/components/UI/Text/text"
@@ -8,6 +9,7 @@ import { useAuthContext } from "@/contexts/AuthContext"
 import { useUserProfileContext } from "@/contexts/UserProfileContext"
 import { useToast } from "@/hooks/useToast"
 import { type ProfileFormValues, profileSchema } from "@/schemas/profile.schema"
+
 import styles from "./profile.module.scss"
 
 const formatPhone = (value: string) => {

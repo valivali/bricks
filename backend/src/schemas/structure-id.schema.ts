@@ -9,11 +9,26 @@ const stringNoHtml = (max: number) =>
 
 const optionalString = (max: number) =>
   z.preprocess(value => {
-    if (value === null || value === undefined) return null
+    if (value === null || value === undefined || value === "") return null
+    if (typeof value === "number") return String(value)
     if (typeof value !== "string") return value
     const trimmed = value.trim()
     return trimmed === "" ? null : trimmed
   }, stringNoHtml(max).nullable())
+
+const optionalImage = z.preprocess(
+  value => {
+    if (value === null || value === undefined) return null
+    if (typeof value !== "string") return value
+    const trimmed = value.trim()
+    return trimmed === "" ? null : trimmed
+  },
+  z
+    .string()
+    .max(3_000_000, "Image too large")
+    .refine(value => value.startsWith("data:image/"), "Invalid image data")
+    .nullable()
+)
 
 const optionalDate = z.preprocess(value => {
   if (value === null || value === undefined) return null
@@ -26,7 +41,7 @@ const optionalDate = z.preprocess(value => {
 }, z.date().nullable())
 
 const optionalInt = z.preprocess(value => {
-  if (value === null || value === undefined) return null
+  if (value === null || value === undefined || value === "") return null
   if (typeof value === "number") return value
   if (typeof value !== "string") return value
   const trimmed = value.trim()
@@ -36,7 +51,7 @@ const optionalInt = z.preprocess(value => {
 }, z.number().int().nullable())
 
 const optionalFloat = z.preprocess(value => {
-  if (value === null || value === undefined) return null
+  if (value === null || value === undefined || value === "") return null
   if (typeof value === "number") return value
   if (typeof value !== "string") return value
   const trimmed = value.trim()
@@ -57,6 +72,16 @@ export const createStructureIdSchema = z.object({
   runningDistanceEnd: optionalString(10),
   coordinateNorth: optionalString(10),
   coordinateEast: optionalString(10),
+
+  structureType: optionalString(50),
+  structureSubType: optionalString(50),
+  structureDetailType: optionalString(50),
+  inventoryComponentName: optionalString(200),
+  inspectionType: optionalString(50),
+  plannedInspectionDate: optionalDate,
+  inspector: optionalString(200),
+  inspectionCompany: optionalString(200),
+  inspectionStatus: optionalString(50),
 
   primaryClassificationGroup: optionalString(10),
   secondaryClassificationGroup: optionalString(10),
@@ -92,6 +117,7 @@ export const createStructureIdSchema = z.object({
   bypassPossible: optionalString(10),
   bypassLength: optionalInt,
   bypassDescription: optionalString(1000),
+  bypassDescriptionImage: optionalImage,
   localBypass: optionalString(10),
   localBypassMethod: optionalString(10),
   localBypassMethodOther: optionalString(1000),

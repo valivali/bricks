@@ -2,6 +2,7 @@ import type { Request, Response } from "express"
 import { ProfileServiceInterface } from "../services/profile/profile.interface.js"
 import { ProfileService } from "../services/profile/profile.service.js"
 import { updateProfileSchema } from "../schemas/profile.schema.js"
+import { handleApiError } from "../lib/http/error-handler.js"
 
 export class ProfileController {
   constructor(private readonly profileService: ProfileServiceInterface) {}
@@ -22,11 +23,7 @@ export class ProfileController {
       const profile = await this.profileService.getProfile(userId)
       res.status(200).json(profile)
     } catch (error) {
-      if (error instanceof Error) {
-        res.status(404).json({ error: error.message })
-      } else {
-        res.status(500).json({ error: "Internal server error" })
-      }
+      handleApiError(res, error, { operation: "profile.get", knownErrorStatus: 404 })
     }
   }
 
@@ -52,11 +49,7 @@ export class ProfileController {
       const updated = await this.profileService.updateProfile(userId, parsed.data)
       res.status(200).json(updated)
     } catch (error) {
-      if (error instanceof Error) {
-        res.status(400).json({ error: error.message })
-      } else {
-        res.status(500).json({ error: "Internal server error" })
-      }
+      handleApiError(res, error, { operation: "profile.update", knownErrorStatus: 400 })
     }
   }
 }

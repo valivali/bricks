@@ -1,17 +1,39 @@
-import { useMutation, useQuery, useQueryClient, type UseMutationOptions } from "@tanstack/react-query"
-import { structureIdApi, type CreateStructureIdRequest, type StructureIdDto, type UpdateStructureIdRequest } from "@/api/structure-id.api"
+import { useMutation, type UseMutationOptions, useQuery, useQueryClient } from "@tanstack/react-query"
+
+import { type CreateStructureIdRequest, structureIdApi, type StructureIdDto, type UpdateStructureIdRequest } from "@/api/structure-id.api"
+import { normalizeDateForForm } from "@/schemas/structure-id.schema"
+
+const normalizeDatesInDto = (dto: StructureIdDto): StructureIdDto => {
+  return {
+    ...dto,
+    loadRatingDate: normalizeDateForForm(dto.loadRatingDate),
+    seismicRatingDate: normalizeDateForForm(dto.seismicRatingDate),
+    initialInspectionDate: normalizeDateForForm(dto.initialInspectionDate),
+    lastRoutineInspectionDate: normalizeDateForForm(dto.lastRoutineInspectionDate),
+    damageControlInspectionDate: normalizeDateForForm(dto.damageControlInspectionDate),
+    underwaterInspectionDate: normalizeDateForForm(dto.underwaterInspectionDate),
+    thoroughInspectionDate: normalizeDateForForm(dto.thoroughInspectionDate),
+    specialInspectionDate: normalizeDateForForm(dto.specialInspectionDate)
+  }
+}
 
 export const useStructureIdsQuery = () => {
   return useQuery({
     queryKey: ["structureIds"],
-    queryFn: structureIdApi.getUserStructureIds
+    queryFn: async () => {
+      const data = await structureIdApi.getUserStructureIds()
+      return data.map(normalizeDatesInDto)
+    }
   })
 }
 
 export const useStructureIdQuery = (id?: string) => {
   return useQuery({
     queryKey: ["structureId", id],
-    queryFn: () => structureIdApi.getStructureIdById(id!),
+    queryFn: async () => {
+      const data = await structureIdApi.getStructureIdById(id!)
+      return normalizeDatesInDto(data)
+    },
     enabled: !!id && id !== "new"
   })
 }

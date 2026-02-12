@@ -1,8 +1,11 @@
 import React from "react"
+
+import { FieldError } from "@/components/structure-id/FieldError"
 import { Title } from "@/components/UI/Text/text"
 import styles from "@/pages/structure-id/structure-id.module.scss"
-import { MATERIAL_OPTIONS } from "../structureIdOptions"
+
 import type { StructureIdSectionBaseProps } from "../sectionTypes"
+import { MATERIAL_OPTIONS } from "../structureIdOptions"
 
 type MaterialsSectionProps = StructureIdSectionBaseProps & {
   deckMaterialsValue?: string
@@ -19,6 +22,7 @@ type MaterialsSectionProps = StructureIdSectionBaseProps & {
 
 export const MaterialsSection: React.FC<MaterialsSectionProps> = ({
   register,
+  errors,
   isReadonly,
   deckMaterialsValue,
   beamMaterialsValue,
@@ -47,12 +51,14 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({
             </option>
           ))}
         </select>
+        <FieldError errors={errors} name="deckMaterials" />
       </label>
 
       {deckMaterialsValue === "6.123" && (
         <label className={styles.field}>
           <span className={styles.label}>6.1 פירוט אחר</span>
           <textarea {...register("deckMaterialsOther")} className={styles.textarea} disabled={isReadonly} rows={2} />
+          <FieldError errors={errors} name="deckMaterialsOther" />
         </label>
       )}
 
@@ -66,12 +72,14 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({
             </option>
           ))}
         </select>
+        <FieldError errors={errors} name="beamMaterials" />
       </label>
 
       {beamMaterialsValue === "6.123" && (
         <label className={styles.field}>
           <span className={styles.label}>6.2 פירוט אחר</span>
           <textarea {...register("beamMaterialsOther")} className={styles.textarea} disabled={isReadonly} rows={2} />
+          <FieldError errors={errors} name="beamMaterialsOther" />
         </label>
       )}
 
@@ -85,12 +93,14 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({
             </option>
           ))}
         </select>
+        <FieldError errors={errors} name="abutmentMaterials" />
       </label>
 
       {abutmentMaterialsValue === "6.123" && (
         <label className={styles.field}>
           <span className={styles.label}>6.3 פירוט אחר</span>
           <textarea {...register("abutmentMaterialsOther")} className={styles.textarea} disabled={isReadonly} rows={2} />
+          <FieldError errors={errors} name="abutmentMaterialsOther" />
         </label>
       )}
 
@@ -104,12 +114,14 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({
             </option>
           ))}
         </select>
+        <FieldError errors={errors} name="pierMaterials" />
       </label>
 
       {pierMaterialsValue === "6.123" && (
         <label className={styles.field}>
           <span className={styles.label}>6.4 פירוט אחר</span>
           <textarea {...register("pierMaterialsOther")} className={styles.textarea} disabled={isReadonly} rows={2} />
+          <FieldError errors={errors} name="pierMaterialsOther" />
         </label>
       )}
 
@@ -123,12 +135,14 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({
             </option>
           ))}
         </select>
+        <FieldError errors={errors} name="slopeProtectionMaterials" />
       </label>
 
       {slopeProtectionMaterialsValue === "6.123" && (
         <label className={styles.field}>
           <span className={styles.label}>6.5 פירוט אחר</span>
           <textarea {...register("slopeProtectionMaterialsOther")} className={styles.textarea} disabled={isReadonly} rows={2} />
+          <FieldError errors={errors} name="slopeProtectionMaterialsOther" />
         </label>
       )}
 
@@ -142,12 +156,14 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({
             </option>
           ))}
         </select>
+        <FieldError errors={errors} name="vehicleBarrierMaterials" />
       </label>
 
       {vehicleBarrierMaterialsValue === "6.123" && (
         <label className={styles.field}>
           <span className={styles.label}>6.6 פירוט אחר</span>
           <textarea {...register("vehicleBarrierMaterialsOther")} className={styles.textarea} disabled={isReadonly} rows={2} />
+          <FieldError errors={errors} name="vehicleBarrierMaterialsOther" />
         </label>
       )}
 
@@ -161,12 +177,14 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({
             </option>
           ))}
         </select>
+        <FieldError errors={errors} name="pedestrianRailingMaterials" />
       </label>
 
       {pedestrianRailingMaterialsValue === "6.123" && (
         <label className={styles.field}>
           <span className={styles.label}>6.7 פירוט אחר</span>
           <textarea {...register("pedestrianRailingMaterialsOther")} className={styles.textarea} disabled={isReadonly} rows={2} />
+          <FieldError errors={errors} name="pedestrianRailingMaterialsOther" />
         </label>
       )}
 
@@ -180,12 +198,14 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({
             </option>
           ))}
         </select>
+        <FieldError errors={errors} name="deckCoveringMaterials" />
       </label>
 
       {deckCoveringMaterialsValue === "6.123" && (
         <label className={styles.field}>
           <span className={styles.label}>6.8 פירוט אחר</span>
           <textarea {...register("deckCoveringMaterialsOther")} className={styles.textarea} disabled={isReadonly} rows={2} />
+          <FieldError errors={errors} name="deckCoveringMaterialsOther" />
         </label>
       )}
 
@@ -199,12 +219,14 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({
             </option>
           ))}
         </select>
+        <FieldError errors={errors} name="deckSealingMaterials" />
       </label>
 
       {deckSealingMaterialsValue === "6.123" && (
         <label className={styles.field}>
           <span className={styles.label}>6.9 פירוט אחר</span>
           <textarea {...register("deckSealingMaterialsOther")} className={styles.textarea} disabled={isReadonly} rows={2} />
+          <FieldError errors={errors} name="deckSealingMaterialsOther" />
         </label>
       )}
 
@@ -218,12 +240,14 @@ export const MaterialsSection: React.FC<MaterialsSectionProps> = ({
             </option>
           ))}
         </select>
+        <FieldError errors={errors} name="curbMaterials" />
       </label>
 
       {curbMaterialsValue === "6.123" && (
         <label className={styles.field}>
           <span className={styles.label}>6.10 פירוט אחר</span>
           <textarea {...register("curbMaterialsOther")} className={styles.textarea} disabled={isReadonly} rows={2} />
+          <FieldError errors={errors} name="curbMaterialsOther" />
         </label>
       )}
     </div>

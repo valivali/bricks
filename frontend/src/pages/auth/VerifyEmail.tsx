@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
-import { useVerifyEmail } from "@/hooks/useAuth"
+
 import { Button } from "@/components/UI/button/button"
 import { Text, Title } from "@/components/UI/Text/text"
+import { useVerifyEmail } from "@/hooks/useAuth"
+
 import styles from "./auth.module.scss"
 
 export const VerifyEmail = () => {
@@ -54,7 +56,7 @@ export const VerifyEmail = () => {
               <Text variant="p">{errorMessage}</Text>
             </div>
           )}
-          
+
           {successMessage && (
             <div className={styles.successAlert}>
               <Text variant="p">{successMessage}</Text>
@@ -62,22 +64,13 @@ export const VerifyEmail = () => {
           )}
 
           {successMessage && (
-            <Button
-              size="lg"
-              className={styles.submitButton}
-              onClick={() => navigate("/auth/login")}
-            >
+            <Button size="lg" className={styles.submitButton} onClick={() => navigate("/auth/login")}>
               <Text variant="span">מעבר להתחברות</Text>
             </Button>
           )}
 
           {errorMessage && (
-            <Button
-              size="lg"
-              variant="outline"
-              className={styles.submitButton}
-              onClick={() => navigate("/auth/signup")}
-            >
+            <Button size="lg" variant="outline" className={styles.submitButton} onClick={() => navigate("/auth/signup")}>
               <Text variant="span">חזרה להרשמה</Text>
             </Button>
           )}

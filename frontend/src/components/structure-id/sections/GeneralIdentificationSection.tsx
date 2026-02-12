@@ -1,8 +1,10 @@
 import React from "react"
+
 import { Text, Title } from "@/components/UI/Text/text"
 import styles from "@/pages/structure-id/structure-id.module.scss"
-import { AREA_OPTIONS } from "../structureIdOptions"
+
 import type { StructureIdSectionBaseProps } from "../sectionTypes"
+import { AREA_OPTIONS } from "../structureIdOptions"
 
 export const GeneralIdentificationSection: React.FC<StructureIdSectionBaseProps> = ({ register, errors, isReadonly }) => (
   <section className={styles.section}>

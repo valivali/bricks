@@ -4,6 +4,7 @@ import authRoutes from "./auth.routes.js"
 import inspectionRoutes from "./inspection.routes.js"
 import profileRoutes from "./profile.routes.js"
 import structureIdRoutes from "./structure-id.routes.js"
+import structureComponentRoutes from "./structure-component.routes.js"
 
 const router = Router()
 
@@ -25,5 +26,6 @@ router.use("/auth", authRoutes)
 router.use("/inspection", inspectionRoutes)
 router.use("/profile", profileRoutes)
 router.use("/structure-id", structureIdRoutes)
+router.use("/structure-component", structureComponentRoutes)
 
 export default router

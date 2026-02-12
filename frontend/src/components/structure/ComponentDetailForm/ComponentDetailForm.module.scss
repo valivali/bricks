@@ -1,0 +1,386 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+  padding: 0.5rem;
+}
+
+.componentCard {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  transition: all 0.2s ease;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+
+  &:hover {
+    border-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transform: translateY(-2px);
+  }
+
+  &.active {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--primary-10);
+  }
+}
+
+.cardImagePlaceholder {
+  width: 100%;
+  height: 120px;
+  background: var(--secondary-05);
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ccc;
+  border: 1px dashed #ddd;
+  margin-bottom: -0.25rem;
+
+  svg {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.cardTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  .id {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+  }
+
+  .description {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--dark);
+  }
+}
+
+.cardMetrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--secondary-05);
+  border-radius: 0.75rem;
+}
+
+.metricItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  .label {
+    font-size: 0.75rem;
+    color: #777;
+    white-space: nowrap;
+  }
+
+  .value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--foreground);
+
+    &.highlight {
+      color: var(--primary);
+    }
+  }
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.cardDate {
+  font-size: 0.8rem;
+  color: #999;
+}
+
+.statusBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+
+  &.green {
+    background: #f6ffed;
+    color: #52c41a;
+    border: 1px solid #b7eb8f;
+  }
+  &.yellow {
+    background: #fffbe6;
+    color: #faad14;
+    border: 1px solid #ffe58f;
+  }
+  &.red {
+    background: #fff1f0;
+    color: #ff4d4f;
+    border: 1px solid #ffa39e;
+  }
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+
+  &.green {
+    background: #52c41a;
+  }
+  &.yellow {
+    background: #faad14;
+  }
+  &.red {
+    background: #ff4d4f;
+  }
+}
+
+.masterCommentsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #555;
+  }
+}
+
+.statusLegend {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.detailHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border);
+  background: white;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.subCardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.subCard {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.subCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--secondary-05);
+}
+
+.subCardTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  .subId {
+    width: 28px;
+    height: 28px;
+    background: var(--primary-10);
+    color: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+  }
+
+  .subNameInput {
+    border: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--dark);
+    padding: 4px 8px;
+    border-radius: 4px;
+    width: 250px;
+
+    &:hover,
+    &:focus {
+      background: var(--secondary-05);
+      outline: none;
+    }
+  }
+}
+
+.subCardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.quantityGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.quantityField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-size: 0.8rem;
+    color: #777;
+    font-weight: 500;
+  }
+
+  .inputGroup {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    input {
+      flex: 1;
+    }
+
+    .unit {
+      font-size: 0.85rem;
+      color: #999;
+      min-width: 40px;
+    }
+  }
+}
+
+.subCardComments {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  label {
+    font-size: 0.8rem;
+    color: #777;
+    font-weight: 500;
+  }
+}
+
+.subCardAttachments {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  label {
+    font-size: 0.8rem;
+    color: #777;
+    font-weight: 500;
+  }
+}
+
+.subCardFooter {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  border-top: 1px solid var(--secondary-05);
+  font-size: 0.75rem;
+  color: #bbb;
+}
+
+.subTableContainer {
+  display: none; // Hide old table container
+}
+
+.tableInput {
+  width: 100%;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  background: white;
+
+  &[type="number"] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+
+  &.tableInput:is(textarea) {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.4;
+  }
+
+  &:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 0 0 0 2px var(--primary-10);
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.submitButton {
+  margin-right: auto;
+}

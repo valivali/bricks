@@ -1,12 +1,14 @@
-import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { Link, useNavigate } from "react-router-dom"
+
+import { Button } from "@/components/UI/button/button"
+import { Subtitle, Text, Title } from "@/components/UI/Text/text"
 import { useLogin } from "@/hooks/useAuth"
 import { useToast } from "@/hooks/useToast"
-import { loginSchema, type LoginFormData } from "@/schemas/auth.schema"
-import { Button } from "@/components/UI/button/button"
-import { Text, Title, Subtitle } from "@/components/UI/Text/text"
+import { type LoginFormData, loginSchema } from "@/schemas/auth.schema"
+
 import styles from "./auth.module.scss"
 
 export const Login = () => {
@@ -35,10 +37,7 @@ export const Login = () => {
         errorMessage.toLowerCase().includes("not found") ||
         errorMessage.toLowerCase().includes("unauthorized")
       const messageLines = isInvalidCredentials
-        ? [
-            "לא הצלחנו למצוא משתמש עם הפרטים הללו במערכת.",
-            "בדקו שאין טעות או הירשמו."
-          ]
+        ? ["לא הצלחנו למצוא משתמש עם הפרטים הללו במערכת.", "בדקו שאין טעות או הירשמו."]
         : ["לא ניתן להשלים את ההתחברות כרגע.", "נסו שוב בעוד מספר דקות."]
 
       toast.error(messageLines.join("\n"), { id: "login-error" })
@@ -79,7 +78,7 @@ export const Login = () => {
               className={`${styles.input} ${emailHasError ? styles.inputError : ""}`}
               placeholder="you@example.com"
               onFocus={() => setFocusedField("email")}
-              onBlur={(event) => {
+              onBlur={event => {
                 emailField.onBlur(event)
                 setFocusedField(null)
               }}
@@ -102,7 +101,7 @@ export const Login = () => {
               className={`${styles.input} ${passwordHasError ? styles.inputError : ""}`}
               placeholder="••••••••"
               onFocus={() => setFocusedField("password")}
-              onBlur={(event) => {
+              onBlur={event => {
                 passwordField.onBlur(event)
                 setFocusedField(null)
               }}
@@ -120,12 +119,7 @@ export const Login = () => {
             </Link>
           </div>
 
-          <Button
-            type="submit"
-            size="lg"
-            className={styles.submitButton}
-            isLoading={loginMutation.isPending}
-          >
+          <Button type="submit" size="lg" className={styles.submitButton} isLoading={loginMutation.isPending}>
             <Text variant="span">התחברות</Text>
           </Button>
 

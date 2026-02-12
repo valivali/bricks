@@ -121,6 +121,13 @@
   font-style: italic;
 }
 
+.bypassImagePreview {
+  width: 100%;
+  max-width: 360px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
 .actions {
   display: flex;
   gap: 12px;

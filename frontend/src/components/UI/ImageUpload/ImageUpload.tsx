@@ -1,7 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from "react"
-import { useToast } from "@/hooks/useToast"
+
 import { Button } from "@/components/UI/button/button"
 import { Text } from "@/components/UI/Text/text"
+import { useToast } from "@/hooks/useToast"
+
 import styles from "./ImageUpload.module.scss"
 
 type ImageUploadProps = {

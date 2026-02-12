@@ -1,12 +1,14 @@
-import { useState } from "react"
-import { Link } from "react-router-dom"
-import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { Link } from "react-router-dom"
+
+import { Button } from "@/components/UI/button/button"
+import { Subtitle, Text, Title } from "@/components/UI/Text/text"
 import { useSignup } from "@/hooks/useAuth"
 import { useToast } from "@/hooks/useToast"
-import { signupSchema, type SignupFormData } from "@/schemas/auth.schema"
-import { Button } from "@/components/UI/button/button"
-import { Text, Title, Subtitle } from "@/components/UI/Text/text"
+import { type SignupFormData, signupSchema } from "@/schemas/auth.schema"
+
 import styles from "./auth.module.scss"
 
 export const Signup = () => {
@@ -74,7 +76,7 @@ export const Signup = () => {
               className={`${styles.input} ${emailHasError ? styles.inputError : ""}`}
               placeholder="you@example.com"
               onFocus={() => setFocusedField("email")}
-              onBlur={(event) => {
+              onBlur={event => {
                 emailField.onBlur(event)
                 setFocusedField(null)
               }}
@@ -97,7 +99,7 @@ export const Signup = () => {
               className={`${styles.input} ${passwordHasError ? styles.inputError : ""}`}
               placeholder="••••••••"
               onFocus={() => setFocusedField("password")}
-              onBlur={(event) => {
+              onBlur={event => {
                 passwordField.onBlur(event)
                 setFocusedField(null)
               }}
@@ -112,12 +114,7 @@ export const Signup = () => {
             </Text>
           </div>
 
-          <Button
-            type="submit"
-            size="lg"
-            className={styles.submitButton}
-            isLoading={signupMutation.isPending}
-          >
+          <Button type="submit" size="lg" className={styles.submitButton} isLoading={signupMutation.isPending}>
             <Text variant="span">הרשמה</Text>
           </Button>
 

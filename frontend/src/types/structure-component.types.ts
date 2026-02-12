@@ -3,7 +3,7 @@ export interface SubComponentData {
   name: string
   basicQuantity: number
   secondaryQuantity: number
-  attachment?: string
+  attachments?: string[]
   comments: string
   updatedAt: string
 }
@@ -15,5 +15,5 @@ export interface ComponentFormRecord {
 }
 
 export interface FormValues {
-  components: Record<string, ComponentFormRecord>
+  components: Record<string, ComponentFormRecord | undefined>
 }
