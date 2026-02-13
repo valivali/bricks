@@ -4,6 +4,7 @@ dotenv.config()
 
 interface EnvConfig {
   port: number
+  nodeEnv: string
   logProvider: string
   logLevel: string
   jwtSecret: string
@@ -26,6 +27,7 @@ function validateEnv(): EnvConfig {
 
   return {
     port: Number(process.env.PORT) || 4000,
+    nodeEnv: process.env.NODE_ENV || "production",
     logProvider: process.env.LOG_PROVIDER || "console",
     logLevel: process.env.LOG_LEVEL || "info",
     jwtSecret: process.env.JWT_SECRET!,

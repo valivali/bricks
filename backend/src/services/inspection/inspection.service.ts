@@ -3,6 +3,7 @@ import type { InspectionDto } from "../../dto/inspection.dto.js"
 import type { CreateInspectionInput, UpdateInspectionInput } from "../../schemas/inspection.schema.js"
 import { prisma, type PrismaDbClient } from "../../lib/prisma.js"
 import { InspectionServiceInterface } from "./inspection.interface.js"
+import { logger } from "../../lib/logger/index.js"
 
 export class InspectionService implements InspectionServiceInterface {
   constructor(private readonly prismaClient: PrismaDbClient) {}
@@ -24,6 +25,7 @@ export class InspectionService implements InspectionServiceInterface {
     })
 
     if (!existing) {
+      logger.warn("inspection not found on update inspection", { userId, inspectionId })
       throw new Error("סקירה לא נמצאה")
     }
 
@@ -32,6 +34,7 @@ export class InspectionService implements InspectionServiceInterface {
       data
     })
 
+    logger.info("inspection updated", { userId, inspectionId })
     return this.toDto(inspection)
   }
 
@@ -41,6 +44,7 @@ export class InspectionService implements InspectionServiceInterface {
     })
 
     if (!inspection) {
+      logger.warn("inspection not found on get inspection by id", { userId, inspectionId })
       throw new Error("סקירה לא נמצאה")
     }
 
@@ -62,6 +66,7 @@ export class InspectionService implements InspectionServiceInterface {
     })
 
     if (!structure) {
+      logger.warn("structure not found on get structure inspections", { userId, structureId })
       throw new Error("Structure not found")
     }
 
@@ -70,6 +75,7 @@ export class InspectionService implements InspectionServiceInterface {
       orderBy: { createdAt: "desc" }
     })
 
+    logger.info("structure inspections found", { userId, structureId })
     return inspections.map(inspection => this.toDto(inspection))
   }
 

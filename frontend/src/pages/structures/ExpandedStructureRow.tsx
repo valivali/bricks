@@ -1,6 +1,5 @@
 import React from "react"
 
-import { type StructureIdDto } from "@/api/structure-id.api"
 import { Button } from "@/components/UI/button/button"
 import InspectionForm from "@/components/structure/InspectionForm/InspectionForm"
 import { type InspectionDto } from "@/api/inspection.api"
@@ -9,7 +8,6 @@ import { type InspectionFormValues } from "@/schemas/inspection.schema"
 import styles from "./structures.module.scss"
 
 interface ExpandedStructureRowProps {
-  structure: StructureIdDto
   inspections?: InspectionDto[]
   showInspectionForm: boolean
   inspectionDefaults: InspectionFormValues
@@ -19,7 +17,6 @@ interface ExpandedStructureRowProps {
 }
 
 export const ExpandedStructureRow: React.FC<ExpandedStructureRowProps> = ({
-  structure,
   inspections,
   showInspectionForm,
   inspectionDefaults,

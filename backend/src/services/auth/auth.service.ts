@@ -8,6 +8,7 @@ import { AuthServiceInterface } from "./auth.interface.js"
 import { EmailProviderInterface, ResendEmailProvider } from "../../providers/resend.provider.js"
 import { prisma, type PrismaDbClient } from "../../lib/prisma.js"
 import { env } from "../../config/env.config.js"
+import { logger } from "../../lib/logger/index.js"
 
 export class AuthService implements AuthServiceInterface {
   constructor(
@@ -146,6 +147,7 @@ export class AuthService implements AuthServiceInterface {
     const user = await this.prisma.user.findUnique({ where: { email } })
 
     if (!user) {
+      logger.warn("user not found on forgot password", { email })
       return { message: "אם קיים חשבון עם האימייל הזה, נשלח קישור לאיפוס סיסמה." }
     }
 
@@ -164,7 +166,7 @@ export class AuthService implements AuthServiceInterface {
     await this.emailProvider.sendPasswordResetEmail(email, resetToken)
 
     return {
-      message: "אם קיים חשבון עם האימייל הזה, נשלח קישור לאיפוס סיסמה.",
+      message: "נשלח קישור לאיפוס סיסמה.",
       resetUrl: env.exposeEmailTokens ? resetUrl : undefined
     }
   }
@@ -175,10 +177,12 @@ export class AuthService implements AuthServiceInterface {
     })
 
     if (!user || !user.resetTokenExpiry) {
+      logger.warn("invalid user or reset token on reset password", { token })
       throw new Error("אסימון האיפוס לא תקין או שפג תוקפו")
     }
 
     if (user.resetTokenExpiry < new Date()) {
+      logger.warn("reset token expired on reset password", { token })
       throw new Error("תוקף אסימון האיפוס פג")
     }
 
@@ -195,6 +199,7 @@ export class AuthService implements AuthServiceInterface {
       }
     })
 
+    logger.info("password reset successful", { userId: user.id })
     return { message: "איפוס הסיסמה הצליח. אפשר להתחבר עם הסיסמה החדשה." }
   }
 
@@ -204,6 +209,7 @@ export class AuthService implements AuthServiceInterface {
     })
 
     if (!user) {
+      logger.warn("user not found on get current user", { userId })
       throw new Error("משתמש לא נמצא")
     }
 

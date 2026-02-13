@@ -3,6 +3,7 @@ import type { StructureIdDto } from "../../dto/structure-id.dto.js"
 import type { CreateStructureIdInput, UpdateStructureIdInput } from "../../schemas/structure-id.schema.js"
 import { prisma, type PrismaDbClient } from "../../lib/prisma.js"
 import { StructureIdServiceInterface } from "./structure-id.interface.js"
+import { logger } from "../../lib/logger/index.js"
 
 export class StructureIdService implements StructureIdServiceInterface {
   constructor(private readonly prismaClient: PrismaDbClient) {}
@@ -24,6 +25,7 @@ export class StructureIdService implements StructureIdServiceInterface {
     })
 
     if (!existing) {
+      logger.warn("structure id not found on update structure id", { userId, structureIdId })
       throw new Error("תעודת זהות למבנה לא נמצאה")
     }
 
@@ -32,6 +34,7 @@ export class StructureIdService implements StructureIdServiceInterface {
       data
     })
 
+    logger.info("structure id updated", { userId, structureIdId })
     return this.toDto(structureId)
   }
 
@@ -41,6 +44,7 @@ export class StructureIdService implements StructureIdServiceInterface {
     })
 
     if (!structureId) {
+      logger.warn("structure id not found on get structure id by id", { userId, structureIdId })
       throw new Error("תעודת זהות למבנה לא נמצאה")
     }
 
@@ -53,6 +57,7 @@ export class StructureIdService implements StructureIdServiceInterface {
       orderBy: { createdAt: "desc" }
     })
 
+    logger.info("structure ids found on get user structure ids", { userId })
     return structureIds.map(structureId => this.toDto(structureId))
   }
 
@@ -62,12 +67,15 @@ export class StructureIdService implements StructureIdServiceInterface {
     })
 
     if (!existing) {
+      logger.warn("structure id not found on delete structure id", { userId, structureIdId })
       throw new Error("תעודת זהות למבנה לא נמצאה")
     }
 
     await this.prismaClient.structureId.delete({
       where: { id: structureIdId }
     })
+
+    logger.info("structure id deleted", { userId, structureIdId })
   }
 
   static build(): StructureIdService {

@@ -401,7 +401,6 @@ export const Structures: React.FC = () => {
                     <tr className={styles.expandedRow}>
                       <td colSpan={columns.length}>
                         <ExpandedStructureRow
-                          structure={structure}
                           inspections={expandedInspections}
                           showInspectionForm={showInspectionForm === structure.id}
                           inspectionDefaults={getInspectionDefaults(structure)}

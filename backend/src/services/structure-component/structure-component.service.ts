@@ -2,6 +2,7 @@ import { prisma } from "../../lib/prisma.js"
 import { toStructureComponentDto, type StructureComponentDto } from "../../dto/structure-component.dto.js"
 import type { BulkUpsertStructureComponentsInput } from "../../schemas/structure-component.schema.js"
 import type { StructureComponentService } from "./structure-component.interface.js"
+import { logger } from "../../lib/logger/index.js"
 
 class StructureComponentServiceImpl implements StructureComponentService {
   async getComponentsByStructureId(userId: string, structureId: string): Promise<StructureComponentDto[]> {
@@ -10,7 +11,8 @@ class StructureComponentServiceImpl implements StructureComponentService {
     })
 
     if (!structure) {
-      throw new Error("רכיבים למבנה לא נמצאים")
+      logger.warn("structure not found on get components by structure id", { userId, structureId })
+      throw new Error("מבנה לא נמצא")
     }
 
     const components = await prisma.structureComponent.findMany({
@@ -23,6 +25,7 @@ class StructureComponentServiceImpl implements StructureComponentService {
       orderBy: { createdAt: "asc" }
     })
 
+    logger.info("components found on get components by structure id", { userId, structureId })
     return components.map(toStructureComponentDto)
   }
 
@@ -36,6 +39,7 @@ class StructureComponentServiceImpl implements StructureComponentService {
     })
 
     if (!structure) {
+      logger.warn("structure not found on bulk upsert components", { userId, structureId })
       throw new Error("רכיבים למבנה לא נמצאים")
     }
 
@@ -78,6 +82,7 @@ class StructureComponentServiceImpl implements StructureComponentService {
         })
       )
 
+      logger.info("components bulk upserted", { userId, structureId })
       return createdComponents.map(toStructureComponentDto)
     })
   }

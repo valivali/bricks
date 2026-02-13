@@ -4,6 +4,7 @@ import type { UpdateProfileInput } from "../../schemas/profile.schema.js"
 import { prisma, type PrismaDbClient } from "../../lib/prisma.js"
 import { ResendEmailProvider, type EmailProviderInterface } from "../../providers/resend.provider.js"
 import { ProfileServiceInterface } from "./profile.interface.js"
+import { logger } from "../../lib/logger/index.js"
 
 export class ProfileService implements ProfileServiceInterface {
   constructor(
@@ -18,6 +19,7 @@ export class ProfileService implements ProfileServiceInterface {
     })
 
     if (!user) {
+      logger.warn("user not found on get profile", { userId })
       throw new Error("משתמש לא נמצא")
     }
 
@@ -37,19 +39,23 @@ export class ProfileService implements ProfileServiceInterface {
     })
 
     if (!user) {
+      logger.warn("user not found on update profile", { userId })
       throw new Error("משתמש לא נמצא")
     }
 
     if (data.email !== user.email) {
+      logger.info("email changed on update profile", { userId, email: data.email })
       const existingUser = await this.prismaClient.user.findUnique({
         where: { email: data.email }
       })
 
       if (existingUser && existingUser.id !== userId) {
+        logger.warn("email already in use on update profile", { userId, email: data.email })
         throw new Error("כתובת האימייל כבר בשימוש")
       }
 
       const verificationToken = uuidv4()
+      logger.info("sending verification email on update profile", { userId, email: data.email })
 
       await this.prismaClient.user.update({
         where: { id: userId },
@@ -61,8 +67,10 @@ export class ProfileService implements ProfileServiceInterface {
       })
 
       await this.emailProvider.sendVerificationEmail(data.email, verificationToken)
+      logger.info("verification email sent on update profile", { userId, email: data.email })
     }
 
+    logger.info("profile updated", { userId })
     return this.updateProfileData(userId, data, {
       email: data.email,
       isVerified: data.email !== user.email ? false : user.isVerified
@@ -100,6 +108,7 @@ export class ProfileService implements ProfileServiceInterface {
     })
 
     if (!user) {
+      logger.warn("user not found on update profile data", { userId })
       throw new Error("משתמש לא נמצא")
     }
 
