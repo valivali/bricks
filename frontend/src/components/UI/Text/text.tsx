@@ -9,8 +9,10 @@ export const Text = ({ children, className, size, variant = "span" }: TextProps)
   return <Tag className={classes}>{children}</Tag>
 }
 
+const headingTags = ["h1", "h2", "h3", "h4", "h5", "h6"] as const
+
 export const Title = ({ children, className, size, level = 1 }: TitleProps) => {
-  const Tag = `h${level}`
+  const Tag = headingTags[level - 1] ?? "h1"
   const sizeClass = size ? `title--${size}` : undefined
   const classes = [styles.title, sizeClass && styles[sizeClass], className].filter(Boolean).join(" ")
 

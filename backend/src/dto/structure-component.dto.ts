@@ -1,4 +1,4 @@
-import type { StructureComponent, SubComponent } from "@/generated/prisma"
+import type { StructureComponent, SubComponent } from "../generated/prisma/client.js"
 
 export interface SubComponentDto {
   id: string
