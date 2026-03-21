@@ -1,3 +1,6 @@
+import path from "path"
+import { fileURLToPath } from "url"
+
 import cors from "cors"
 import express from "express"
 import helmet from "helmet"
@@ -30,6 +33,19 @@ app.use(requestContextMiddleware)
 app.use(requestLoggerMiddleware)
 
 app.use("/api", routes)
+
+if (env.nodeEnv === "production") {
+  const __dirname = path.dirname(fileURLToPath(import.meta.url))
+  const clientDist = path.join(__dirname, "../../frontend/dist")
+
+  app.use(express.static(clientDist))
+  app.get("*", (req, res, next) => {
+    if (req.method !== "GET") return next()
+    res.sendFile(path.join(clientDist, "index.html"), err => {
+      if (err) return next(err)
+    })
+  })
+}
 
 app.listen(port, () => {
   logger.info("server.started", { port })
