@@ -25,7 +25,7 @@ React frontend for the Bricks app with a full authentication flow (login, signup
 
 ### Prerequisites
 
-- Node.js 20.18.0+ (see `.nvmrc`)
+- Node.js 22.22.1+ (see `.nvmrc`)
 - Backend running on `http://localhost:4000` (or update `VITE_API_URL`)
 
 ### Install
@@ -68,6 +68,7 @@ npm run test      # Tests
 - `/auth/verify-email?token=...`
 
 Protected:
+
 - `/create-skeleton`
 
 ## Toasts
