@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom"
 
 import { type StructureIdDto } from "@/api/structure-id.api"
 import {
-  AREA_OPTIONS,
   INSPECTION_CLASSIFICATION_OPTIONS,
   PRIMARY_CLASSIFICATION_OPTIONS,
   SECONDARY_CLASSIFICATION_OPTIONS
