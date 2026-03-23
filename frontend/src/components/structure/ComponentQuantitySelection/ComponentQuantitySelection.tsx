@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 
 import { Button } from "@/components/UI/button/button"
 import { type StructuralComponent } from "@/config/skeleton-data"
@@ -14,9 +14,29 @@ interface ComponentQuantitySelectionProps {
 
 const ComponentQuantitySelection: React.FC<ComponentQuantitySelectionProps> = ({ components, initialQuantities, onNext, onBack }) => {
   const [quantities, setQuantities] = useState<Record<string, string>>(initialQuantities)
+  const rootRef = useRef<HTMLDivElement | null>(null)
   useEffect(() => {
     setQuantities(initialQuantities)
   }, [initialQuantities])
+
+  const findScrollContainer = useCallback((): HTMLElement | null => {
+    let el: HTMLElement | null = rootRef.current
+    while (el) {
+      const style = window.getComputedStyle(el)
+      if (
+        (style.overflowY === "auto" || style.overflowY === "scroll") &&
+        el.scrollHeight > el.clientHeight
+      ) {
+        return el
+      }
+      el = el.parentElement
+    }
+    return null
+  }, [])
+
+  const scrollDrawerToTop = useCallback(() => {
+    findScrollContainer()?.scrollTo({ top: 0 })
+  }, [findScrollContainer])
 
   const handleQuantityChange = (componentId: string, value: string) => {
     setQuantities(prev => ({
@@ -28,7 +48,7 @@ const ComponentQuantitySelection: React.FC<ComponentQuantitySelectionProps> = ({
   const hasSelectedComponents = Object.values(quantities).some(q => parseInt(q) > 0)
 
   return (
-    <div className={styles.container}>
+    <div ref={rootRef} className={styles.container}>
       <div className={styles.tableWrapper}>
         <table className={styles.componentsTable}>
           <thead>
@@ -62,10 +82,23 @@ const ComponentQuantitySelection: React.FC<ComponentQuantitySelectionProps> = ({
       </div>
 
       <div className={styles.actions}>
-        <Button variant="outline" onClick={onBack}>
+        <Button
+          variant="outline"
+          onClick={() => {
+            scrollDrawerToTop()
+            onBack()
+          }}
+        >
           חזור
         </Button>
-        <Button onClick={() => onNext(quantities)} disabled={!hasSelectedComponents} className={styles.nextButton}>
+        <Button
+          onClick={() => {
+            scrollDrawerToTop()
+            onNext(quantities)
+          }}
+          disabled={!hasSelectedComponents}
+          className={styles.nextButton}
+        >
           המשך
         </Button>
       </div>

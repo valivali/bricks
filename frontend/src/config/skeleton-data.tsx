@@ -477,7 +477,7 @@ export const BRIDGE_STRUCTURAL_COMPONENTS: StructuralComponent[] = [
   },
   {
     componentId: "10",
-    description: "קירות מצע",
+    description: "קירות מצח",
     importanceLevel: ImportanceLevel.HIGH,
     basicMeasurementUnit: "מ״ר",
     secondaryMeasurementUnit: "",

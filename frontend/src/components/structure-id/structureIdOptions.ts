@@ -20,15 +20,16 @@ export const PRIMARY_CLASSIFICATION_OPTIONS = [
 ]
 
 export const SECONDARY_CLASSIFICATION_OPTIONS = [
-  { value: "VBG", label: "VBG" },
-  { value: "TBG", label: "TBG" },
-  { value: "PBG", label: "PBG" },
-  { value: "UBG", label: "UBG" },
-  { value: "VUP", label: "VUP" },
-  { value: "CLB", label: "CLB" },
-  { value: "PUP", label: "PUP" },
   { value: "AUP", label: "AUP" },
-  { value: "CLS", label: "CLS" }
+  { value: "CLB", label: "CLB" },
+  { value: "CLL", label: "CLL" },
+  { value: "CLS", label: "CLS" },
+  { value: "PBG", label: "PBG" },
+  { value: "PUP", label: "PUP" },
+  { value: "TBG", label: "TBG" },
+  { value: "UBG", label: "UBG" },
+  { value: "VBG", label: "VBG" },
+  { value: "VUP", label: "VUP" }
 ]
 
 export const AUTHORITY_OPTIONS = [

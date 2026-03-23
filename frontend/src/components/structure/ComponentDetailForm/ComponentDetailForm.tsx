@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useForm } from "react-hook-form"
 import { match } from "ts-pattern"
 
@@ -25,6 +25,60 @@ const ComponentDetailForm: React.FC<ComponentDetailFormProps> = ({
   onBack
 }) => {
   const [activeComponentId, setActiveComponentId] = useState<string | null>(null)
+  const rootRef = useRef<HTMLDivElement | null>(null)
+  const prevActiveComponentIdRef = useRef<string | null>(null)
+  const savedScrollTopRef = useRef(0)
+  const savedScrollContainerRef = useRef<HTMLElement | null>(null)
+  const hasSavedScrollRef = useRef(false)
+
+  const findScrollContainer = useCallback((): HTMLElement | null => {
+    let el: HTMLElement | null = rootRef.current
+    while (el) {
+      const style = window.getComputedStyle(el)
+      if (
+        (style.overflowY === "auto" || style.overflowY === "scroll") &&
+        el.scrollHeight > el.clientHeight
+      ) {
+        return el
+      }
+      el = el.parentElement
+    }
+    return null
+  }, [])
+
+  const scrollDrawerToTop = useCallback(() => {
+    findScrollContainer()?.scrollTo({ top: 0 })
+  }, [findScrollContainer])
+
+  const saveDrawerScrollPosition = useCallback(() => {
+    const sc = findScrollContainer()
+    if (!sc) return
+    savedScrollContainerRef.current = sc
+    savedScrollTopRef.current = sc.scrollTop
+    hasSavedScrollRef.current = true
+  }, [findScrollContainer])
+
+  const restoreDrawerScrollPosition = useCallback(() => {
+    if (!hasSavedScrollRef.current) return
+    const sc = savedScrollContainerRef.current ?? findScrollContainer()
+    if (!sc) return
+    sc.scrollTo({ top: savedScrollTopRef.current })
+    hasSavedScrollRef.current = false
+  }, [findScrollContainer])
+
+  useEffect(() => {
+    const prev = prevActiveComponentIdRef.current
+
+    if (activeComponentId && !prev) {
+      requestAnimationFrame(() => scrollDrawerToTop())
+    }
+
+    if (!activeComponentId && prev) {
+      requestAnimationFrame(() => restoreDrawerScrollPosition())
+    }
+
+    prevActiveComponentIdRef.current = activeComponentId
+  }, [activeComponentId, restoreDrawerScrollPosition, scrollDrawerToTop])
 
   const { watch, setValue, handleSubmit } = useForm<FormValues>({
     defaultValues: initialFormValues
@@ -184,7 +238,7 @@ const ComponentDetailForm: React.FC<ComponentDetailFormProps> = ({
 
   if (activeComponentId && activeComponent) {
     return (
-      <div className={styles.container}>
+      <div ref={rootRef} className={styles.container}>
         <div className={styles.detailHeader}>
           <div className={styles.componentTitle}>
             <strong>{activeComponent.componentId}</strong> - {activeComponent.description}
@@ -281,7 +335,7 @@ const ComponentDetailForm: React.FC<ComponentDetailFormProps> = ({
   }
 
   return (
-    <div className={styles.container}>
+    <div ref={rootRef} className={styles.container}>
       <div className={styles.statusLegend}>
         <div className={styles.legendItem}>
           <div className={`${styles.statusDot} ${styles.green}`} /> הכל מלא
@@ -308,7 +362,11 @@ const ComponentDetailForm: React.FC<ComponentDetailFormProps> = ({
             <div
               key={comp.componentId}
               className={`${styles.componentCard} ${activeComponentId === comp.componentId ? styles.active : ""}`}
-              onClick={() => setActiveComponentId(comp.componentId)}>
+              onClick={() => {
+                saveDrawerScrollPosition()
+                setActiveComponentId(comp.componentId)
+              }}
+            >
               <div className={styles.cardImagePlaceholder}>
                 {firstImage ? (
                   <img src={firstImage} alt="preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -360,10 +418,22 @@ const ComponentDetailForm: React.FC<ComponentDetailFormProps> = ({
       </div>
 
       <div className={styles.actions}>
-        <Button variant="outline" onClick={onBack}>
+        <Button
+          variant="outline"
+          onClick={() => {
+            scrollDrawerToTop()
+            onBack()
+          }}
+        >
           חזור
         </Button>
-        <Button onClick={handleSubmit(onSubmit)} className={styles.submitButton}>
+        <Button
+          onClick={handleSubmit(data => {
+            scrollDrawerToTop()
+            onSubmit(data)
+          })}
+          className={styles.submitButton}
+        >
           המשך
         </Button>
       </div>
