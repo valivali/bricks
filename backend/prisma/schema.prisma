@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -14,20 +8,20 @@ datasource db {
 }
 
 model User {
-  id                 String    @id @default(uuid())
-  email              String    @unique
+  id                 String        @id @default(uuid())
+  email              String        @unique
   password           String
-  isVerified         Boolean   @default(false)
-  verificationToken  String?   @unique
-  resetToken         String?   @unique
+  isVerified         Boolean       @default(false)
+  verificationToken  String?       @unique
+  resetToken         String?       @unique
   resetTokenExpiry   DateTime?
-  refreshTokenHash   String?   @unique
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  refreshTokenHash   String?       @unique
   refreshTokenExpiry DateTime?
-  createdAt          DateTime  @default(now())
-  updatedAt          DateTime  @updatedAt
-  profile            UserProfile?
   inspections        Inspection[]
   structureIds       StructureId[]
+  profile            UserProfile?
 
   @@map("users")
 }
@@ -35,7 +29,6 @@ model User {
 model UserProfile {
   id             String   @id @default(uuid())
   userId         String   @unique
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   firstName      String?  @db.VarChar(50)
   lastName       String?  @db.VarChar(50)
   idNumber       String?  @db.VarChar(9)
@@ -43,9 +36,10 @@ model UserProfile {
   companyName    String?  @db.VarChar(100)
   companyId      String?  @db.VarChar(9)
   companyAddress String?  @db.VarChar(200)
-  profileImage   String?  @db.Text
+  profileImage   String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("user_profiles")
 }
@@ -53,12 +47,9 @@ model UserProfile {
 model Inspection {
   id                          String       @id @default(uuid())
   userId                      String
-  user                        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  structureId                 String?
-  structure                   StructureId? @relation(fields: [structureId], references: [id])
   lastUpdated                 DateTime?
   structureType               String
-  generalDescription          String?      @db.Text
+  generalDescription          String?
   inspectionType              String?
   companyName                 String?
   inspectorName               String?
@@ -83,85 +74,71 @@ model Inspection {
   coordinateEast              Float?
   createdAt                   DateTime     @default(now())
   updatedAt                   DateTime     @updatedAt
+  structureId                 String?
+  structure                   StructureId? @relation(fields: [structureId], references: [id])
+  user                        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("inspections")
 }
 
 model StructureId {
-  id                              String    @id @default(uuid())
+  id                              String               @id @default(uuid())
   userId                          String
-  user                            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
-  structureNumber                 String?   @db.VarChar(50)
-  structureName                   String?   @db.VarChar(200)
-  structureMarking                String?   @db.VarChar(100)
-  generalDescription              String?   @db.Text
-  area                            String?   @db.VarChar(10)
-  belongsToRoad                   String?   @db.VarChar(10)
-  runningDistanceKm               String?   @db.VarChar(10)
-  runningDistanceStart            String?   @db.VarChar(10)
-  runningDistanceEnd              String?   @db.VarChar(10)
-  coordinateNorth                 String?   @db.VarChar(10)
-  coordinateEast                  String?   @db.VarChar(10)
-  
-  structureType                   String?   @db.VarChar(50)
-  structureSubType                String?   @db.VarChar(50)
-  structureDetailType             String?   @db.VarChar(50)
-  inventoryComponentName          String?   @db.VarChar(200)
-  inspectionType                  String?   @db.VarChar(50)
-  plannedInspectionDate           DateTime?
-  inspector                       String?   @db.VarChar(200)
-  inspectionCompany               String?   @db.VarChar(200)
-  inspectionStatus                String?   @db.VarChar(50)
-  
-  primaryClassificationGroup      String?   @db.VarChar(10)
-  secondaryClassificationGroup    String?   @db.VarChar(10)
-  trafficFunctionClass            String?   @db.VarChar(10)
-  emergencyClass                  String?   @db.VarChar(10)
-  builtBy                         String?   @db.VarChar(10)
-  owner                           String?   @db.VarChar(10)
-  maintenanceResponsibility       String?   @db.VarChar(10)
-  tollRoad                        String?   @db.VarChar(10)
-  specialTransport                String?   @db.VarChar(10)
-  historicalValue                 String?   @db.VarChar(10)
-  temporaryStructure              String?   @db.VarChar(10)
-  
-  constructionYear                String?   @db.VarChar(4)
-  lastRehabYear                   String?   @db.VarChar(4)
-  primaryUsageAbove               String?   @db.VarChar(10)
-  primaryRoadNumberAbove          String?   @db.VarChar(10)
-  secondaryUsageAbove             String?   @db.VarChar(10)
-  secondaryRoadNumberAbove        String?   @db.VarChar(10)
+  structureNumber                 String?              @db.VarChar(50)
+  structureName                   String?              @db.VarChar(200)
+  structureMarking                String?              @db.VarChar(100)
+  generalDescription              String?
+  area                            String?              @db.VarChar(10)
+  belongsToRoad                   String?              @db.VarChar(10)
+  runningDistanceKm               String?              @db.VarChar(10)
+  runningDistanceStart            String?              @db.VarChar(10)
+  runningDistanceEnd              String?              @db.VarChar(10)
+  coordinateNorth                 String?              @db.VarChar(10)
+  coordinateEast                  String?              @db.VarChar(10)
+  primaryClassificationGroup      String?              @db.VarChar(10)
+  secondaryClassificationGroup    String?              @db.VarChar(10)
+  trafficFunctionClass            String?              @db.VarChar(10)
+  emergencyClass                  String?              @db.VarChar(10)
+  builtBy                         String?              @db.VarChar(10)
+  owner                           String?              @db.VarChar(10)
+  maintenanceResponsibility       String?              @db.VarChar(10)
+  tollRoad                        String?              @db.VarChar(10)
+  specialTransport                String?              @db.VarChar(10)
+  historicalValue                 String?              @db.VarChar(10)
+  temporaryStructure              String?              @db.VarChar(10)
+  constructionYear                String?              @db.VarChar(4)
+  lastRehabYear                   String?              @db.VarChar(4)
+  primaryUsageAbove               String?              @db.VarChar(10)
+  primaryRoadNumberAbove          String?              @db.VarChar(10)
+  secondaryUsageAbove             String?              @db.VarChar(10)
+  secondaryRoadNumberAbove        String?              @db.VarChar(10)
   tracksOrRailwaysAbove           Int?
   lanesAbove                      Int?
-  trafficDirectionAbove           String?   @db.VarChar(10)
-  primaryUsageBelow               String?   @db.VarChar(10)
-  primaryRoadNumberBelow          String?   @db.VarChar(10)
-  secondaryUsageBelow             String?   @db.VarChar(10)
-  secondaryRoadNumberBelow        String?   @db.VarChar(10)
+  trafficDirectionAbove           String?              @db.VarChar(10)
+  primaryUsageBelow               String?              @db.VarChar(10)
+  primaryRoadNumberBelow          String?              @db.VarChar(10)
+  secondaryUsageBelow             String?              @db.VarChar(10)
+  secondaryRoadNumberBelow        String?              @db.VarChar(10)
   tracksOrRailwaysBelow           Int?
   lanesBelow                      Int?
-  trafficDirectionBelow           String?   @db.VarChar(10)
+  trafficDirectionBelow           String?              @db.VarChar(10)
   aadt                            Int?
-  aadtYear                        String?   @db.VarChar(4)
+  aadtYear                        String?              @db.VarChar(4)
   aadtt                           Int?
-  bypassPossible                  String?   @db.VarChar(10)
+  bypassPossible                  String?              @db.VarChar(10)
   bypassLength                    Int?
-  bypassDescription               String?   @db.Text
-  bypassDescriptionImage          String?   @db.Text
-  localBypass                     String?   @db.VarChar(10)
-  localBypassMethod               String?   @db.VarChar(10)
-  localBypassMethodOther          String?   @db.Text
-  originalPlanner                 String?   @db.VarChar(200)
-  rehabPlanner                    String?   @db.VarChar(200)
-  
+  bypassDescription               String?
+  localBypass                     String?              @db.VarChar(10)
+  localBypassMethod               String?              @db.VarChar(10)
+  originalPlanner                 String?              @db.VarChar(200)
+  rehabPlanner                    String?              @db.VarChar(200)
   spanCount                       Int?
   maxSpanLength                   Float?
   totalLength                     Float?
   lengthRight                     Float?
   lengthLeft                      Float?
-  spanDistribution                String?   @db.VarChar(500)
-  widthChange                     String?   @db.VarChar(10)
+  spanDistribution                String?              @db.VarChar(500)
+  widthChange                     String?              @db.VarChar(10)
   minWidthPerpendicular           Float?
   maxWidthPerpendicular           Float?
   maxExternalWidth                Float?
@@ -170,8 +147,7 @@ model StructureId {
   leftSidewalkWidth               Float?
   minRoadwayWidth                 Float?
   totalRoadwayWidth               Float?
-  separatorType                   String?   @db.VarChar(10)
-  separatorTypeOther              String?   @db.Text
+  separatorType                   String?              @db.VarChar(10)
   skewAngle                       Int?
   minVerticalClearanceBelow       Float?
   verticalClearanceDrainage       Float?
@@ -189,71 +165,43 @@ model StructureId {
   maxHorizontalDim                Float?
   minVerticalClearanceTunnel      Float?
   minHorizontalClearanceTunnel    Float?
-  
   deckTypeCount                   Int?
-  deckTypes                       String?   @db.Text
-  deckTypesOther                  String?   @db.Text
-  floorType                       String?   @db.Text
-  floorTypeOther                  String?   @db.Text
-  abutment1Type                   String?   @db.VarChar(10)
-  abutment1TypeOther              String?   @db.Text
-  abutment2Type                   String?   @db.VarChar(10)
-  abutment2TypeOther              String?   @db.Text
+  deckTypes                       String?
+  floorType                       String?
+  abutment1Type                   String?              @db.VarChar(10)
+  abutment2Type                   String?              @db.VarChar(10)
   pierTypeCount                   Int?
-  pierTypes                       String?   @db.Text
-  pierTypesOther                  String?   @db.Text
-  prestressingType                String?   @db.VarChar(10)
-  prestressingTypeOther           String?   @db.Text
-  bearingTypes                    String?   @db.Text
-  bearingTypesOther               String?   @db.Text
-  jointTypes                      String?   @db.Text
-  jointTypesOther                 String?   @db.Text
-  
-  deckMaterials                   String?   @db.Text
-  deckMaterialsOther              String?   @db.Text
-  beamMaterials                   String?   @db.Text
-  beamMaterialsOther              String?   @db.Text
-  abutmentMaterials               String?   @db.Text
-  abutmentMaterialsOther          String?   @db.Text
-  pierMaterials                   String?   @db.Text
-  pierMaterialsOther              String?   @db.Text
-  slopeProtectionMaterials        String?   @db.Text
-  slopeProtectionMaterialsOther   String?   @db.Text
-  vehicleBarrierMaterials         String?   @db.Text
-  vehicleBarrierMaterialsOther    String?   @db.Text
-  pedestrianRailingMaterials      String?   @db.Text
-  pedestrianRailingMaterialsOther String?   @db.Text
-  deckCoveringMaterials           String?   @db.Text
-  deckCoveringMaterialsOther      String?   @db.Text
-  deckSealingMaterials            String?   @db.Text
-  deckSealingMaterialsOther       String?   @db.Text
-  curbMaterials                   String?   @db.Text
-  curbMaterialsOther              String?   @db.Text
-  
-  loadRatingMethod                String?   @db.Text
-  loadRatingResult                String?   @db.VarChar(100)
+  pierTypes                       String?
+  prestressingType                String?              @db.VarChar(10)
+  bearingTypes                    String?
+  jointTypes                      String?
+  deckMaterials                   String?
+  beamMaterials                   String?
+  abutmentMaterials               String?
+  pierMaterials                   String?
+  slopeProtectionMaterials        String?
+  vehicleBarrierMaterials         String?
+  pedestrianRailingMaterials      String?
+  deckCoveringMaterials           String?
+  deckSealingMaterials            String?
+  curbMaterials                   String?
+  loadRatingMethod                String?
+  loadRatingResult                String?              @db.VarChar(100)
   loadRatingDate                  DateTime?
-  seismicRatingMethod             String?   @db.Text
-  seismicRatingResult             String?   @db.VarChar(100)
+  seismicRatingMethod             String?
+  seismicRatingResult             String?              @db.VarChar(100)
   seismicRatingDate               DateTime?
   approvedLoadLimits              Int?
   loadSignage                     Int?
-  
-  infrastructureTypes             String?   @db.Text
-  infrastructureTypesOther        String?   @db.Text
-  
+  infrastructureTypes             String?
   maxRelativeLevel                Float?
   designReturnPeriod              Int?
-  hydraulicAdequacy               String?   @db.VarChar(10)
-  
+  hydraulicAdequacy               String?              @db.VarChar(10)
   conditionPIav                   Int?
   conditionPIcrit                 Int?
-  
   availabilityPI                  Int?
-  
   reliabilityPI                   Int?
-  
-  inspectionClassification        String?   @db.VarChar(20)
+  inspectionClassification        String?              @db.VarChar(20)
   initialInspectionDate           DateTime?
   lastRoutineInspectionDate       DateTime?
   routineInspectionFrequency      Int?
@@ -261,20 +209,62 @@ model StructureId {
   underwaterInspectionDate        DateTime?
   thoroughInspectionDate          DateTime?
   specialInspectionDate           DateTime?
-  
-  createdAt                       DateTime  @default(now())
-  updatedAt                       DateTime  @updatedAt
-  
-  components                      StructureComponent[]
+  createdAt                       DateTime             @default(now())
+  updatedAt                       DateTime             @updatedAt
+  localBypassMethodOther          String?
+  bypassDescriptionImage          String?
+  abutment1TypeOther              String?
+  abutment2TypeOther              String?
+  abutmentMaterialsOther          String?
+  beamMaterialsOther              String?
+  bearingTypesOther               String?
+  curbMaterialsOther              String?
+  deckCoveringMaterialsOther      String?
+  deckMaterialsOther              String?
+  deckSealingMaterialsOther       String?
+  deckTypesOther                  String?
+  floorTypeOther                  String?
+  infrastructureTypesOther        String?
+  jointTypesOther                 String?
+  pedestrianRailingMaterialsOther String?
+  pierMaterialsOther              String?
+  pierTypesOther                  String?
+  prestressingTypeOther           String?
+  separatorTypeOther              String?
+  slopeProtectionMaterialsOther   String?
+  vehicleBarrierMaterialsOther    String?
+  inspectionCompany               String?              @db.VarChar(200)
+  inspectionStatus                String?              @db.VarChar(50)
+  inspectionType                  String?              @db.VarChar(50)
+  inspector                       String?              @db.VarChar(200)
+  inventoryComponentName          String?              @db.VarChar(200)
+  plannedInspectionDate           DateTime?
+  structureDetailType             String?              @db.VarChar(50)
+  structureSubType                String?              @db.VarChar(50)
+  structureType                   String?              @db.VarChar(50)
+  fieldImages                     FieldImage[]
   inspections                     Inspection[]
+  components                      StructureComponent[]
+  user                            User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("structure_ids")
+}
+
+model FieldImage {
+  id          String      @id @default(uuid())
+  structureId String
+  fieldName   String
+  imageUrl    String
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  structure   StructureId @relation(fields: [structureId], references: [id], onDelete: Cascade)
+
+  @@map("field_images")
 }
 
 model StructureComponent {
   id                       String         @id @default(uuid())
   structureId              String
-  structure                StructureId    @relation(fields: [structureId], references: [id], onDelete: Cascade)
   componentCode            String
   description              String
   importanceLevel          String
@@ -282,11 +272,12 @@ model StructureComponent {
   secondaryMeasurementUnit String?
   quantity                 Int
   evaluationNeeded         Boolean        @default(false)
-  notes                    String?        @db.Text
-  comments                 String?        @db.Text
-  subComponents            SubComponent[]
+  notes                    String?
+  comments                 String?
   createdAt                DateTime       @default(now())
   updatedAt                DateTime       @updatedAt
+  structure                StructureId    @relation(fields: [structureId], references: [id], onDelete: Cascade)
+  subComponents            SubComponent[]
 
   @@map("structure_components")
 }
@@ -294,15 +285,15 @@ model StructureComponent {
 model SubComponent {
   id                String             @id @default(uuid())
   componentId       String
-  component         StructureComponent @relation(fields: [componentId], references: [id], onDelete: Cascade)
   index             Int
   name              String
   basicQuantity     Float              @default(0)
   secondaryQuantity Float              @default(0)
-  comments          String?            @db.Text
-  attachment        String?            @db.Text
+  comments          String?
+  attachment        String?
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
+  component         StructureComponent @relation(fields: [componentId], references: [id], onDelete: Cascade)
 
   @@map("sub_components")
 }

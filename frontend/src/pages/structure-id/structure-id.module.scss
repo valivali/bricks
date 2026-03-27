@@ -60,11 +60,18 @@
   }
 }
 
+.labelWrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
 .label {
   font-size: 14px;
   font-weight: 500;
   color: var(--foreground);
-  margin-bottom: 6px;
+  margin-bottom: 0;
 }
 
 .input,

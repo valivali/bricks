@@ -1,7 +1,6 @@
 import React, { useEffect } from "react"
 
-import { FieldError } from "@/components/structure-id/FieldError"
-import { Text, Title } from "@/components/UI/Text/text"
+import { Title } from "@/components/UI/Text/text"
 import styles from "@/pages/structure-id/structure-id.module.scss"
 
 import type { StructureIdSectionBaseProps } from "../sectionTypes"
@@ -13,6 +12,7 @@ import {
   YES_NO_OPTIONS
 } from "../structureIdOptions"
 import { getStructureDetailTypeOptions, getStructureSubTypeOptions, getStructureTypeOptions } from "../structureTypeOptions"
+import { FormField } from "../FormField"
 
 export interface GeneralClassificationSectionProps extends StructureIdSectionBaseProps {
   structureTypeValue?: string
@@ -25,6 +25,8 @@ export const GeneralClassificationSection: React.FC<GeneralClassificationSection
   register,
   errors,
   isReadonly,
+  fieldImages,
+  onFieldImagesChange,
   structureTypeValue,
   structureSubTypeValue,
   onStructureTypeChange,
@@ -47,209 +49,179 @@ export const GeneralClassificationSection: React.FC<GeneralClassificationSection
       </Title>
 
       <div className={styles.grid}>
-        <label className={styles.field}>
-          <span className={styles.label}>סוג מבנה</span>
-          <select
-            {...register("structureType")}
-            className={styles.select}
-            disabled={isReadonly}
-            onChange={e => {
-              register("structureType").onChange(e)
-              onStructureTypeChange?.(e.target.value)
-            }}>
-            <option value="">בחר</option>
-            {structureTypes.map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <FieldError errors={errors} name="structureType" />
-        </label>
+        <FormField
+          label="סוג מבנה"
+          name="structureType"
+          type="select"
+          register={register}
+          error={errors.structureType}
+          isReadonly={isReadonly}
+          options={structureTypes}
+          images={fieldImages}
+          onImagesChange={onFieldImagesChange}
+          onChange={e => onStructureTypeChange?.(e.target.value)}
+        />
 
         {structureSubTypes.length > 0 && (
-          <label className={styles.field}>
-            <span className={styles.label}>תת-סוג מבנה</span>
-            <select
-              {...register("structureSubType")}
-              className={styles.select}
-              disabled={isReadonly}
-              onChange={e => {
-                register("structureSubType").onChange(e)
-                onStructureSubTypeChange?.(e.target.value)
-              }}>
-              <option value="">בחר</option>
-              {structureSubTypes.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-            <FieldError errors={errors} name="structureSubType" />
-          </label>
+          <FormField
+            label="תת-סוג מבנה"
+            name="structureSubType"
+            type="select"
+            register={register}
+            error={errors.structureSubType}
+            isReadonly={isReadonly}
+            options={structureSubTypes}
+            images={fieldImages}
+            onImagesChange={onFieldImagesChange}
+            onChange={e => onStructureSubTypeChange?.(e.target.value)}
+          />
         )}
 
         {structureDetailTypes.length > 0 && (
-          <label className={styles.field}>
-            <span className={styles.label}>פירוט סוג מבנה</span>
-            <select {...register("structureDetailType")} className={styles.select} disabled={isReadonly}>
-              <option value="">בחר</option>
-              {structureDetailTypes.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-            <FieldError errors={errors} name="structureDetailType" />
-          </label>
+          <FormField
+            label="פירוט סוג מבנה"
+            name="structureDetailType"
+            type="select"
+            register={register}
+            error={errors.structureDetailType}
+            isReadonly={isReadonly}
+            options={structureDetailTypes}
+            images={fieldImages}
+            onImagesChange={onFieldImagesChange}
+          />
         )}
 
-        <label className={styles.field}>
-          <span className={styles.label}>2.1 קבוצת סיווג ראשית</span>
-          <select {...register("primaryClassificationGroup")} className={styles.select} disabled={isReadonly}>
-            <option value="">בחר</option>
-            {PRIMARY_CLASSIFICATION_OPTIONS.map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <FieldError errors={errors} name="primaryClassificationGroup" />
-        </label>
+        <FormField
+          label="2.1 קבוצת סיווג ראשית"
+          name="primaryClassificationGroup"
+          type="select"
+          register={register}
+          error={errors.primaryClassificationGroup}
+          isReadonly={isReadonly}
+          options={PRIMARY_CLASSIFICATION_OPTIONS}
+          images={fieldImages}
+          onImagesChange={onFieldImagesChange}
+        />
 
-        <label className={styles.field}>
-          <span className={styles.label}>2.2 קבוצת סיווג משנית</span>
-          <select {...register("secondaryClassificationGroup")} className={styles.select} disabled={isReadonly}>
-            <option value="">בחר</option>
-            {SECONDARY_CLASSIFICATION_OPTIONS.map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <FieldError errors={errors} name="secondaryClassificationGroup" />
-        </label>
+        <FormField
+          label="2.2 קבוצת סיווג משנית"
+          name="secondaryClassificationGroup"
+          type="select"
+          register={register}
+          error={errors.secondaryClassificationGroup}
+          isReadonly={isReadonly}
+          options={SECONDARY_CLASSIFICATION_OPTIONS}
+          images={fieldImages}
+          onImagesChange={onFieldImagesChange}
+        />
 
-        <label className={styles.field}>
-          <span className={styles.label}>2.3 סיווג תפקוד תנועתי</span>
-          <select {...register("trafficFunctionClass")} className={styles.select} disabled={isReadonly}>
-            <option value="">בחר סיווג</option>
-            {TRAFFIC_FUNCTION_OPTIONS.map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <FieldError errors={errors} name="trafficFunctionClass" />
-        </label>
+        <FormField
+          label="2.3 סיווג תפקוד תנועתי"
+          name="trafficFunctionClass"
+          type="select"
+          register={register}
+          error={errors.trafficFunctionClass}
+          isReadonly={isReadonly}
+          options={TRAFFIC_FUNCTION_OPTIONS}
+          images={fieldImages}
+          onImagesChange={onFieldImagesChange}
+        />
 
-        <label className={styles.field}>
-          <span className={styles.label}>2.4 סיווג חירום *</span>
-          <select {...register("emergencyClass")} className={styles.select} disabled={true}>
-            <option value="">בחר</option>
-            {YES_NO_OPTIONS.map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <span className={styles.restricted}>שדה מוגבל</span>
-          <FieldError errors={errors} name="emergencyClass" />
-        </label>
+        <FormField
+          label="2.4 סיווג חירום *"
+          name="emergencyClass"
+          type="select"
+          register={register}
+          error={errors.emergencyClass}
+          isReadonly={true}
+          options={YES_NO_OPTIONS}
+          images={fieldImages}
+          onImagesChange={onFieldImagesChange}
+        />
 
-        <label className={styles.field}>
-          <span className={styles.label}>2.5 הוקם על ידי *</span>
-          <select {...register("builtBy")} className={styles.select} disabled={isReadonly}>
-            <option value="">בחר</option>
-            {AUTHORITY_OPTIONS.map(option => (
-              <option key={`built-${option.value}`} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <FieldError errors={errors} name="builtBy" />
-        </label>
+        <FormField
+          label="2.5 הוקם על ידי *"
+          name="builtBy"
+          type="select"
+          register={register}
+          error={errors.builtBy}
+          isReadonly={isReadonly}
+          options={AUTHORITY_OPTIONS}
+          images={fieldImages}
+          onImagesChange={onFieldImagesChange}
+        />
 
-        <label className={styles.field}>
-          <span className={styles.label}>2.6 בעלים *</span>
-          <select {...register("owner")} className={styles.select} disabled={isReadonly}>
-            <option value="">בחר</option>
-            {AUTHORITY_OPTIONS.map(option => (
-              <option key={`owner-${option.value}`} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <FieldError errors={errors} name="owner" />
-        </label>
+        <FormField
+          label="2.6 בעלים *"
+          name="owner"
+          type="select"
+          register={register}
+          error={errors.owner}
+          isReadonly={isReadonly}
+          options={AUTHORITY_OPTIONS}
+          images={fieldImages}
+          onImagesChange={onFieldImagesChange}
+        />
 
-        <label className={styles.field}>
-          <span className={styles.label}>2.7 אחריות אחזקה *</span>
-          <select {...register("maintenanceResponsibility")} className={styles.select} disabled={isReadonly}>
-            <option value="">בחר</option>
-            {AUTHORITY_OPTIONS.map(option => (
-              <option key={`maint-${option.value}`} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <FieldError errors={errors} name="maintenanceResponsibility" />
-        </label>
+        <FormField
+          label="2.7 אחריות אחזקה *"
+          name="maintenanceResponsibility"
+          type="select"
+          register={register}
+          error={errors.maintenanceResponsibility}
+          isReadonly={isReadonly}
+          options={AUTHORITY_OPTIONS}
+          images={fieldImages}
+          onImagesChange={onFieldImagesChange}
+        />
 
-        <label className={styles.field}>
-          <span className={styles.label}>2.8 שייך לכביש אגרה</span>
-          <select {...register("tollRoad")} className={styles.select} disabled={isReadonly}>
-            <option value="">בחר</option>
-            {YES_NO_OPTIONS.map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <FieldError errors={errors} name="tollRoad" />
-        </label>
+        <FormField
+          label="2.8 שייך לכביש אגרה"
+          name="tollRoad"
+          type="select"
+          register={register}
+          error={errors.tollRoad}
+          isReadonly={isReadonly}
+          options={YES_NO_OPTIONS}
+          images={fieldImages}
+          onImagesChange={onFieldImagesChange}
+        />
 
-        <label className={styles.field}>
-          <span className={styles.label}>2.9 הובלות מיוחדות *</span>
-          <select {...register("specialTransport")} className={styles.select} disabled={true}>
-            <option value="">בחר</option>
-            {YES_NO_OPTIONS.map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <Text className={styles.restricted}>שדה מוגבל</Text>
-          <FieldError errors={errors} name="specialTransport" />
-        </label>
+        <FormField
+          label="2.9 הובלות מיוחדות *"
+          name="specialTransport"
+          type="select"
+          register={register}
+          error={errors.specialTransport}
+          isReadonly={true}
+          options={YES_NO_OPTIONS}
+          images={fieldImages}
+          onImagesChange={onFieldImagesChange}
+        />
 
-        <label className={styles.field}>
-          <span className={styles.label}>2.10 ערך היסטורי *</span>
-          <select {...register("historicalValue")} className={styles.select} disabled={true}>
-            <option value="">בחר</option>
-            {YES_NO_OPTIONS.map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <Text className={styles.restricted}>שדה מוגבל</Text>
-          <FieldError errors={errors} name="historicalValue" />
-        </label>
+        <FormField
+          label="2.10 ערך היסטורי *"
+          name="historicalValue"
+          type="select"
+          register={register}
+          error={errors.historicalValue}
+          isReadonly={true}
+          options={YES_NO_OPTIONS}
+          images={fieldImages}
+          onImagesChange={onFieldImagesChange}
+        />
 
-        <label className={styles.field}>
-          <span className={styles.label}>2.11 מבנה זמני *</span>
-          <select {...register("temporaryStructure")} className={styles.select} disabled={true}>
-            <option value="">בחר</option>
-            {YES_NO_OPTIONS.map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <Text className={styles.restricted}>שדה מוגבל</Text>
-          <FieldError errors={errors} name="temporaryStructure" />
-        </label>
+        <FormField
+          label="2.11 מבנה זמני *"
+          name="temporaryStructure"
+          type="select"
+          register={register}
+          error={errors.temporaryStructure}
+          isReadonly={true}
+          options={YES_NO_OPTIONS}
+          images={fieldImages}
+          onImagesChange={onFieldImagesChange}
+        />
       </div>
     </section>
   )

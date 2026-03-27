@@ -159,4 +159,13 @@ export type StructureIdDto = {
   specialInspectionDate: string | null
   createdAt: string
   updatedAt: string
+  fieldImages: FieldImageDto[]
+}
+
+export type FieldImageDto = {
+  id: string
+  fieldName: string
+  imageUrl: string
+  createdAt: string
+  updatedAt: string
 }

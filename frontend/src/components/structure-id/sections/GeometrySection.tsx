@@ -1,188 +1,285 @@
 import React from "react"
 
-import { FieldError } from "@/components/structure-id/FieldError"
 import { Title } from "@/components/UI/Text/text"
 import styles from "@/pages/structure-id/structure-id.module.scss"
 
 import type { StructureIdSectionBaseProps } from "../sectionTypes"
 import { SEPARATOR_TYPE_OPTIONS, YES_NO_OPTIONS } from "../structureIdOptions"
+import { FormField } from "../FormField"
 
 type GeometrySectionProps = StructureIdSectionBaseProps & {
   separatorTypeValue?: string
 }
 
-export const GeometrySection: React.FC<GeometrySectionProps> = ({ register, errors, isReadonly, separatorTypeValue }) => (
+export const GeometrySection: React.FC<GeometrySectionProps> = ({
+  register,
+  errors,
+  isReadonly,
+  fieldImages,
+  onFieldImagesChange,
+  separatorTypeValue
+}) => (
   <section className={styles.section}>
     <Title level={3} className={styles.sectionTitle}>
       מידע גיאומטרי
     </Title>
 
     <div className={styles.grid}>
-      <label className={styles.field}>
-        <span className={styles.label}>4.1 מספר מפתחים</span>
-        <input type="text" {...register("spanCount")} className={styles.input} disabled={isReadonly} />
-        <FieldError errors={errors} name="spanCount" />
-      </label>
+      <FormField
+        label="4.1 מספר מפתחים"
+        name="spanCount"
+        register={register}
+        error={errors.spanCount}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.2 אורך מפתח מרבי (מ')</span>
-        <input type="text" {...register("maxSpanLength")} className={styles.input} disabled={isReadonly} step="0.1" />
-        <FieldError errors={errors} name="maxSpanLength" />
-      </label>
+      <FormField
+        label="4.2 אורך מפתח מרבי (מ')"
+        name="maxSpanLength"
+        register={register}
+        error={errors.maxSpanLength}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.3 אורך מבנה כללי (מ')</span>
-        <input type="text" {...register("totalLength")} className={styles.input} disabled={isReadonly} step="0.1" />
-        <FieldError errors={errors} name="totalLength" />
-      </label>
+      <FormField
+        label="4.3 אורך מבנה כללי (מ')"
+        name="totalLength"
+        register={register}
+        error={errors.totalLength}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.4 אורך ימין (מ')</span>
-        <input type="text" {...register("lengthRight")} className={styles.input} disabled={isReadonly} step="0.1" />
-        <FieldError errors={errors} name="lengthRight" />
-      </label>
+      <FormField
+        label="4.4 אורך ימין (מ')"
+        name="lengthRight"
+        register={register}
+        error={errors.lengthRight}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.5 אורך שמאל (מ')</span>
-        <input type="text" {...register("lengthLeft")} className={styles.input} disabled={isReadonly} step="0.1" />
-        <FieldError errors={errors} name="lengthLeft" />
-      </label>
+      <FormField
+        label="4.5 אורך שמאל (מ')"
+        name="lengthLeft"
+        register={register}
+        error={errors.lengthLeft}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.6 חלוקת מפתחים</span>
-        <input type="text" {...register("spanDistribution")} className={styles.input} disabled={isReadonly} />
-        <FieldError errors={errors} name="spanDistribution" />
-      </label>
+      <FormField
+        label="4.6 חלוקת מפתחים"
+        name="spanDistribution"
+        register={register}
+        error={errors.spanDistribution}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.7 שינוי רוחב קיים</span>
-        <select {...register("widthChange")} className={styles.select} disabled={isReadonly}>
-          <option value="">בחר</option>
-          {YES_NO_OPTIONS.map(option => (
-            <option key={`width-change-${option.value}`} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-        <FieldError errors={errors} name="widthChange" />
-      </label>
+      <FormField
+        label="4.7 שינוי רוחב קיים"
+        name="widthChange"
+        type="select"
+        register={register}
+        error={errors.widthChange}
+        isReadonly={isReadonly}
+        options={YES_NO_OPTIONS}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.8 רוחב חיצוני מינימלי ניצב לציר הדרך (מ')</span>
-        <input type="text" {...register("minWidthPerpendicular")} className={styles.input} disabled={isReadonly} />
-        <FieldError errors={errors} name="minWidthPerpendicular" />
-      </label>
+      <FormField
+        label="4.8 רוחב חיצוני מינימלי ניצב לציר הדרך (מ')"
+        name="minWidthPerpendicular"
+        register={register}
+        error={errors.minWidthPerpendicular}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.9 רוחב חיצוני מכסימלי ניצב לציר הדרך (מ')</span>
-        <input type="text" {...register("maxWidthPerpendicular")} className={styles.input} disabled={isReadonly} />
-        <FieldError errors={errors} name="maxWidthPerpendicular" />
-      </label>
+      <FormField
+        label="4.9 רוחב חיצוני מכסימלי ניצב לציר הדרך (מ')"
+        name="maxWidthPerpendicular"
+        register={register}
+        error={errors.maxWidthPerpendicular}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.10 רוחב חיצוני מכסימלי (מ')</span>
-        <input type="text" {...register("maxExternalWidth")} className={styles.input} disabled={isReadonly} />
-        <FieldError errors={errors} name="maxExternalWidth" />
-      </label>
+      <FormField
+        label="4.10 רוחב חיצוני מכסימלי (מ')"
+        name="maxExternalWidth"
+        register={register}
+        error={errors.maxExternalWidth}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.11 רוחב חיצוני מינימלי (מ')</span>
-        <input type="text" {...register("minExternalWidth")} className={styles.input} disabled={isReadonly} />
-        <FieldError errors={errors} name="minExternalWidth" />
-      </label>
+      <FormField
+        label="4.11 רוחב חיצוני מינימלי (מ')"
+        name="minExternalWidth"
+        register={register}
+        error={errors.minExternalWidth}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.12 רוחב הגבהות ומדרכות צדדיות – ימין (מ')</span>
-        <input type="text" {...register("rightSidewalkWidth")} className={styles.input} disabled={isReadonly} />
-        <FieldError errors={errors} name="rightSidewalkWidth" />
-      </label>
+      <FormField
+        label="4.12 רוחב הגבהות ומדרכות צדדיות – ימין (מ')"
+        name="rightSidewalkWidth"
+        register={register}
+        error={errors.rightSidewalkWidth}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.13 רוחב הגבהות ומדרכות צדדיות – שמאל (מ')</span>
-        <input type="text" {...register("leftSidewalkWidth")} className={styles.input} disabled={isReadonly} />
-        <FieldError errors={errors} name="leftSidewalkWidth" />
-      </label>
+      <FormField
+        label="4.13 רוחב הגבהות ומדרכות צדדיות – שמאל (מ')"
+        name="leftSidewalkWidth"
+        register={register}
+        error={errors.leftSidewalkWidth}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.14 רוחב מסלול מינימלי (בין הגבהות) (מ')</span>
-        <input type="text" {...register("minRoadwayWidth")} className={styles.input} disabled={isReadonly} />
-        <FieldError errors={errors} name="minRoadwayWidth" />
-      </label>
+      <FormField
+        label="4.14 רוחב מסלול מינימלי (בין הגבהות) (מ')"
+        name="minRoadwayWidth"
+        register={register}
+        error={errors.minRoadwayWidth}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.15 רוחב מסלולים כולל (מהגבהה להגבהה) (מ')</span>
-        <input type="text" {...register("totalRoadwayWidth")} className={styles.input} disabled={isReadonly} />
-        <FieldError errors={errors} name="totalRoadwayWidth" />
-      </label>
+      <FormField
+        label="4.15 רוחב מסלולים כולל (מהגבהה להגבהה) (מ')"
+        name="totalRoadwayWidth"
+        register={register}
+        error={errors.totalRoadwayWidth}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.16 סוג מפרדה</span>
-        <select {...register("separatorType")} className={styles.select} disabled={isReadonly}>
-          <option value="">בחר</option>
-          {SEPARATOR_TYPE_OPTIONS.map(option => (
-            <option key={`separator-${option.value}`} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-        <FieldError errors={errors} name="separatorType" />
-      </label>
+      <FormField
+        label="4.16 סוג מפרדה"
+        name="separatorType"
+        type="select"
+        register={register}
+        error={errors.separatorType}
+        isReadonly={isReadonly}
+        options={SEPARATOR_TYPE_OPTIONS}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
       {separatorTypeValue === "4.16-5" && (
-        <label className={styles.field}>
-          <span className={styles.label}>4.16 פירוט אחר</span>
-          <input type="text" {...register("separatorTypeOther")} className={styles.input} disabled={isReadonly} />
-          <FieldError errors={errors} name="separatorTypeOther" />
-        </label>
+        <FormField
+          label="4.16 פירוט אחר"
+          name="separatorTypeOther"
+          register={register}
+          error={errors.separatorTypeOther}
+          isReadonly={isReadonly}
+          images={fieldImages}
+          onImagesChange={onFieldImagesChange}
+        />
       )}
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.17 זווית ייחוס (Skew) מעלות</span>
-        <input type="text" {...register("skewAngle")} className={styles.input} disabled={isReadonly} />
-        <FieldError errors={errors} name="skewAngle" />
-      </label>
+      <FormField
+        label="4.17 זווית ייחוס (Skew) מעלות"
+        name="skewAngle"
+        register={register}
+        error={errors.skewAngle}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.18 מרווח אנכי חופשי מינימלי קיים מתחת לגשר (מ')</span>
-        <input type="text" {...register("minVerticalClearanceBelow")} className={styles.input} disabled={isReadonly} />
-        <FieldError errors={errors} name="minVerticalClearanceBelow" />
-      </label>
+      <FormField
+        label="4.18 מרווח אנכי חופשי מינימלי קיים מתחת לגשר (מ')"
+        name="minVerticalClearanceBelow"
+        register={register}
+        error={errors.minVerticalClearanceBelow}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.19 מרווח אנכי חופשי לניקוז / מעברי תשתיות (מ')</span>
-        <input type="text" {...register("verticalClearanceDrainage")} className={styles.input} disabled={isReadonly} />
-        <FieldError errors={errors} name="verticalClearanceDrainage" />
-      </label>
+      <FormField
+        label="4.19 מרווח אנכי חופשי לניקוז / מעברי תשתיות (מ')"
+        name="verticalClearanceDrainage"
+        register={register}
+        error={errors.verticalClearanceDrainage}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.20 מרווח אנכי חופשי מינימלי קיים מעל למבנה (מ')</span>
-        <input type="text" {...register("minVerticalClearanceAbove")} className={styles.input} disabled={isReadonly} />
-        <FieldError errors={errors} name="minVerticalClearanceAbove" />
-      </label>
+      <FormField
+        label="4.20 מרווח אנכי חופשי מינימלי קיים מעל למבנה (מ')"
+        name="minVerticalClearanceAbove"
+        register={register}
+        error={errors.minVerticalClearanceAbove}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.21 ערך שילוט מגבלת גובה קיים בפועל (מ')</span>
-        <input type="text" {...register("heightSignageValue")} className={styles.input} disabled={isReadonly} />
-        <FieldError errors={errors} name="heightSignageValue" />
-      </label>
+      <FormField
+        label="4.21 ערך שילוט מגבלת גובה קיים בפועל (מ')"
+        name="heightSignageValue"
+        register={register}
+        error={errors.heightSignageValue}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.22 מרווח אופקי מינימלי (מ')</span>
-        <input type="text" {...register("minHorizontalClearance")} className={styles.input} disabled={isReadonly} />
-        <FieldError errors={errors} name="minHorizontalClearance" />
-      </label>
+      <FormField
+        label="4.22 מרווח אופקי מינימלי (מ')"
+        name="minHorizontalClearance"
+        register={register}
+        error={errors.minHorizontalClearance}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.23 גובה נציב מכסימלי (מ')</span>
-        <input type="text" {...register("maxPierHeight")} className={styles.input} disabled={isReadonly} />
-        <FieldError errors={errors} name="maxPierHeight" />
-      </label>
+      <FormField
+        label="4.23 גובה נציב מכסימלי (מ')"
+        name="maxPierHeight"
+        register={register}
+        error={errors.maxPierHeight}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>4.29 שטח מיסעה (מ"ר)</span>
-        <input type="text" {...register("deckArea")} className={styles.input} disabled={isReadonly} />
-        <FieldError errors={errors} name="deckArea" />
-      </label>
+      <FormField
+        label='4.29 שטח מיסעה (מ"ר)'
+        name="deckArea"
+        register={register}
+        error={errors.deckArea}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
     </div>
   </section>
 )

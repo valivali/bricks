@@ -6,4 +6,6 @@ export type StructureIdSectionBaseProps = {
   register: UseFormRegister<StructureIdFormValues>
   errors: FieldErrors<StructureIdFormValues>
   isReadonly: boolean
+  fieldImages: { fieldName: string; imageUrl: string }[]
+  onFieldImagesChange: (images: { fieldName: string; imageUrl: string }[]) => void
 }

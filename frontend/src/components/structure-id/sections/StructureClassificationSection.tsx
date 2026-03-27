@@ -1,6 +1,5 @@
 import React from "react"
 
-import { FieldError } from "@/components/structure-id/FieldError"
 import { Title } from "@/components/UI/Text/text"
 import styles from "@/pages/structure-id/structure-id.module.scss"
 
@@ -15,6 +14,7 @@ import {
   PIER_TYPE_OPTIONS,
   PRESTRESSING_TYPE_OPTIONS
 } from "../structureIdOptions"
+import { FormField } from "../FormField"
 
 type StructureClassificationSectionProps = StructureIdSectionBaseProps & {
   deckTypesValue?: string
@@ -31,6 +31,8 @@ export const StructureClassificationSection: React.FC<StructureClassificationSec
   register,
   errors,
   isReadonly,
+  fieldImages,
+  onFieldImagesChange,
   deckTypesValue,
   floorTypeValue,
   abutment1TypeValue,
@@ -46,184 +48,226 @@ export const StructureClassificationSection: React.FC<StructureClassificationSec
     </Title>
 
     <div className={styles.grid}>
-      <label className={styles.field}>
-        <span className={styles.label}>5.1 מספר סוגי מבנה עליון/מיסעה/תקרה</span>
-        <input type="text" {...register("deckTypeCount")} className={styles.input} disabled={isReadonly} />
-        <FieldError errors={errors} name="deckTypeCount" />
-      </label>
+      <FormField
+        label="5.1 מספר סוגי מבנה עליון/מיסעה/תקרה"
+        name="deckTypeCount"
+        register={register}
+        error={errors.deckTypeCount}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>5.2 סיווג מבנה עליון/מיסעה/תקרה</span>
-        <select {...register("deckTypes")} className={styles.select} disabled={isReadonly}>
-          <option value="">בחר</option>
-          {DECK_TYPE_OPTIONS.map(option => (
-            <option key={`deck-${option.value}`} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-        <FieldError errors={errors} name="deckTypes" />
-      </label>
+      <FormField
+        label="5.2 סיווג מבנה עליון/מיסעה/תקרה"
+        name="deckTypes"
+        type="select"
+        register={register}
+        error={errors.deckTypes}
+        isReadonly={isReadonly}
+        options={DECK_TYPE_OPTIONS}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
       {deckTypesValue === "5.2-12" && (
-        <label className={styles.field}>
-          <span className={styles.label}>5.2 פירוט אחר</span>
-          <textarea {...register("deckTypesOther")} className={styles.textarea} disabled={isReadonly} rows={2} />
-          <FieldError errors={errors} name="deckTypesOther" />
-        </label>
+        <FormField
+          label="5.2 פירוט אחר"
+          name="deckTypesOther"
+          type="textarea"
+          register={register}
+          error={errors.deckTypesOther}
+          isReadonly={isReadonly}
+          rows={2}
+          images={fieldImages}
+          onImagesChange={onFieldImagesChange}
+        />
       )}
 
-      <label className={styles.field}>
-        <span className={styles.label}>5.3 סיווג רצפה</span>
-        <select {...register("floorType")} className={styles.select} disabled={isReadonly}>
-          <option value="">בחר</option>
-          {FLOOR_TYPE_OPTIONS.map(option => (
-            <option key={`floor-${option.value}`} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-        <FieldError errors={errors} name="floorType" />
-      </label>
+      <FormField
+        label="5.3 סיווג רצפה"
+        name="floorType"
+        type="select"
+        register={register}
+        error={errors.floorType}
+        isReadonly={isReadonly}
+        options={FLOOR_TYPE_OPTIONS}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
       {floorTypeValue === "5.3-3" && (
-        <label className={styles.field}>
-          <span className={styles.label}>5.3 פירוט אחר</span>
-          <textarea {...register("floorTypeOther")} className={styles.textarea} disabled={isReadonly} rows={2} />
-          <FieldError errors={errors} name="floorTypeOther" />
-        </label>
+        <FormField
+          label="5.3 פירוט אחר"
+          name="floorTypeOther"
+          type="textarea"
+          register={register}
+          error={errors.floorTypeOther}
+          isReadonly={isReadonly}
+          rows={2}
+          images={fieldImages}
+          onImagesChange={onFieldImagesChange}
+        />
       )}
 
-      <label className={styles.field}>
-        <span className={styles.label}>5.4 סיווג נציב / קיר קצה 1</span>
-        <select {...register("abutment1Type")} className={styles.select} disabled={isReadonly}>
-          <option value="">בחר</option>
-          {ABUTMENT_TYPE_1_OPTIONS.map(option => (
-            <option key={`abutment1-${option.value}`} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-        <FieldError errors={errors} name="abutment1Type" />
-      </label>
+      <FormField
+        label="5.4 סיווג נציב / קיר קצה 1"
+        name="abutment1Type"
+        type="select"
+        register={register}
+        error={errors.abutment1Type}
+        isReadonly={isReadonly}
+        options={ABUTMENT_TYPE_1_OPTIONS}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
       {abutment1TypeValue === "5.4-7" && (
-        <label className={styles.field}>
-          <span className={styles.label}>5.4 פירוט אחר</span>
-          <input type="text" {...register("abutment1TypeOther")} className={styles.input} disabled={isReadonly} />
-          <FieldError errors={errors} name="abutment1TypeOther" />
-        </label>
+        <FormField
+          label="5.4 פירוט אחר"
+          name="abutment1TypeOther"
+          register={register}
+          error={errors.abutment1TypeOther}
+          isReadonly={isReadonly}
+          images={fieldImages}
+          onImagesChange={onFieldImagesChange}
+        />
       )}
 
-      <label className={styles.field}>
-        <span className={styles.label}>5.5 סיווג נציב / קיר קצה 2</span>
-        <select {...register("abutment2Type")} className={styles.select} disabled={isReadonly}>
-          <option value="">בחר</option>
-          {ABUTMENT_TYPE_2_OPTIONS.map(option => (
-            <option key={`abutment2-${option.value}`} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-        <FieldError errors={errors} name="abutment2Type" />
-      </label>
+      <FormField
+        label="5.5 סיווג נציב / קיר קצה 2"
+        name="abutment2Type"
+        type="select"
+        register={register}
+        error={errors.abutment2Type}
+        isReadonly={isReadonly}
+        options={ABUTMENT_TYPE_2_OPTIONS}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
       {abutment2TypeValue === "5.5-7" && (
-        <label className={styles.field}>
-          <span className={styles.label}>5.5 פירוט אחר</span>
-          <input type="text" {...register("abutment2TypeOther")} className={styles.input} disabled={isReadonly} />
-          <FieldError errors={errors} name="abutment2TypeOther" />
-        </label>
+        <FormField
+          label="5.5 פירוט אחר"
+          name="abutment2TypeOther"
+          register={register}
+          error={errors.abutment2TypeOther}
+          isReadonly={isReadonly}
+          images={fieldImages}
+          onImagesChange={onFieldImagesChange}
+        />
       )}
 
-      <label className={styles.field}>
-        <span className={styles.label}>5.6 מספר סוגי נציבים ביניים</span>
-        <input type="text" {...register("pierTypeCount")} className={styles.input} disabled={isReadonly} />
-        <FieldError errors={errors} name="pierTypeCount" />
-      </label>
+      <FormField
+        label="5.6 מספר סוגי נציבים ביניים"
+        name="pierTypeCount"
+        register={register}
+        error={errors.pierTypeCount}
+        isReadonly={isReadonly}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
-      <label className={styles.field}>
-        <span className={styles.label}>5.7 סיווג נציבים ביניים (בהתאם לכמות ולסוג)</span>
-        <select {...register("pierTypes")} className={styles.select} disabled={isReadonly}>
-          <option value="">בחר</option>
-          {PIER_TYPE_OPTIONS.map(option => (
-            <option key={`pier-${option.value}`} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-        <FieldError errors={errors} name="pierTypes" />
-      </label>
+      <FormField
+        label="5.7 סיווג נציבים ביניים (בהתאם לכמות ולסוג)"
+        name="pierTypes"
+        type="select"
+        register={register}
+        error={errors.pierTypes}
+        isReadonly={isReadonly}
+        options={PIER_TYPE_OPTIONS}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
       {pierTypesValue === "5.7-6" && (
-        <label className={styles.field}>
-          <span className={styles.label}>5.7 פירוט אחר</span>
-          <textarea {...register("pierTypesOther")} className={styles.textarea} disabled={isReadonly} rows={2} />
-          <FieldError errors={errors} name="pierTypesOther" />
-        </label>
+        <FormField
+          label="5.7 פירוט אחר"
+          name="pierTypesOther"
+          type="textarea"
+          register={register}
+          error={errors.pierTypesOther}
+          isReadonly={isReadonly}
+          rows={2}
+          images={fieldImages}
+          onImagesChange={onFieldImagesChange}
+        />
       )}
 
-      <label className={styles.field}>
-        <span className={styles.label}>5.8 סוג דריכה</span>
-        <select {...register("prestressingType")} className={styles.select} disabled={isReadonly}>
-          <option value="">בחר</option>
-          {PRESTRESSING_TYPE_OPTIONS.map(option => (
-            <option key={`prestress-${option.value}`} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-        <FieldError errors={errors} name="prestressingType" />
-      </label>
+      <FormField
+        label="5.8 סוג דריכה"
+        name="prestressingType"
+        type="select"
+        register={register}
+        error={errors.prestressingType}
+        isReadonly={isReadonly}
+        options={PRESTRESSING_TYPE_OPTIONS}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
       {prestressingTypeValue === "5.8-7" && (
-        <label className={styles.field}>
-          <span className={styles.label}>5.8 פירוט אחר</span>
-          <input type="text" {...register("prestressingTypeOther")} className={styles.input} disabled={isReadonly} />
-          <FieldError errors={errors} name="prestressingTypeOther" />
-        </label>
+        <FormField
+          label="5.8 פירוט אחר"
+          name="prestressingTypeOther"
+          register={register}
+          error={errors.prestressingTypeOther}
+          isReadonly={isReadonly}
+          images={fieldImages}
+          onImagesChange={onFieldImagesChange}
+        />
       )}
 
-      <label className={styles.field}>
-        <span className={styles.label}>5.9 סוג סמכים</span>
-        <select {...register("bearingTypes")} className={styles.select} disabled={isReadonly}>
-          <option value="">בחר</option>
-          {BEARING_TYPE_OPTIONS.map(option => (
-            <option key={`bearing-${option.value}`} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-        <FieldError errors={errors} name="bearingTypes" />
-      </label>
+      <FormField
+        label="5.9 סוג סמכים"
+        name="bearingTypes"
+        type="select"
+        register={register}
+        error={errors.bearingTypes}
+        isReadonly={isReadonly}
+        options={BEARING_TYPE_OPTIONS}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
       {bearingTypesValue === "5.9-5" && (
-        <label className={styles.field}>
-          <span className={styles.label}>5.9 פירוט אחר</span>
-          <textarea {...register("bearingTypesOther")} className={styles.textarea} disabled={isReadonly} rows={2} />
-          <FieldError errors={errors} name="bearingTypesOther" />
-        </label>
+        <FormField
+          label="5.9 פירוט אחר"
+          name="bearingTypesOther"
+          type="textarea"
+          register={register}
+          error={errors.bearingTypesOther}
+          isReadonly={isReadonly}
+          rows={2}
+          images={fieldImages}
+          onImagesChange={onFieldImagesChange}
+        />
       )}
 
-      <label className={styles.field}>
-        <span className={styles.label}>5.10 סוג תפרים</span>
-        <select {...register("jointTypes")} className={styles.select} disabled={isReadonly}>
-          <option value="">בחר</option>
-          {JOINT_TYPE_OPTIONS.map(option => (
-            <option key={`joint-${option.value}`} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-        <FieldError errors={errors} name="jointTypes" />
-      </label>
+      <FormField
+        label="5.10 סוג תפרים"
+        name="jointTypes"
+        type="select"
+        register={register}
+        error={errors.jointTypes}
+        isReadonly={isReadonly}
+        options={JOINT_TYPE_OPTIONS}
+        images={fieldImages}
+        onImagesChange={onFieldImagesChange}
+      />
 
       {jointTypesValue === "5.10-7" && (
-        <label className={styles.field}>
-          <span className={styles.label}>5.10 פירוט אחר</span>
-          <textarea {...register("jointTypesOther")} className={styles.textarea} disabled={isReadonly} rows={2} />
-          <FieldError errors={errors} name="jointTypesOther" />
-        </label>
+        <FormField
+          label="5.10 פירוט אחר"
+          name="jointTypesOther"
+          type="textarea"
+          register={register}
+          error={errors.jointTypesOther}
+          isReadonly={isReadonly}
+          rows={2}
+          images={fieldImages}
+          onImagesChange={onFieldImagesChange}
+        />
       )}
     </div>
   </section>

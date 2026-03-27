@@ -78,3 +78,16 @@
 .helper {
   color: var(--muted-foreground);
 }
+
+.indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: -0.25rem;
+}
+
+.successText {
+  color: #10b981;
+  font-size: 0.875rem;
+  font-weight: 500;
+}

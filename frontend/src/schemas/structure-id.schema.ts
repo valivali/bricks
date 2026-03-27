@@ -225,7 +225,15 @@ export const structureIdSchema = z.object({
   damageControlInspectionDate: optionalDate,
   underwaterInspectionDate: optionalDate,
   thoroughInspectionDate: optionalDate,
-  specialInspectionDate: optionalDate
+  specialInspectionDate: optionalDate,
+  fieldImages: z
+    .array(
+      z.object({
+        fieldName: z.string(),
+        imageUrl: z.string()
+      })
+    )
+    .optional()
 })
 
 export type StructureIdFormValues = z.input<typeof structureIdSchema>

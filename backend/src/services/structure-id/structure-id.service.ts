@@ -1,4 +1,4 @@
-import type { StructureId } from "../../generated/prisma/client.js"
+import type { StructureId, FieldImage } from "../../generated/prisma/client.js"
 import type { StructureIdDto } from "../../dto/structure-id.dto.js"
 import type { CreateStructureIdInput, UpdateStructureIdInput } from "../../schemas/structure-id.schema.js"
 import { prisma, type PrismaDbClient } from "../../lib/prisma.js"
@@ -9,14 +9,26 @@ export class StructureIdService implements StructureIdServiceInterface {
   constructor(private readonly prismaClient: PrismaDbClient) {}
 
   async createStructureId(userId: string, data: CreateStructureIdInput): Promise<StructureIdDto> {
+    const { fieldImages, ...rest } = data
     const structureId = await this.prismaClient.structureId.create({
       data: {
         userId,
-        ...data
+        ...rest,
+        fieldImages: fieldImages
+          ? {
+              create: fieldImages.map(img => ({
+                fieldName: img.fieldName,
+                imageUrl: img.imageUrl
+              }))
+            }
+          : undefined
+      },
+      include: {
+        fieldImages: true
       }
     })
 
-    return this.toDto(structureId)
+    return this.toDto(structureId as any)
   }
 
   async updateStructureId(userId: string, structureIdId: string, data: UpdateStructureIdInput): Promise<StructureIdDto> {
@@ -29,18 +41,35 @@ export class StructureIdService implements StructureIdServiceInterface {
       throw new Error("תעודת זהות למבנה לא נמצאה")
     }
 
+    const { fieldImages, ...rest } = data
+
     const structureId = await this.prismaClient.structureId.update({
       where: { id: structureIdId },
-      data
+      data: {
+        ...rest,
+        fieldImages: fieldImages
+          ? {
+              deleteMany: {},
+              create: fieldImages.map(img => ({
+                fieldName: img.fieldName,
+                imageUrl: img.imageUrl
+              }))
+            }
+          : undefined
+      },
+      include: {
+        fieldImages: true
+      }
     })
 
     logger.info("structure id updated", { userId, structureIdId })
-    return this.toDto(structureId)
+    return this.toDto(structureId as any)
   }
 
   async getStructureIdById(userId: string, structureIdId: string): Promise<StructureIdDto> {
     const structureId = await this.prismaClient.structureId.findFirst({
-      where: { id: structureIdId, userId }
+      where: { id: structureIdId, userId },
+      include: { fieldImages: true }
     })
 
     if (!structureId) {
@@ -54,11 +83,12 @@ export class StructureIdService implements StructureIdServiceInterface {
   async getUserStructureIds(userId: string): Promise<StructureIdDto[]> {
     const structureIds = await this.prismaClient.structureId.findMany({
       where: { userId },
+      include: { fieldImages: true },
       orderBy: { createdAt: "desc" }
     })
 
     logger.info("structure ids found on get user structure ids", { userId })
-    return structureIds.map(structureId => this.toDto(structureId))
+    return structureIds.map(structureId => this.toDto(structureId as any))
   }
 
   async deleteStructureId(userId: string, structureIdId: string): Promise<void> {
@@ -82,7 +112,7 @@ export class StructureIdService implements StructureIdServiceInterface {
     return new StructureIdService(prisma)
   }
 
-  private toDto(structureId: StructureId): StructureIdDto {
+  private toDto(structureId: StructureId & { fieldImages?: FieldImage[] }): StructureIdDto {
     return {
       id: structureId.id,
       userId: structureId.userId,
@@ -243,7 +273,14 @@ export class StructureIdService implements StructureIdServiceInterface {
       thoroughInspectionDate: structureId.thoroughInspectionDate?.toISOString() ?? null,
       specialInspectionDate: structureId.specialInspectionDate?.toISOString() ?? null,
       createdAt: structureId.createdAt.toISOString(),
-      updatedAt: structureId.updatedAt.toISOString()
+      updatedAt: structureId.updatedAt.toISOString(),
+      fieldImages: (structureId.fieldImages ?? []).map(img => ({
+        id: img.id,
+        fieldName: img.fieldName,
+        imageUrl: img.imageUrl,
+        createdAt: img.createdAt.toISOString(),
+        updatedAt: img.updatedAt.toISOString()
+      }))
     }
   }
 }

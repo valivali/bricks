@@ -73,7 +73,7 @@ export const StructureIdForm: React.FC = () => {
   const deckSealingMaterialsValue = toStr(watch("deckSealingMaterials"))
   const curbMaterialsValue = toStr(watch("curbMaterials"))
   const infrastructureTypesValue = toStr(watch("infrastructureTypes"))
-  const bypassDescriptionImageValue = watch("bypassDescriptionImage") ?? undefined
+  const fieldImages = watch("fieldImages") || []
 
   useEffect(() => {
     if (existingData) {
@@ -126,6 +126,10 @@ export const StructureIdForm: React.FC = () => {
 
   const isReadonly = false
 
+  const onFieldImagesChange = (newImages: { fieldName: string; imageUrl: string }[]) => {
+    setValue("fieldImages", newImages, { shouldDirty: true })
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -135,11 +139,19 @@ export const StructureIdForm: React.FC = () => {
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-        <GeneralIdentificationSection register={register} errors={errors} isReadonly={isReadonly} />
+        <GeneralIdentificationSection
+          register={register}
+          errors={errors}
+          isReadonly={isReadonly}
+          fieldImages={fieldImages}
+          onFieldImagesChange={onFieldImagesChange}
+        />
         <GeneralClassificationSection
           register={register}
           errors={errors}
           isReadonly={isReadonly}
+          fieldImages={fieldImages}
+          onFieldImagesChange={onFieldImagesChange}
           structureTypeValue={structureTypeValue}
           structureSubTypeValue={structureSubTypeValue}
           onStructureTypeChange={value => {
@@ -156,15 +168,24 @@ export const StructureIdForm: React.FC = () => {
           register={register}
           errors={errors}
           isReadonly={isReadonly}
+          fieldImages={fieldImages}
+          onFieldImagesChange={onFieldImagesChange}
           localBypassMethodValue={localBypassMethodValue}
-          bypassDescriptionImageValue={bypassDescriptionImageValue}
-          onBypassDescriptionImageChange={value => setValue("bypassDescriptionImage", value || "", { shouldDirty: true })}
         />
-        <GeometrySection register={register} errors={errors} isReadonly={isReadonly} separatorTypeValue={separatorTypeValue} />
+        <GeometrySection
+          register={register}
+          errors={errors}
+          isReadonly={isReadonly}
+          fieldImages={fieldImages}
+          onFieldImagesChange={onFieldImagesChange}
+          separatorTypeValue={separatorTypeValue}
+        />
         <StructureClassificationSection
           register={register}
           errors={errors}
           isReadonly={isReadonly}
+          fieldImages={fieldImages}
+          onFieldImagesChange={onFieldImagesChange}
           deckTypesValue={deckTypesValue}
           floorTypeValue={floorTypeValue}
           abutment1TypeValue={abutment1TypeValue}
@@ -178,6 +199,8 @@ export const StructureIdForm: React.FC = () => {
           register={register}
           errors={errors}
           isReadonly={isReadonly}
+          fieldImages={fieldImages}
+          onFieldImagesChange={onFieldImagesChange}
           deckMaterialsValue={deckMaterialsValue}
           beamMaterialsValue={beamMaterialsValue}
           abutmentMaterialsValue={abutmentMaterialsValue}
@@ -189,16 +212,42 @@ export const StructureIdForm: React.FC = () => {
           deckSealingMaterialsValue={deckSealingMaterialsValue}
           curbMaterialsValue={curbMaterialsValue}
         />
-        <LoadInfoSection register={register} errors={errors} isReadonly={isReadonly} />
+        <LoadInfoSection
+          register={register}
+          errors={errors}
+          isReadonly={isReadonly}
+          fieldImages={fieldImages}
+          onFieldImagesChange={onFieldImagesChange}
+        />
         <InfrastructureSection
           register={register}
           errors={errors}
           isReadonly={isReadonly}
+          fieldImages={fieldImages}
+          onFieldImagesChange={onFieldImagesChange}
           infrastructureTypesValue={infrastructureTypesValue}
         />
-        <HydraulicSection register={register} errors={errors} isReadonly={isReadonly} />
-        <ConditionRatingSection register={register} errors={errors} isReadonly={isReadonly} />
-        <InspectionsSection register={register} errors={errors} isReadonly={isReadonly} />
+        <HydraulicSection
+          register={register}
+          errors={errors}
+          isReadonly={isReadonly}
+          fieldImages={fieldImages}
+          onFieldImagesChange={onFieldImagesChange}
+        />
+        <ConditionRatingSection
+          register={register}
+          errors={errors}
+          isReadonly={isReadonly}
+          fieldImages={fieldImages}
+          onFieldImagesChange={onFieldImagesChange}
+        />
+        <InspectionsSection
+          register={register}
+          errors={errors}
+          isReadonly={isReadonly}
+          fieldImages={fieldImages}
+          onFieldImagesChange={onFieldImagesChange}
+        />
 
         <div className={styles.actions}>
           <Button type="button" variant="outline" onClick={handleCancel}>

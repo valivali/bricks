@@ -14,6 +14,10 @@ type ImageUploadProps = {
   size?: number
   maxSizeBytes?: number
   shape?: "circle" | "rect"
+  showPreview?: boolean
+  allowCrop?: boolean
+  allowZoom?: boolean
+  capture?: boolean
 }
 
 type Position = { x: number; y: number }
@@ -48,7 +52,11 @@ export function ImageUpload({
   helperText,
   size = DEFAULT_SIZE,
   maxSizeBytes = MAX_SIZE,
-  shape = "circle"
+  shape = "circle",
+  showPreview = false,
+  allowCrop = true,
+  allowZoom = true,
+  capture = false
 }: ImageUploadProps) {
   const toast = useToast()
   const [workingImage, setWorkingImage] = useState<string | null>(value)
@@ -131,13 +139,13 @@ export function ImageUpload({
   }
 
   const handlePointerDown = (event: React.PointerEvent) => {
-    if (!workingImage) return
+    if (!workingImage || !allowCrop) return
     setDragging(true)
     lastPoint.current = { x: event.clientX, y: event.clientY }
   }
 
   const handlePointerMove = (event: React.PointerEvent) => {
-    if (!dragging) return
+    if (!dragging || !allowCrop) return
     event.preventDefault()
     const deltaX = event.clientX - lastPoint.current.x
     const deltaY = event.clientY - lastPoint.current.y
@@ -149,6 +157,10 @@ export function ImageUpload({
 
   const cropImage = async () => {
     if (!imgRef.current || !viewportRef.current || !workingImage) return null
+
+    if (!allowCrop) {
+      return workingImage
+    }
 
     const outputSize = 400
     const canvas = document.createElement("canvas")
@@ -195,7 +207,9 @@ export function ImageUpload({
       return
     }
     onChange(cropped)
-    setWorkingImage(cropped)
+    // Clear working image after save to allow next upload
+    setWorkingImage(null)
+    if (inputRef.current) inputRef.current.value = ""
   }
 
   const handleRemove = () => {
@@ -203,10 +217,11 @@ export function ImageUpload({
     setPosition({ x: 0, y: 0 })
     setZoom(1)
     onChange(null)
+    if (inputRef.current) inputRef.current.value = ""
   }
 
   const handleWheel = (event: React.WheelEvent) => {
-    if (!workingImage) return
+    if (!workingImage || !allowZoom) return
     event.preventDefault()
     const delta = event.deltaY > 0 ? -0.05 : 0.05
     setZoom(prev => Math.min(Math.max(prev + delta, 1), 3))
@@ -223,6 +238,7 @@ export function ImageUpload({
       <div
         className={styles.viewport}
         data-shape={shape}
+        data-has-image={!!workingImage}
         style={{ width: viewportSize, height: viewportSize }}
         ref={viewportRef}
         onPointerDown={handlePointerDown}
@@ -230,44 +246,70 @@ export function ImageUpload({
         onPointerUp={handlePointerUp}
         onPointerLeave={handlePointerUp}
         onWheel={handleWheel}>
-        {workingImage ? (
-          <img
-            ref={imgRef}
-            src={workingImage}
-            alt="Profile preview"
-            crossOrigin="anonymous"
-            referrerPolicy="no-referrer"
-            className={styles.image}
-            style={{
-              width: "auto",
-              height: "auto",
-              transform: `translate(-50%, -50%) translate(${position.x}px, ${position.y}px) scale(${baseScale * zoom})`
-            }}
-            onLoad={handleImageLoad}
-            draggable={false}
-          />
-        ) : (
-          <div className={styles.placeholder}>
-            <Text variant="span">לא נבחרה תמונה</Text>
-          </div>
+        {showPreview && (
+          <>
+            {workingImage ? (
+              <img
+                ref={imgRef}
+                src={workingImage}
+                alt="Profile preview"
+                crossOrigin="anonymous"
+                referrerPolicy="no-referrer"
+                className={styles.image}
+                style={{
+                  width: allowCrop ? "auto" : "100%",
+                  height: allowCrop ? "auto" : "100%",
+                  objectFit: allowCrop ? "unset" : "contain",
+                  top: allowCrop ? "50%" : "0",
+                  left: allowCrop ? "50%" : "0",
+                  transform: allowCrop
+                    ? `translate(-50%, -50%) translate(${position.x}px, ${position.y}px) scale(${baseScale * zoom})`
+                    : "none"
+                }}
+                onLoad={handleImageLoad}
+                draggable={false}
+              />
+            ) : (
+              <div className={styles.placeholder}>
+                <Text variant="span">לא נבחרה תמונה</Text>
+              </div>
+            )}
+            {allowCrop && <div className={shape === "circle" ? styles.mask : styles.maskRect} />}
+          </>
         )}
-        <div className={shape === "circle" ? styles.mask : styles.maskRect} />
       </div>
 
+      {!showPreview && workingImage && (
+        <div className={styles.indicator}>
+          <Text variant="span" className={styles.successText}>
+            ✓ תמונה הועלתה
+          </Text>
+        </div>
+      )}
+
       <div className={styles.controls}>
-        <input ref={inputRef} type="file" accept="image/png,image/jpeg,image/webp" className={styles.input} onChange={handleFileChange} />
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/*"
+          capture={capture ? "environment" : undefined}
+          className={styles.input}
+          onChange={handleFileChange}
+        />
         <Button type="button" variant="outline" size="sm" onClick={() => inputRef.current?.click()}>
           העלאה
         </Button>
         <Button type="button" variant="ghost" size="sm" onClick={handleRemove} disabled={!workingImage}>
           הסרה
         </Button>
-        <div className={styles.slider}>
-          <Text variant="span" className={styles.sliderLabel}>
-            זום
-          </Text>
-          <input type="range" min={1} max={3} step={0.05} value={zoom} onChange={e => setZoom(parseFloat(e.target.value))} />
-        </div>
+        {showPreview && allowZoom && workingImage && (
+          <div className={styles.slider}>
+            <Text variant="span" className={styles.sliderLabel}>
+              זום
+            </Text>
+            <input type="range" min={1} max={3} step={0.05} value={zoom} onChange={e => setZoom(parseFloat(e.target.value))} />
+          </div>
+        )}
         <Button type="button" size="sm" onClick={handleSave} disabled={!workingImage}>
           שמירה
         </Button>
