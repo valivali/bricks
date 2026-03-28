@@ -21,8 +21,8 @@ import {
   WALL_STRUCTURAL_COMPONENTS
 } from "@/config/skeleton-data"
 import { type SkeletonOption, type StructuralComponent, StructureType } from "@/config/skeleton-data.types"
-import { useUserProfileContext } from "@/contexts/UserProfileContext"
 import { useAllStructureComponents } from "@/hooks/useAllStructureComponents"
+import { useUserProfileContext } from "@/hooks/useAuth"
 import { useCreateInspection, useStructureInspectionsQuery } from "@/hooks/useInspections"
 import { type ClientStructureComponent, useStructureComponentsQuery, useUpsertStructureComponents } from "@/hooks/useStructureComponents"
 import { useStructureComponentsDrawer } from "@/hooks/useStructureComponentsDrawer"

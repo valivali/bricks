@@ -18,7 +18,7 @@ import {
 } from "@/components/structure-id"
 import { Button } from "@/components/UI/button/button"
 import { Title } from "@/components/UI/Text/text"
-import { useUserProfileContext } from "@/contexts/UserProfileContext"
+import { useUserProfileContext } from "@/hooks/useAuth"
 import { useCreateStructureId, useStructureIdQuery, useUpdateStructureId } from "@/hooks/useStructureId"
 import { useToast } from "@/hooks/useToast"
 import { type StructureIdFormValues, structureIdSchema, type StructureIdValidatedValues } from "@/schemas/structure-id.schema"

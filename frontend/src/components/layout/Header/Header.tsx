@@ -2,8 +2,7 @@ import React from "react"
 import { useNavigate } from "react-router-dom"
 
 import { Dropdown } from "@/components/UI/Dropdown/Dropdown"
-import { useAuthContext } from "@/contexts/AuthContext"
-import { useUserProfileContext } from "@/contexts/UserProfileContext"
+import { useAuthContext, useUserProfileContext } from "@/hooks/useAuth"
 
 import styles from "./Header.module.scss"
 

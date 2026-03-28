@@ -1,6 +1,8 @@
+/* eslint-disable react-refresh/only-export-components */
 import { BridgeIcon, SignageIcon, TunnelIcon, WallIcon } from "@/components/icons"
 
 import { ImportanceLevel, type SkeletonOption, type StructuralComponent, StructureType } from "./skeleton-data.types"
+export { ImportanceLevel, type SkeletonOption, type StructuralComponent, StructureType }
 
 export const SKELETON_STRUCTURE_TYPES: SkeletonOption[] = [
   {
