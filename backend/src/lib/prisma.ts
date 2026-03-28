@@ -49,7 +49,7 @@ const basePrisma = new PrismaClient({ adapter })
 export const prisma = basePrisma.$extends({
   query: {
     $allModels: {
-      async $allOperations({ model, operation, args, query }) {
+      async $allOperations({ model, operation, args, query }: { model: any; operation: any; args: any; query: any }) {
         const startedAt = Date.now()
         const safeArgs = sanitize(args)
 

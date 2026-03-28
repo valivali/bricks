@@ -43,13 +43,13 @@ class StructureComponentServiceImpl implements StructureComponentService {
       throw new Error("רכיבים למבנה לא נמצאים")
     }
 
-    return await prisma.$transaction(async tx => {
+    return await prisma.$transaction(async (tx: any) => {
       await tx.structureComponent.deleteMany({
         where: { structureId }
       })
 
       const createdComponents = await Promise.all(
-        data.components.map(async comp => {
+        data.components.map(async (comp: any) => {
           return await tx.structureComponent.create({
             data: {
               structureId,
@@ -63,7 +63,7 @@ class StructureComponentServiceImpl implements StructureComponentService {
               notes: comp.notes,
               comments: comp.comments,
               subComponents: {
-                create: comp.subComponents.map(sub => ({
+                create: comp.subComponents.map((sub: any) => ({
                   index: sub.index,
                   name: sub.name,
                   basicQuantity: sub.basicQuantity,

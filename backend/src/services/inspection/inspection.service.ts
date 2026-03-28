@@ -57,7 +57,7 @@ export class InspectionService implements InspectionServiceInterface {
       orderBy: { createdAt: "desc" }
     })
 
-    return inspections.map(inspection => this.toDto(inspection))
+    return inspections.map((inspection: Inspection) => this.toDto(inspection))
   }
 
   async getStructureInspections(userId: string, structureId: string): Promise<InspectionDto[]> {
@@ -76,7 +76,7 @@ export class InspectionService implements InspectionServiceInterface {
     })
 
     logger.info("structure inspections found", { userId, structureId })
-    return inspections.map(inspection => this.toDto(inspection))
+    return inspections.map((inspection: Inspection) => this.toDto(inspection))
   }
 
   static build(): InspectionService {

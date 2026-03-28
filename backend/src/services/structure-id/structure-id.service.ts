@@ -88,7 +88,7 @@ export class StructureIdService implements StructureIdServiceInterface {
     })
 
     logger.info("structure ids found on get user structure ids", { userId })
-    return structureIds.map(structureId => this.toDto(structureId as any))
+    return structureIds.map((structureId: any) => this.toDto(structureId as any))
   }
 
   async deleteStructureId(userId: string, structureIdId: string): Promise<void> {
@@ -274,7 +274,7 @@ export class StructureIdService implements StructureIdServiceInterface {
       specialInspectionDate: structureId.specialInspectionDate?.toISOString() ?? null,
       createdAt: structureId.createdAt.toISOString(),
       updatedAt: structureId.updatedAt.toISOString(),
-      fieldImages: (structureId.fieldImages ?? []).map(img => ({
+      fieldImages: (structureId.fieldImages ?? []).map((img: FieldImage) => ({
         id: img.id,
         fieldName: img.fieldName,
         imageUrl: img.imageUrl,
