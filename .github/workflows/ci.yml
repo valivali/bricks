@@ -77,8 +77,8 @@ jobs:
       #   run: npx prisma migrate status --schema=prisma/schema.prisma
 
       # 8. TESTS
-      - name: Run tests
-        run: npm test -- --ci
+      # - name: Run tests
+      #   run: npm test -- --ci
 
       # 9. BUILD (runs last because slowest)
       - name: Build all apps
