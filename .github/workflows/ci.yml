@@ -49,20 +49,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      # 4. LINT (fail fastest)
-      - name: Lint
-        run: npm run lint
-
-      # 5. TYPECHECK
-      - name: Typecheck
-        run: npm run typecheck
-
-      # 6. PRISMA VALIDATION
+      # 4. PRISMA GENERATION (needed for typechecking)
       - name: Prisma generate
         run: npx prisma generate --schema=backend/prisma/schema.prisma
 
       - name: Prisma validate schema
         run: npx prisma validate --schema=backend/prisma/schema.prisma
+
+      # 5. LINT (fail fastest)
+      - name: Lint
+        run: npm run lint
+
+      # 6. TYPECHECK
+      - name: Typecheck
+        run: npm run typecheck
 
       # 7. RUN MIGRATIONS AGAINST REAL DB
       - name: Run Prisma migrations
