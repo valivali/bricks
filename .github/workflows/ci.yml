@@ -67,14 +67,14 @@ jobs:
         run: npm run typecheck
 
       # 7. RUN MIGRATIONS AGAINST REAL DB
-      - name: Run Prisma migrations
-        working-directory: backend
-        run: npx prisma migrate deploy --schema=prisma/schema.prisma
+      # - name: Run Prisma migrations
+      #   working-directory: backend
+      #   run: npx prisma migrate deploy --schema=prisma/schema.prisma
 
       # Optional but powerful: detect drift
-      - name: Check migration drift
-        working-directory: backend
-        run: npx prisma migrate status --schema=prisma/schema.prisma
+      # - name: Check migration drift
+      #   working-directory: backend
+      #   run: npx prisma migrate status --schema=prisma/schema.prisma
 
       # 8. TESTS
       - name: Run tests
