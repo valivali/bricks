@@ -51,10 +51,12 @@ jobs:
 
       # 4. PRISMA GENERATION (needed for typechecking)
       - name: Prisma generate
-        run: npx prisma generate --schema=backend/prisma/schema.prisma
+        working-directory: backend
+        run: npx prisma generate --schema=prisma/schema.prisma
 
       - name: Prisma validate schema
-        run: npx prisma validate --schema=backend/prisma/schema.prisma
+        working-directory: backend
+        run: npx prisma validate --schema=prisma/schema.prisma
 
       # 5. LINT (fail fastest)
       - name: Lint
@@ -66,11 +68,13 @@ jobs:
 
       # 7. RUN MIGRATIONS AGAINST REAL DB
       - name: Run Prisma migrations
-        run: npx prisma migrate deploy --schema=backend/prisma/schema.prisma
+        working-directory: backend
+        run: npx prisma migrate deploy --schema=prisma/schema.prisma
 
       # Optional but powerful: detect drift
       - name: Check migration drift
-        run: npx prisma migrate status --schema=backend/prisma/schema.prisma
+        working-directory: backend
+        run: npx prisma migrate status --schema=prisma/schema.prisma
 
       # 8. TESTS
       - name: Run tests
