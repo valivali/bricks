@@ -23,7 +23,7 @@ const ExpandableRow: React.FC<ExpandableRowProps> = ({
   const contentRef = useRef<HTMLDivElement>(null)
   const [contentHeight, setContentHeight] = useState<number | string>(0)
 
-  const isExpanded = controlledIsExpanded !== undefined ? controlledIsExpanded : internalIsExpanded
+  const isExpanded = controlledIsExpanded ?? internalIsExpanded
 
   useEffect(() => {
     if (contentRef.current) {

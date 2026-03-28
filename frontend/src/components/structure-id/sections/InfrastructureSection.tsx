@@ -3,9 +3,9 @@ import React from "react"
 import { Title } from "@/components/UI/Text/text"
 import styles from "@/pages/structure-id/structure-id.module.scss"
 
+import { FormField } from "../FormField"
 import type { StructureIdSectionBaseProps } from "../sectionTypes"
 import { INFRASTRUCTURE_OPTIONS } from "../structureIdOptions"
-import { FormField } from "../FormField"
 
 type InfrastructureSectionProps = StructureIdSectionBaseProps & {
   infrastructureTypesValue?: string

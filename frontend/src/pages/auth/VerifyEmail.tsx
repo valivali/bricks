@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useNavigate, useSearchParams } from "react-router-dom"
 
 import { Button } from "@/components/UI/button/button"
@@ -16,14 +16,7 @@ export const VerifyEmail = () => {
   const [successMessage, setSuccessMessage] = useState("")
   const [isVerifying, setIsVerifying] = useState(false)
 
-  useEffect(() => {
-    if (token && !isVerifying) {
-      setIsVerifying(true)
-      verifyEmail()
-    }
-  }, [token])
-
-  const verifyEmail = async () => {
+  const verifyEmail = useCallback(async () => {
     if (!token) {
       setErrorMessage("אסימון אימות לא תקין או חסר")
       return
@@ -35,7 +28,14 @@ export const VerifyEmail = () => {
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : "האימות נכשל")
     }
-  }
+  }, [token, verifyEmailMutation])
+
+  useEffect(() => {
+    if (token && !isVerifying) {
+      setIsVerifying(true)
+      void verifyEmail()
+    }
+  }, [token, isVerifying, verifyEmail])
 
   return (
     <div className={styles.authContainer}>
@@ -64,13 +64,13 @@ export const VerifyEmail = () => {
           )}
 
           {successMessage && (
-            <Button size="lg" className={styles.submitButton} onClick={() => navigate("/auth/login")}>
+            <Button size="lg" className={styles.submitButton} onClick={() => void navigate("/auth/login")}>
               <Text variant="span">מעבר להתחברות</Text>
             </Button>
           )}
 
           {errorMessage && (
-            <Button size="lg" variant="outline" className={styles.submitButton} onClick={() => navigate("/auth/signup")}>
+            <Button size="lg" variant="outline" className={styles.submitButton} onClick={() => void navigate("/auth/signup")}>
               <Text variant="span">חזרה להרשמה</Text>
             </Button>
           )}

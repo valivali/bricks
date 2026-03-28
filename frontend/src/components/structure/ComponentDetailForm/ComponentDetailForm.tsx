@@ -4,7 +4,7 @@ import { match } from "ts-pattern"
 
 import { Button } from "@/components/UI/button/button"
 import FileUpload from "@/components/UI/FileUpload/FileUpload"
-import { type StructuralComponent } from "@/config/skeleton-data"
+import { type StructuralComponent } from "@/config/skeleton-data.types"
 import { type ComponentFormRecord, type FormValues, type SubComponentData } from "@/types/structure-component.types"
 
 import styles from "./ComponentDetailForm.module.scss"
@@ -35,10 +35,7 @@ const ComponentDetailForm: React.FC<ComponentDetailFormProps> = ({
     let el: HTMLElement | null = rootRef.current
     while (el) {
       const style = window.getComputedStyle(el)
-      if (
-        (style.overflowY === "auto" || style.overflowY === "scroll") &&
-        el.scrollHeight > el.clientHeight
-      ) {
+      if ((style.overflowY === "auto" || style.overflowY === "scroll") && el.scrollHeight > el.clientHeight) {
         return el
       }
       el = el.parentElement
@@ -105,7 +102,7 @@ const ComponentDetailForm: React.FC<ComponentDetailFormProps> = ({
   )
 
   const handleSubComponentChange = useCallback(
-    (componentId: string, index: number, field: keyof SubComponentData, value: any) => {
+    <K extends keyof SubComponentData>(componentId: string, index: number, field: K, value: SubComponentData[K]) => {
       const record = getComponentRecord(componentId)
       if (!record) return
 
@@ -125,15 +122,15 @@ const ComponentDetailForm: React.FC<ComponentDetailFormProps> = ({
           updatedAt: now
         }
 
-        const updatedComponents = { ...formValues.components }
-        setValue("components" as any, {
-          ...updatedComponents,
+        const updatedComponents: Record<string, ComponentFormRecord | undefined> = {
+          ...formValues.components,
           [componentId]: {
             ...record,
             subComponents: subs,
             updatedAt: now
           }
-        })
+        }
+        setValue("components", updatedComponents)
       }
     },
     [formValues.components, getComponentRecord, setValue]
@@ -148,7 +145,7 @@ const ComponentDetailForm: React.FC<ComponentDetailFormProps> = ({
       if (subs[index]) {
         // In a real app, you'd upload these files and get URLs back.
         // For now, we'll just use the file names as placeholders.
-        const currentAttachments = subs[index].attachments || []
+        const currentAttachments = subs[index].attachments ?? []
         const newAttachments = [...currentAttachments, ...files.map(f => f.name)]
         handleSubComponentChange(componentId, index, "attachments", newAttachments)
       }
@@ -163,7 +160,7 @@ const ComponentDetailForm: React.FC<ComponentDetailFormProps> = ({
 
       const subs = [...record.subComponents]
       if (subs[index]) {
-        const currentAttachments = subs[index].attachments || []
+        const currentAttachments = subs[index].attachments ?? []
         const newAttachments = currentAttachments.filter((_, i) => i !== fileIndex)
         handleSubComponentChange(componentId, index, "attachments", newAttachments)
       }
@@ -177,14 +174,16 @@ const ComponentDetailForm: React.FC<ComponentDetailFormProps> = ({
       if (!record) return
 
       const now = new Date().toISOString().split("T")[0]
-      setValue("components" as any, {
+      const updatedComponents: Record<string, ComponentFormRecord | undefined> = {
         ...formValues.components,
         [componentId]: {
           ...record,
           comments: value,
           updatedAt: now
         }
-      })
+      }
+
+      setValue("components", updatedComponents)
     },
     [formValues.components, getComponentRecord, setValue]
   )
@@ -194,16 +193,16 @@ const ComponentDetailForm: React.FC<ComponentDetailFormProps> = ({
 
     filteredComponents.forEach(comp => {
       const record = getComponentRecord(comp.componentId)
-      const subs = record?.subComponents || []
+      const subs = record?.subComponents ?? []
 
       let status: "not-filled" | "semi-filled" | "all-filled" = "not-filled"
       if (subs.length > 0) {
-        const filledCount = subs.filter((s: any) => s.basicQuantity > 0 && s.name).length
+        const filledCount = subs.filter((s: SubComponentData) => s.basicQuantity > 0 && s.name).length
         if (filledCount === subs.length) status = "all-filled"
         else if (filledCount > 0) status = "semi-filled"
       }
 
-      const totalBasicQuantity = subs.reduce((sum: number, sub: any) => sum + (Number(sub.basicQuantity) || 0), 0)
+      const totalBasicQuantity = subs.reduce((sum: number, sub: SubComponentData) => sum + (Number(sub.basicQuantity) || 0), 0)
 
       metrics[comp.componentId] = { status, totalBasicQuantity }
     })
@@ -249,7 +248,7 @@ const ComponentDetailForm: React.FC<ComponentDetailFormProps> = ({
         </div>
 
         <div className={styles.subCardsGrid}>
-          {(getComponentRecord(activeComponentId)?.subComponents || []).map((sub: any, index: number) => (
+          {(getComponentRecord(activeComponentId)?.subComponents ?? []).map((sub: SubComponentData, index: number) => (
             <div key={index} className={styles.subCard}>
               <div className={styles.subCardHeader}>
                 <div className={styles.subCardTitle}>
@@ -272,7 +271,7 @@ const ComponentDetailForm: React.FC<ComponentDetailFormProps> = ({
                         min="0"
                         step="0.01"
                         className={styles.tableInput}
-                        value={sub.basicQuantity || ""}
+                        value={sub.basicQuantity ?? ""}
                         placeholder="0"
                         onChange={e => handleSubComponentChange(activeComponentId, index, "basicQuantity", parseFloat(e.target.value) || 0)}
                       />
@@ -288,7 +287,7 @@ const ComponentDetailForm: React.FC<ComponentDetailFormProps> = ({
                         min="0"
                         step="0.01"
                         className={styles.tableInput}
-                        value={sub.secondaryQuantity || ""}
+                        value={sub.secondaryQuantity ?? ""}
                         placeholder="0"
                         onChange={e =>
                           handleSubComponentChange(activeComponentId, index, "secondaryQuantity", parseFloat(e.target.value) || 0)
@@ -313,7 +312,7 @@ const ComponentDetailForm: React.FC<ComponentDetailFormProps> = ({
                 <div className={styles.subCardAttachments}>
                   <label>קבצים ותמונות</label>
                   <FileUpload
-                    values={sub.attachments || []}
+                    values={sub.attachments ?? []}
                     onFilesSelect={files => handleSubComponentFilesSelect(activeComponentId, index, files)}
                     onRemove={fileIndex => handleSubComponentFileRemove(activeComponentId, index, fileIndex)}
                   />
@@ -365,8 +364,7 @@ const ComponentDetailForm: React.FC<ComponentDetailFormProps> = ({
               onClick={() => {
                 saveDrawerScrollPosition()
                 setActiveComponentId(comp.componentId)
-              }}
-            >
+              }}>
               <div className={styles.cardImagePlaceholder}>
                 {firstImage ? (
                   <img src={firstImage} alt="preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
@@ -403,7 +401,7 @@ const ComponentDetailForm: React.FC<ComponentDetailFormProps> = ({
                   className={styles.tableInput}
                   rows={2}
                   placeholder="הוסף הערות כאן..."
-                  value={record?.comments || ""}
+                  value={record?.comments ?? ""}
                   onChange={e => handleComponentCommentsChange(comp.componentId, e.target.value)}
                 />
               </div>
@@ -423,8 +421,7 @@ const ComponentDetailForm: React.FC<ComponentDetailFormProps> = ({
           onClick={() => {
             scrollDrawerToTop()
             onBack()
-          }}
-        >
+          }}>
           חזור
         </Button>
         <Button
@@ -432,8 +429,7 @@ const ComponentDetailForm: React.FC<ComponentDetailFormProps> = ({
             scrollDrawerToTop()
             onSubmit(data)
           })}
-          className={styles.submitButton}
-        >
+          className={styles.submitButton}>
           המשך
         </Button>
       </div>

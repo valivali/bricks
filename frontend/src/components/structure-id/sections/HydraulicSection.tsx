@@ -3,8 +3,8 @@ import React from "react"
 import { Title } from "@/components/UI/Text/text"
 import styles from "@/pages/structure-id/structure-id.module.scss"
 
-import type { StructureIdSectionBaseProps } from "../sectionTypes"
 import { FormField } from "../FormField"
+import type { StructureIdSectionBaseProps } from "../sectionTypes"
 
 export const HydraulicSection: React.FC<StructureIdSectionBaseProps> = ({ register, errors, fieldImages, onFieldImagesChange }) => (
   <section className={styles.section}>

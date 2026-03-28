@@ -8,8 +8,8 @@ import { useUserProfileContext } from "@/contexts/UserProfileContext"
 import styles from "./Header.module.scss"
 
 const getInitials = (firstName?: string | null, lastName?: string | null, email?: string | null) => {
-  const first = firstName?.trim() || ""
-  const last = lastName?.trim() || ""
+  const first = firstName?.trim() ?? ""
+  const last = lastName?.trim() ?? ""
   if (first && last) return `${first[0]}${last[0]}`.toUpperCase()
   if (first) return first.slice(0, 2).toUpperCase()
   if (email) return email[0].toUpperCase()
@@ -43,9 +43,9 @@ export const Header: React.FC = () => {
           { label: "פרופיל", to: "/profile" },
           {
             label: "התנתק",
-            onClick: () => {
+            onClick: async () => {
               logout()
-              navigate("/auth/login")
+              await navigate("/auth/login")
             }
           }
         ]}

@@ -42,10 +42,10 @@ export const useCreateStructureId = (options?: UseMutationOptions<StructureIdDto
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: structureIdApi.createStructureId,
+    mutationFn: (data: CreateStructureIdRequest) => structureIdApi.createStructureId(data),
     ...options,
     onSuccess: (data, variables, onMutateResult, context) => {
-      queryClient.invalidateQueries({ queryKey: ["structureIds"] })
+      void queryClient.invalidateQueries({ queryKey: ["structureIds"] })
       options?.onSuccess?.(data, variables, onMutateResult, context)
     },
     onError: (error, variables, onMutateResult, context) => {
@@ -67,9 +67,9 @@ export const useUpdateStructureId = (id?: string, options?: UseMutationOptions<S
     ...options,
     onSuccess: (data, variables, onMutateResult, context) => {
       if (id) {
-        queryClient.invalidateQueries({ queryKey: ["structureId", id] })
+        void queryClient.invalidateQueries({ queryKey: ["structureId", id] })
       }
-      queryClient.invalidateQueries({ queryKey: ["structureIds"] })
+      void queryClient.invalidateQueries({ queryKey: ["structureIds"] })
       options?.onSuccess?.(data, variables, onMutateResult, context)
     },
     onError: (error, variables, onMutateResult, context) => {

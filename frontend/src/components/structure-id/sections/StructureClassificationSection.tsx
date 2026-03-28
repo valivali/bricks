@@ -3,6 +3,7 @@ import React from "react"
 import { Title } from "@/components/UI/Text/text"
 import styles from "@/pages/structure-id/structure-id.module.scss"
 
+import { FormField } from "../FormField"
 import type { StructureIdSectionBaseProps } from "../sectionTypes"
 import {
   ABUTMENT_TYPE_1_OPTIONS,
@@ -14,7 +15,6 @@ import {
   PIER_TYPE_OPTIONS,
   PRESTRESSING_TYPE_OPTIONS
 } from "../structureIdOptions"
-import { FormField } from "../FormField"
 
 type StructureClassificationSectionProps = StructureIdSectionBaseProps & {
   deckTypesValue?: string

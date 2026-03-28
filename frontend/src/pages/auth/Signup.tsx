@@ -39,8 +39,8 @@ export const Signup = () => {
     toast.error("נא לתקן את השדות המסומנים")
   }
 
-  const emailHasError = Boolean(errors.email) && (touchedFields.email || submitCount > 0)
-  const passwordHasError = Boolean(errors.password) && (touchedFields.password || submitCount > 0)
+  const emailHasError = Boolean(errors.email) && (touchedFields.email ?? submitCount > 0)
+  const passwordHasError = Boolean(errors.password) && (touchedFields.password ?? submitCount > 0)
   const showEmailError = emailHasError && focusedField !== "email"
   const showPasswordError = passwordHasError && focusedField !== "password"
   const emailErrorMessage = errors.email?.message
@@ -76,8 +76,8 @@ export const Signup = () => {
               className={`${styles.input} ${emailHasError ? styles.inputError : ""}`}
               placeholder="you@example.com"
               onFocus={() => setFocusedField("email")}
-              onBlur={event => {
-                emailField.onBlur(event)
+              onBlur={async event => {
+                await emailField.onBlur(event)
                 setFocusedField(null)
               }}
             />
@@ -99,8 +99,8 @@ export const Signup = () => {
               className={`${styles.input} ${passwordHasError ? styles.inputError : ""}`}
               placeholder="••••••••"
               onFocus={() => setFocusedField("password")}
-              onBlur={event => {
-                passwordField.onBlur(event)
+              onBlur={async event => {
+                await passwordField.onBlur(event)
                 setFocusedField(null)
               }}
             />

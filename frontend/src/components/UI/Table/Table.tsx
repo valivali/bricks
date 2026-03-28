@@ -24,7 +24,7 @@ export function Table<T extends { id: string }>({ columns, data, onRowClick, cla
   }
 
   return (
-    <div className={`${styles.tableWrapper} ${className || ""}`}>
+    <div className={`${styles.tableWrapper} ${className ?? ""}`}>
       <table className={styles.table}>
         <thead>
           <tr>

@@ -1,9 +1,8 @@
-import React, { useEffect } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
+import React, { useEffect, useMemo } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate, useParams } from "react-router-dom"
-import { Button } from "@/components/UI/button/button"
-import { Title } from "@/components/UI/Text/text"
+
 import {
   ConditionRatingSection,
   GeneralClassificationSection,
@@ -17,10 +16,13 @@ import {
   MaterialsSection,
   StructureClassificationSection
 } from "@/components/structure-id"
+import { Button } from "@/components/UI/button/button"
+import { Title } from "@/components/UI/Text/text"
 import { useUserProfileContext } from "@/contexts/UserProfileContext"
-import { useToast } from "@/hooks/useToast"
 import { useCreateStructureId, useStructureIdQuery, useUpdateStructureId } from "@/hooks/useStructureId"
-import { structureIdSchema, type StructureIdFormValues, type StructureIdValidatedValues } from "@/schemas/structure-id.schema"
+import { useToast } from "@/hooks/useToast"
+import { type StructureIdFormValues, structureIdSchema, type StructureIdValidatedValues } from "@/schemas/structure-id.schema"
+
 import styles from "./structure-id.module.scss"
 
 export const StructureIdForm: React.FC = () => {
@@ -31,10 +33,13 @@ export const StructureIdForm: React.FC = () => {
 
   const { data: existingData, isLoading } = useStructureIdQuery(id)
 
-  const defaultValues: Partial<StructureIdFormValues> = {
-    area: undefined,
-    trafficFunctionClass: undefined
-  }
+  const defaultValues: Partial<StructureIdFormValues> = useMemo(
+    () => ({
+      area: undefined,
+      trafficFunctionClass: undefined
+    }),
+    []
+  )
 
   const {
     register,
@@ -73,22 +78,22 @@ export const StructureIdForm: React.FC = () => {
   const deckSealingMaterialsValue = toStr(watch("deckSealingMaterials"))
   const curbMaterialsValue = toStr(watch("curbMaterials"))
   const infrastructureTypesValue = toStr(watch("infrastructureTypes"))
-  const fieldImages = watch("fieldImages") || []
+  const fieldImages = watch("fieldImages") ?? []
 
   useEffect(() => {
     if (existingData) {
-      reset(existingData as any)
+      reset(existingData as unknown as StructureIdFormValues)
     } else if (profile && id === "new") {
       reset({
         ...defaultValues
       })
     }
-  }, [existingData, profile, reset, id])
+  }, [existingData, profile, reset, id, defaultValues])
 
   const createMutation = useCreateStructureId({
     onSuccess: () => {
       success("תעודת הזהות נוצרה בהצלחה")
-      navigate("/structures")
+      void navigate("/structures")
     },
     onError: () => {
       error("שגיאה ביצירת תעודת הזהות")
@@ -113,11 +118,11 @@ export const StructureIdForm: React.FC = () => {
   }
 
   const handleCancel = () => {
-    navigate("/structures")
+    void navigate("/structures")
   }
 
   const handleClearChanges = () => {
-    reset(existingData as any)
+    reset(existingData as unknown as StructureIdFormValues)
   }
 
   if (isLoading) {

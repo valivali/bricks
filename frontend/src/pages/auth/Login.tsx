@@ -29,7 +29,7 @@ export const Login = () => {
   const onSubmit = async (data: LoginFormData) => {
     try {
       await loginMutation.mutateAsync(data)
-      navigate("/")
+      void navigate("/")
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : ""
       const isInvalidCredentials =
@@ -47,8 +47,8 @@ export const Login = () => {
     toast.error("נא לתקן את השדות המסומנים")
   }
 
-  const emailHasError = Boolean(errors.email) && (touchedFields.email || submitCount > 0)
-  const passwordHasError = Boolean(errors.password) && (touchedFields.password || submitCount > 0)
+  const emailHasError = Boolean(errors.email) && (touchedFields.email ?? submitCount > 0)
+  const passwordHasError = Boolean(errors.password) && (touchedFields.password ?? submitCount > 0)
   const showEmailError = emailHasError && focusedField !== "email"
   const showPasswordError = passwordHasError && focusedField !== "password"
   const emailErrorMessage = errors.email?.message
@@ -78,8 +78,8 @@ export const Login = () => {
               className={`${styles.input} ${emailHasError ? styles.inputError : ""}`}
               placeholder="you@example.com"
               onFocus={() => setFocusedField("email")}
-              onBlur={event => {
-                emailField.onBlur(event)
+              onBlur={async event => {
+                await emailField.onBlur(event)
                 setFocusedField(null)
               }}
             />
@@ -101,8 +101,8 @@ export const Login = () => {
               className={`${styles.input} ${passwordHasError ? styles.inputError : ""}`}
               placeholder="••••••••"
               onFocus={() => setFocusedField("password")}
-              onBlur={event => {
-                passwordField.onBlur(event)
+              onBlur={async event => {
+                await passwordField.onBlur(event)
                 setFocusedField(null)
               }}
             />

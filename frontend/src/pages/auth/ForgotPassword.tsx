@@ -44,7 +44,7 @@ export const ForgotPassword = () => {
     toast.error("נא לתקן את השדות המסומנים")
   }
 
-  const emailHasError = Boolean(errors.email) && (touchedFields.email || submitCount > 0)
+  const emailHasError = Boolean(errors.email) && (touchedFields.email ?? submitCount > 0)
   const showEmailError = emailHasError && focusedField !== "email"
   const emailErrorMessage = errors.email?.message
   const emailField = register("email")
@@ -84,8 +84,8 @@ export const ForgotPassword = () => {
               className={`${styles.input} ${emailHasError ? styles.inputError : ""}`}
               placeholder="you@example.com"
               onFocus={() => setFocusedField("email")}
-              onBlur={event => {
-                emailField.onBlur(event)
+              onBlur={async event => {
+                await emailField.onBlur(event)
                 setFocusedField(null)
               }}
             />

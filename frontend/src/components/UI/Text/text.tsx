@@ -1,3 +1,5 @@
+import React from "react"
+
 import styles from "./text.module.scss"
 import type { BlockquoteProps, SubtitleProps, TextProps, TitleProps } from "./text.types"
 

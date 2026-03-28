@@ -3,6 +3,7 @@ import React, { useEffect } from "react"
 import { Title } from "@/components/UI/Text/text"
 import styles from "@/pages/structure-id/structure-id.module.scss"
 
+import { FormField } from "../FormField"
 import type { StructureIdSectionBaseProps } from "../sectionTypes"
 import {
   AUTHORITY_OPTIONS,
@@ -12,7 +13,6 @@ import {
   YES_NO_OPTIONS
 } from "../structureIdOptions"
 import { getStructureDetailTypeOptions, getStructureSubTypeOptions, getStructureTypeOptions } from "../structureTypeOptions"
-import { FormField } from "../FormField"
 
 export interface GeneralClassificationSectionProps extends StructureIdSectionBaseProps {
   structureTypeValue?: string

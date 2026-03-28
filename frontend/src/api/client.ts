@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? "http://localhost:4000/api" : "/api")
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? (import.meta.env.DEV ? "http://localhost:4000/api" : "/api")
 
 export class ApiClient {
   private baseUrl: string
@@ -76,7 +76,7 @@ export class ApiClient {
       const error = await response.json().catch(() => ({
         error: "An error occurred"
       }))
-      throw new Error(error.error || error.message || "Request failed")
+      throw new Error(error.error ?? error.message ?? "Request failed")
     }
 
     return response.json()

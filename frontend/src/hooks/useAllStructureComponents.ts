@@ -1,30 +1,34 @@
 import { useQuery } from "@tanstack/react-query"
 
 import { structureComponentApi } from "@/api/structure-component.api"
+import { structureComponentMapper } from "@/mappers/structure-component.mapper"
+
+import { type ClientStructureComponent } from "./useStructureComponents"
 
 export const useAllStructureComponents = (structureIds: string[] | undefined) => {
   return useQuery({
     queryKey: ["all-structure-components", structureIds],
     queryFn: async () => {
-      if (!structureIds || structureIds.length === 0) return {}
+      if (!structureIds || structureIds.length === 0) return {} as Record<string, ClientStructureComponent[]>
 
       const results = await Promise.all(
         structureIds.map(async id => {
           try {
-            const components = await structureComponentApi.getComponentsByStructureId(id)
-            return { id, components }
+            const dtos = await structureComponentApi.getComponentsByStructureId(id)
+            const records = dtos.map(structureComponentMapper.toClientStructureComponent)
+            return { id, records }
           } catch {
-            return { id, components: [] }
+            return { id, records: [] }
           }
         })
       )
 
       return results.reduce(
-        (acc, { id, components }) => {
-          acc[id] = components
+        (acc, { id, records }) => {
+          acc[id] = records
           return acc
         },
-        {} as Record<string, any[]>
+        {} as Record<string, ClientStructureComponent[]>
       )
     },
     enabled: !!structureIds && structureIds.length > 0,

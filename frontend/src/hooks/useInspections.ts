@@ -31,9 +31,9 @@ export const useCreateInspection = (options?: { onSuccess?: (data: InspectionDto
   return useMutation({
     mutationFn: (data: CreateInspectionRequest) => inspectionApi.createInspection(data),
     onSuccess: data => {
-      queryClient.invalidateQueries({ queryKey: ["inspections"] })
+      void queryClient.invalidateQueries({ queryKey: ["inspections"] })
       if (data.structureId) {
-        queryClient.invalidateQueries({ queryKey: ["inspections", "structure", data.structureId] })
+        void queryClient.invalidateQueries({ queryKey: ["inspections", "structure", data.structureId] })
       }
       options?.onSuccess?.(data)
     },
@@ -53,10 +53,10 @@ export const useUpdateInspection = (
   return useMutation({
     mutationFn: (data: UpdateInspectionRequest) => inspectionApi.updateInspection(id, data),
     onSuccess: data => {
-      queryClient.invalidateQueries({ queryKey: ["inspections"] })
-      queryClient.invalidateQueries({ queryKey: ["inspections", id] })
+      void queryClient.invalidateQueries({ queryKey: ["inspections"] })
+      void queryClient.invalidateQueries({ queryKey: ["inspections", id] })
       if (data.structureId) {
-        queryClient.invalidateQueries({ queryKey: ["inspections", "structure", data.structureId] })
+        void queryClient.invalidateQueries({ queryKey: ["inspections", "structure", data.structureId] })
       }
       options?.onSuccess?.(data)
     },

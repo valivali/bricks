@@ -1,10 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 
 import { type FormValues } from "@/types/structure-component.types"
-import { type StructureComponentDto } from "@/api/structure-component.api"
+
+import { type ClientStructureComponent } from "./useStructureComponents"
 
 interface UseStructureComponentsDrawerProps {
-  structureComponents?: StructureComponentDto[]
+  structureComponents?: ClientStructureComponent[]
   isDrawerOpen: boolean
   structureId: string | null
 }
@@ -28,19 +29,7 @@ export const useStructureComponentsDrawer = ({ structureComponents, isDrawerOpen
 
     structureComponents.forEach(comp => {
       initQuant[comp.componentCode] = String(comp.quantity)
-      initForm.components[comp.componentCode] = {
-        subComponents: comp.subComponents.map(sub => ({
-          id: sub.index,
-          name: sub.name,
-          basicQuantity: sub.basicQuantity,
-          secondaryQuantity: sub.secondaryQuantity,
-          comments: sub.comments || "",
-          attachment: sub.attachment,
-          updatedAt: new Date(sub.updatedAt).toISOString().split("T")[0]
-        })),
-        comments: comp.comments || "",
-        updatedAt: new Date(comp.updatedAt).toISOString().split("T")[0]
-      }
+      initForm.components[comp.componentCode] = comp
     })
 
     return { quantities: initQuant, formValues: initForm }

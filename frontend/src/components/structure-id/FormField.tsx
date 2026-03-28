@@ -1,18 +1,15 @@
 import React from "react"
-import type { FieldError } from "react-hook-form"
+import type { FieldError, FieldPath, FieldValues, UseFormRegister } from "react-hook-form"
+
 import { Text } from "@/components/UI/Text/text"
-import { FieldImageManager } from "./FieldImageManager"
 import styles from "@/pages/structure-id/structure-id.module.scss"
 
-type FieldImage = {
-  fieldName: string
-  imageUrl: string
-}
+import { FieldImageManager } from "./FieldImageManager"
 
-type FormFieldProps = {
+type FormFieldProps<T extends FieldValues> = {
   label: string
-  name: string
-  register: any // from react-hook-form
+  name: FieldPath<T>
+  register: UseFormRegister<T>
   error?: FieldError
   isReadonly?: boolean
   type?: "text" | "number" | "textarea" | "select"
@@ -27,7 +24,7 @@ type FormFieldProps = {
   onChange?: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void
 }
 
-export const FormField: React.FC<FormFieldProps> = ({
+export function FormField<T extends FieldValues>({
   label,
   name,
   register,
@@ -43,11 +40,11 @@ export const FormField: React.FC<FormFieldProps> = ({
   disabled = false,
   className = "",
   onChange
-}) => {
+}: FormFieldProps<T>) {
   const registerProps = register(name)
 
-  const handleOnChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    registerProps.onChange(e)
+  const handleOnChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    await registerProps.onChange(e)
     onChange?.(e)
   }
 
@@ -72,7 +69,7 @@ export const FormField: React.FC<FormFieldProps> = ({
         />
       ) : type === "select" ? (
         <select {...registerProps} onChange={handleOnChange} className={styles.select} disabled={isReadonly || disabled}>
-          <option value="">{placeholder || "בחר..."}</option>
+          <option value="">{placeholder ?? "בחר..."}</option>
           {options.map(opt => (
             <option key={opt.value} value={opt.value}>
               {opt.label}

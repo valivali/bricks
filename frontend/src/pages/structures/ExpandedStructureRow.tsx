@@ -1,8 +1,8 @@
 import React from "react"
 
-import { Button } from "@/components/UI/button/button"
-import InspectionForm from "@/components/structure/InspectionForm/InspectionForm"
 import { type InspectionDto } from "@/api/inspection.api"
+import InspectionForm from "@/components/structure/InspectionForm/InspectionForm"
+import { Button } from "@/components/UI/button/button"
 import { type InspectionFormValues } from "@/schemas/inspection.schema"
 
 import styles from "./structures.module.scss"
@@ -49,13 +49,13 @@ export const ExpandedStructureRow: React.FC<ExpandedStructureRowProps> = ({
                       {inspection.inspectionDate ? new Date(inspection.inspectionDate).toLocaleDateString("he-IL") : "-"}
                     </div>
                     <div className={styles.inspectionField}>
-                      <strong>סוג:</strong> {inspection.inspectionType || "-"}
+                      <strong>סוג:</strong> {inspection.inspectionType ?? "-"}
                     </div>
                     <div className={styles.inspectionField}>
-                      <strong>סוקר:</strong> {inspection.inspectorName || "-"}
+                      <strong>סוקר:</strong> {inspection.inspectorName ?? "-"}
                     </div>
                     <div className={styles.inspectionField}>
-                      <strong>חברה:</strong> {inspection.companyName || "-"}
+                      <strong>חברה:</strong> {inspection.companyName ?? "-"}
                     </div>
                   </div>
                 ))}

@@ -3,9 +3,9 @@ import React from "react"
 import { Title } from "@/components/UI/Text/text"
 import styles from "@/pages/structure-id/structure-id.module.scss"
 
+import { FormField } from "../FormField"
 import type { StructureIdSectionBaseProps } from "../sectionTypes"
 import { SEPARATOR_TYPE_OPTIONS, YES_NO_OPTIONS } from "../structureIdOptions"
-import { FormField } from "../FormField"
 
 type GeometrySectionProps = StructureIdSectionBaseProps & {
   separatorTypeValue?: string

@@ -1,8 +1,10 @@
-import React from "react"
 import * as Dialog from "@radix-ui/react-dialog"
-import { Button } from "@/components/UI/button/button"
+import React from "react"
+
 import type { ButtonVariant } from "@/components/UI/button/button"
+import { Button } from "@/components/UI/button/button"
 import { Text } from "@/components/UI/Text/text"
+
 import styles from "./ConfirmDialog.module.scss"
 
 type ConfirmDialogProps = {

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react"
+import React, { createContext, useEffect, useState } from "react"
 
 import type { UserDto } from "@/api/auth.api"
 import { useCurrentUser, useLogout } from "@/hooks/useAuth"
@@ -38,7 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [error])
 
   const value: AuthContextType = {
-    user: user || null,
+    user: user ?? null,
     isAuthenticated: !!user,
     isLoading: !isReady || isLoading,
     logout
@@ -61,10 +61,4 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
-export const useAuthContext = () => {
-  const context = useContext(AuthContext)
-  if (context === undefined) {
-    throw new Error("useAuthContext must be used within an AuthProvider")
-  }
-  return context
-}
+export { AuthContext }

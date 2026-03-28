@@ -26,12 +26,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className: [classes, child.props.className].filter(Boolean).join(" "),
         ref,
         ...props,
-        disabled: (disabled || isLoading) as unknown as boolean
+        disabled: Boolean(disabled) || isLoading
       } as React.ButtonHTMLAttributes<HTMLButtonElement>)
     }
 
     return (
-      <button className={classes} ref={ref} disabled={disabled || isLoading} {...props}>
+      <button className={classes} ref={ref} disabled={Boolean(disabled) || isLoading} {...props}>
         {isLoading ? "Loading..." : children}
       </button>
     )

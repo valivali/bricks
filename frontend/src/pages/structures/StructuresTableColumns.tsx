@@ -9,6 +9,7 @@ import {
 } from "@/components/structure-id"
 import { getStructureTypeLabel } from "@/components/structure-id/structureTypeOptions"
 import { Button } from "@/components/UI/button/button"
+import { type ClientStructureComponent } from "@/hooks/useStructureComponents"
 
 import styles from "./structures.module.scss"
 
@@ -21,7 +22,7 @@ interface Column {
 
 interface UseStructuresColumnsProps {
   onOpenDrawer: (structure: StructureIdDto) => void
-  componentsMap: Record<string, any[]>
+  componentsMap: Record<string, ClientStructureComponent[]>
 }
 
 export const useStructuresColumns = ({ onOpenDrawer, componentsMap }: UseStructuresColumnsProps): Column[] => {
@@ -61,7 +62,7 @@ export const useStructuresColumns = ({ onOpenDrawer, componentsMap }: UseStructu
     },
     {
       header: "סוג מבנה",
-      accessor: (row: StructureIdDto) => getStructureTypeLabel(row.structureType || undefined),
+      accessor: (row: StructureIdDto) => getStructureTypeLabel(row.structureType ?? undefined),
       width: "6%"
     },
     {
@@ -79,7 +80,7 @@ export const useStructuresColumns = ({ onOpenDrawer, componentsMap }: UseStructu
       accessor: (row: StructureIdDto) => {
         if (!row.primaryClassificationGroup) return "-"
         const option = PRIMARY_CLASSIFICATION_OPTIONS.find(opt => opt.value === row.primaryClassificationGroup)
-        return option?.label || row.primaryClassificationGroup
+        return option?.label ?? row.primaryClassificationGroup
       },
       width: "6%"
     },
@@ -88,7 +89,7 @@ export const useStructuresColumns = ({ onOpenDrawer, componentsMap }: UseStructu
       accessor: (row: StructureIdDto) => {
         if (!row.secondaryClassificationGroup) return "-"
         const option = SECONDARY_CLASSIFICATION_OPTIONS.find(opt => opt.value === row.secondaryClassificationGroup)
-        return option?.label || row.secondaryClassificationGroup
+        return option?.label ?? row.secondaryClassificationGroup
       },
       width: "6%"
     },
@@ -97,7 +98,7 @@ export const useStructuresColumns = ({ onOpenDrawer, componentsMap }: UseStructu
       accessor: (row: StructureIdDto) => {
         if (!row.inspectionClassification) return "-"
         const option = INSPECTION_CLASSIFICATION_OPTIONS.find(opt => opt.value === row.inspectionClassification)
-        return option?.label || row.inspectionClassification
+        return option?.label ?? row.inspectionClassification
       },
       width: "6%"
     },
@@ -119,7 +120,7 @@ export const useStructuresColumns = ({ onOpenDrawer, componentsMap }: UseStructu
     {
       header: "רכיבים",
       accessor: (row: StructureIdDto) => {
-        const components = componentsMap[row.id] || []
+        const components = componentsMap[row.id] ?? []
         return <span className={styles.componentsStatus}>{components.length > 0 ? "✓" : "-"}</span>
       },
       width: "4%"
@@ -128,7 +129,7 @@ export const useStructuresColumns = ({ onOpenDrawer, componentsMap }: UseStructu
       header: "פעולות",
       renderCell: (row: StructureIdDto) => (
         <div className={styles.actions} onClick={e => e.stopPropagation()}>
-          <Button size="sm" variant="outline" onClick={() => navigate(`/structure-id/${row.id}`)}>
+          <Button size="sm" variant="outline" onClick={() => void navigate(`/structure-id/${row.id}`)}>
             ערוך
           </Button>
           <Button size="sm" onClick={() => onOpenDrawer(row)}>

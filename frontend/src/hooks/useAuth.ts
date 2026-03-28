@@ -1,7 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { useContext } from "react"
 
 import type { ForgotPasswordRequest, LoginRequest, ResetPasswordRequest, SignupRequest, VerifyEmailRequest } from "@/api/auth.api"
 import { authApi } from "@/api/auth.api"
+import { AuthContext } from "@/contexts/AuthContext"
+import { UserProfileContext } from "@/contexts/UserProfileContext"
 
 export const useSignup = () => {
   return useMutation({
@@ -61,4 +64,20 @@ export const useLogout = () => {
     queryClient.setQueryData(["currentUser"], null)
     queryClient.clear()
   }
+}
+
+export const useAuthContext = () => {
+  const context = useContext(AuthContext)
+  if (context === undefined) {
+    throw new Error("useAuthContext must be used within an AuthProvider")
+  }
+  return context
+}
+
+export const useUserProfileContext = () => {
+  const context = useContext(UserProfileContext)
+  if (context === undefined) {
+    throw new Error("useUserProfileContext must be used within a UserProfileProvider")
+  }
+  return context
 }

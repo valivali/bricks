@@ -104,7 +104,7 @@ export function ImageUpload({
 
     const reader = new FileReader()
     reader.onload = () => {
-      const result = reader.result?.toString() || null
+      const result = reader.result?.toString() ?? null
       setWorkingImage(result)
       setZoom(1)
       setPosition({ x: 0, y: 0 })

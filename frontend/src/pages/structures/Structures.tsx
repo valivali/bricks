@@ -17,15 +17,14 @@ import {
   ImportanceLevel,
   SIGNAGE_BRIDGE_STRUCTURAL_COMPONENTS,
   SKELETON_STRUCTURE_TYPES,
-  type StructuralComponent,
-  StructureType,
   TUNNEL_STRUCTURAL_COMPONENTS,
   WALL_STRUCTURAL_COMPONENTS
 } from "@/config/skeleton-data"
+import { type SkeletonOption, type StructuralComponent, StructureType } from "@/config/skeleton-data.types"
 import { useUserProfileContext } from "@/contexts/UserProfileContext"
 import { useAllStructureComponents } from "@/hooks/useAllStructureComponents"
 import { useCreateInspection, useStructureInspectionsQuery } from "@/hooks/useInspections"
-import { useStructureComponentsQuery, useUpsertStructureComponents } from "@/hooks/useStructureComponents"
+import { type ClientStructureComponent, useStructureComponentsQuery, useUpsertStructureComponents } from "@/hooks/useStructureComponents"
 import { useStructureComponentsDrawer } from "@/hooks/useStructureComponentsDrawer"
 import { useStructureIdsQuery } from "@/hooks/useStructureId"
 import { useToast } from "@/hooks/useToast"
@@ -59,8 +58,8 @@ export const Structures: React.FC = () => {
   const structureIds = useMemo(() => structures?.map(s => s.id), [structures])
   const { data: allComponentsMap = {} } = useAllStructureComponents(structureIds)
 
-  const { data: structureComponents } = useStructureComponentsQuery(drawerState.structureId || undefined)
-  const { data: expandedInspections } = useStructureInspectionsQuery(expandedRowId || undefined)
+  const { data: structureComponents } = useStructureComponentsQuery(drawerState.structureId ?? undefined)
+  const { data: expandedInspections } = useStructureInspectionsQuery(expandedRowId ?? undefined)
 
   const { quantities, setQuantities, formValues, setFormValues, resetDrawerState } = useStructureComponentsDrawer({
     structureComponents,
@@ -68,7 +67,7 @@ export const Structures: React.FC = () => {
     structureId: drawerState.structureId
   })
 
-  const upsertMutation = useUpsertStructureComponents(drawerState.structureId || "", {
+  const upsertMutation = useUpsertStructureComponents(drawerState.structureId ?? "", {
     onSuccess: () => {
       success("רכיבים נשמרו בהצלחה")
       setDrawerState({ isOpen: false, structureId: null, step: "quantity" })
@@ -107,7 +106,7 @@ export const Structures: React.FC = () => {
   const processedComponents = useMemo(() => {
     if (!currentStructure) return []
 
-    const selectedPath: any[] = []
+    const selectedPath: SkeletonOption[] = []
 
     if (currentStructure.structureType) {
       const rootType = SKELETON_STRUCTURE_TYPES.find(t => t.id === currentStructure.structureType)
@@ -115,12 +114,12 @@ export const Structures: React.FC = () => {
     }
 
     if (currentStructure.structureSubType && selectedPath[0]?.subOptions) {
-      const subType = selectedPath[0].subOptions.find((s: any) => s.id === currentStructure.structureSubType)
+      const subType = selectedPath[0].subOptions.find(s => s.id === currentStructure.structureSubType)
       if (subType) selectedPath.push(subType)
     }
 
     if (currentStructure.structureDetailType && selectedPath[1]?.subOptions) {
-      const detailType = selectedPath[1].subOptions.find((d: any) => d.id === currentStructure.structureDetailType)
+      const detailType = selectedPath[1].subOptions.find(d => d.id === currentStructure.structureDetailType)
       if (detailType) selectedPath.push(detailType)
     }
 
@@ -143,9 +142,9 @@ export const Structures: React.FC = () => {
             return {
               ...comp,
               componentId: finalSelection.mainComponentId,
-              description: finalSelection.mainComponent || comp.description,
-              basicMeasurementUnit: finalSelection.basicMeasurementUnit || comp.basicMeasurementUnit,
-              secondaryMeasurementUnit: finalSelection.secondaryMeasurementUnit || "-",
+              description: finalSelection.mainComponent ?? comp.description,
+              basicMeasurementUnit: finalSelection.basicMeasurementUnit ?? comp.basicMeasurementUnit,
+              secondaryMeasurementUnit: finalSelection.secondaryMeasurementUnit ?? "-",
               importanceLevel: ImportanceLevel.HIGH_VERY,
               evaluationNeeded: true,
               notes: ""
@@ -156,9 +155,9 @@ export const Structures: React.FC = () => {
               return {
                 ...comp,
                 componentId: finalSelection.secondaryComponentId,
-                description: finalSelection.secondaryComponent || comp.description,
-                basicMeasurementUnit: finalSelection.basicMeasurementUnit || comp.basicMeasurementUnit,
-                secondaryMeasurementUnit: finalSelection.secondaryMeasurementUnit || "-",
+                description: finalSelection.secondaryComponent ?? comp.description,
+                basicMeasurementUnit: finalSelection.basicMeasurementUnit ?? comp.basicMeasurementUnit,
+                secondaryMeasurementUnit: finalSelection.secondaryMeasurementUnit ?? "-",
                 importanceLevel: ImportanceLevel.HIGH_VERY,
                 evaluationNeeded: true,
                 notes: ""
@@ -193,7 +192,7 @@ export const Structures: React.FC = () => {
     filtered.forEach(comp => {
       const qty = parseInt(newQuantities[comp.componentId] || "0")
       const existingRecord = formValues.components[comp.componentId]
-      const existingSubData = existingRecord?.subComponents || []
+      const existingSubData = existingRecord?.subComponents ?? []
 
       const subData: SubComponentData[] = Array.from({ length: qty }).map((_, i) => {
         if (existingSubData[i]) return existingSubData[i]
@@ -209,8 +208,8 @@ export const Structures: React.FC = () => {
       })
       newComponentsData[comp.componentId] = {
         subComponents: subData,
-        comments: existingRecord?.comments || "",
-        updatedAt: existingRecord?.updatedAt || new Date().toISOString().split("T")[0]
+        comments: existingRecord?.comments ?? "",
+        updatedAt: existingRecord?.updatedAt ?? new Date().toISOString().split("T")[0]
       }
     })
 
@@ -219,27 +218,21 @@ export const Structures: React.FC = () => {
   }
 
   const handleDetailSubmit = (data: FormValues) => {
-    const componentsToSave = filteredComponents.map(comp => ({
+    const components: ClientStructureComponent[] = filteredComponents.map(comp => ({
       componentCode: comp.componentId,
       description: comp.description,
       importanceLevel: comp.importanceLevel,
       basicMeasurementUnit: comp.basicMeasurementUnit,
       secondaryMeasurementUnit: comp.secondaryMeasurementUnit || null,
-      quantity: parseInt(quantities[comp.componentId] || "0"),
       evaluationNeeded: comp.evaluationNeeded,
       notes: comp.notes || null,
-      comments: data.components[comp.componentId]?.comments || null,
-      subComponents: (data.components[comp.componentId]?.subComponents || []).map(sub => ({
-        index: sub.id,
-        name: sub.name,
-        basicQuantity: sub.basicQuantity,
-        secondaryQuantity: sub.secondaryQuantity,
-        comments: sub.comments || null,
-        attachments: sub.attachments || null
-      }))
+      quantity: parseInt(quantities[comp.componentId] || "0"),
+      comments: data.components[comp.componentId]?.comments ?? "",
+      subComponents: data.components[comp.componentId]?.subComponents ?? [],
+      updatedAt: data.components[comp.componentId]?.updatedAt ?? ""
     }))
 
-    upsertMutation.mutate({ components: componentsToSave })
+    upsertMutation.mutate(components)
   }
 
   const handleInspectionSubmit = async (values: InspectionFormValues) => {
@@ -292,17 +285,17 @@ export const Structures: React.FC = () => {
 
     return {
       lastUpdated: "",
-      structureType: getStructureTypeLabel(structure.structureType || undefined),
+      structureType: getStructureTypeLabel(structure.structureType ?? undefined),
       generalDescription: "",
       inspectionType: "",
-      companyName: profile?.companyName || "",
+      companyName: profile?.companyName ?? "",
       inspectorName: [profile?.firstName, profile?.lastName].filter(Boolean).join(" "),
-      structureNumber: structure.structureNumber || "",
-      structureName: structure.structureName || "",
-      structureMarking: structure.structureMarking || "",
-      roadNumber: structure.belongsToRoad || "",
-      runningDistance: structure.runningDistanceKm || "",
-      area: areaOption?.label || structure.area || "",
+      structureNumber: structure.structureNumber ?? "",
+      structureName: structure.structureName ?? "",
+      structureMarking: structure.structureMarking ?? "",
+      roadNumber: structure.belongsToRoad ?? "",
+      runningDistance: structure.runningDistanceKm ?? "",
+      area: areaOption?.label ?? structure.area ?? "",
       fullStructureIncluded: true,
       fullStructureNotes: "",
       spanCount: "",
@@ -314,8 +307,8 @@ export const Structures: React.FC = () => {
       nextInspectionType: "",
       nextInspectionDate: "",
       classificationForInspection: "",
-      coordinateNorth: structure.coordinateNorth || "",
-      coordinateEast: structure.coordinateEast || ""
+      coordinateNorth: structure.coordinateNorth ?? "",
+      coordinateEast: structure.coordinateEast ?? ""
     }
   }
 
@@ -333,7 +326,7 @@ export const Structures: React.FC = () => {
   }
 
   const handleCreateNew = () => {
-    navigate("/structure-id/new")
+    void navigate("/structure-id/new")
   }
 
   if (isLoading) {

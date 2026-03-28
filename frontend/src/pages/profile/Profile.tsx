@@ -20,12 +20,12 @@ const formatPhone = (value: string) => {
 }
 
 const toNull = (value?: string | null) => {
-  const trimmed = value?.trim() || ""
+  const trimmed = value?.trim() ?? ""
   return trimmed ? trimmed : null
 }
 
 const digitsOrNull = (value?: string | null) => {
-  const trimmed = value?.trim() || ""
+  const trimmed = value?.trim() ?? ""
   if (!trimmed) return null
   return trimmed.replace(/\D/g, "")
 }
@@ -37,15 +37,15 @@ export const Profile = () => {
 
   const defaultValues = useMemo<ProfileFormValues>(
     () => ({
-      email: profile?.email || user?.email || "",
-      firstName: profile?.firstName || "",
-      lastName: profile?.lastName || "",
-      idNumber: profile?.idNumber || "",
+      email: profile?.email ?? user?.email ?? "",
+      firstName: profile?.firstName ?? "",
+      lastName: profile?.lastName ?? "",
+      idNumber: profile?.idNumber ?? "",
       phone: profile?.phone ? formatPhone(profile.phone) : "",
-      companyName: profile?.companyName || "",
-      companyId: profile?.companyId || "",
-      companyAddress: profile?.companyAddress || "",
-      profileImage: profile?.profileImage || ""
+      companyName: profile?.companyName ?? "",
+      companyId: profile?.companyId ?? "",
+      companyAddress: profile?.companyAddress ?? "",
+      profileImage: profile?.profileImage ?? ""
     }),
     [profile, user]
   )
@@ -69,7 +69,7 @@ export const Profile = () => {
   const profileImage = watch("profileImage")
 
   const onSubmit = handleSubmit(async values => {
-    const previousEmail = profile?.email || user?.email
+    const previousEmail = profile?.email ?? user?.email
     try {
       const updated = await updateProfile({
         email: values.email.trim(),
@@ -151,7 +151,7 @@ export const Profile = () => {
               type="tel"
               inputMode="numeric"
               maxLength={12}
-              value={formatPhone(watch("phone") || "")}
+              value={formatPhone(watch("phone") ?? "")}
               onChange={event => setValue("phone", formatPhone(event.target.value))}
               className={errors.phone ? styles.inputError : styles.input}
             />
@@ -196,8 +196,8 @@ export const Profile = () => {
         <div className={styles.imageSection}>
           <ImageUpload
             label="תמונת פרופיל"
-            value={profileImage || null}
-            onChange={value => setValue("profileImage", value || "")}
+            value={profileImage ?? null}
+            onChange={value => setValue("profileImage", value ?? "")}
             helperText="מומלץ לבחור תמונה מרובעת וברורה"
           />
         </div>

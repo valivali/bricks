@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    name: Lint, Typecheck, Test, Build
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+
+    steps:
+      # 1. Checkout
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 2. Node setup with cache
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      # 3. Install dependencies (monorepo aware)
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. LINT (fail fastest)
+      - name: Lint
+        run: npm run lint
+
+      # 5. TYPECHECK
+      - name: Typecheck
+        run: npm run typecheck
+
+      # 6. PRISMA VALIDATION
+      - name: Prisma generate
+        run: npx prisma generate --schema=backend/prisma/schema.prisma
+
+      - name: Prisma validate schema
+        run: npx prisma validate --schema=backend/prisma/schema.prisma
+
+      # 7. RUN MIGRATIONS AGAINST REAL DB
+      - name: Run Prisma migrations
+        run: npx prisma migrate deploy --schema=backend/prisma/schema.prisma
+
+      # Optional but powerful: detect drift
+      - name: Check migration drift
+        run: npx prisma migrate status --schema=backend/prisma/schema.prisma
+
+      # 8. TESTS
+      - name: Run tests
+        run: npm test -- --ci
+
+      # 9. BUILD (runs last because slowest)
+      - name: Build all apps
+        run: npm run build

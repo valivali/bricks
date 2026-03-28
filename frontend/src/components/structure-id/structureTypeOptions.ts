@@ -45,14 +45,14 @@ export const getStructureDetailTypeOptions = (
 export const getStructureTypeLabel = (structureType: string | undefined): string => {
   if (!structureType) return "-"
   const type = SKELETON_STRUCTURE_TYPES.find(t => t.id === structureType)
-  return type?.label || "-"
+  return type?.label ?? "-"
 }
 
 export const getStructureSubTypeLabel = (structureType: string | undefined, structureSubType: string | undefined): string => {
   if (!structureType || !structureSubType) return "-"
   const type = SKELETON_STRUCTURE_TYPES.find(t => t.id === structureType)
   const subType = type?.subOptions?.find(st => st.id === structureSubType)
-  return subType?.label || "-"
+  return subType?.label ?? "-"
 }
 
 export const getStructureDetailTypeLabel = (
@@ -64,5 +64,5 @@ export const getStructureDetailTypeLabel = (
   const type = SKELETON_STRUCTURE_TYPES.find(t => t.id === structureType)
   const subType = type?.subOptions?.find(st => st.id === structureSubType)
   const detailType = subType?.subOptions?.find(dt => dt.id === structureDetailType)
-  return detailType?.label || "-"
+  return detailType?.label ?? "-"
 }

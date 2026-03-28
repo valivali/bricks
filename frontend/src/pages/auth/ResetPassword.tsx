@@ -45,7 +45,9 @@ export const ResetPassword = () => {
         password: data.password
       })
       setSuccessMessage(response.message)
-      setTimeout(() => navigate("/auth/login"), 2000)
+      setTimeout(() => {
+        void navigate("/auth/login")
+      }, 2000)
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "איפוס הסיסמה נכשל")
     }
@@ -54,7 +56,7 @@ export const ResetPassword = () => {
     toast.error("נא לתקן את השדות המסומנים")
   }
 
-  const passwordHasError = Boolean(errors.password) && (touchedFields.password || submitCount > 0)
+  const passwordHasError = Boolean(errors.password) && (touchedFields.password ?? submitCount > 0)
   const showPasswordError = passwordHasError && focusedField !== "password"
   const passwordErrorMessage = errors.password?.message
   const passwordField = register("password")
@@ -88,8 +90,8 @@ export const ResetPassword = () => {
               placeholder="••••••••"
               disabled={!token}
               onFocus={() => setFocusedField("password")}
-              onBlur={event => {
-                passwordField.onBlur(event)
+              onBlur={async event => {
+                await passwordField.onBlur(event)
                 setFocusedField(null)
               }}
             />

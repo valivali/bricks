@@ -1,11 +1,13 @@
+import * as Dialog from "@radix-ui/react-dialog"
 import React, { useState } from "react"
+
+import { ImageIcon, TrashIcon, XIcon } from "@/components/icons"
+import { ConfirmDialog } from "@/components/UI/ConfirmDialog/ConfirmDialog"
 import { ImageUpload } from "@/components/UI/ImageUpload/ImageUpload"
 import { Text } from "@/components/UI/Text/text"
-import { ImageIcon, TrashIcon, XIcon } from "@/components/icons"
-import * as Dialog from "@radix-ui/react-dialog"
-import styles from "./FieldImageManager.module.scss"
 import { useToast } from "@/hooks/useToast"
-import { ConfirmDialog } from "@/components/UI/ConfirmDialog/ConfirmDialog"
+
+import styles from "./FieldImageManager.module.scss"
 
 type FieldImage = {
   fieldName: string
@@ -37,7 +39,7 @@ export const FieldImageManager: React.FC<FieldImageManagerProps> = ({ fieldName,
       }
       onChange([...images, newImage])
       toast.success("תמונה נשמרה בהצלחה")
-    } catch (error) {
+    } catch {
       toast.error("שגיאה בשמירת התמונה")
     }
   }

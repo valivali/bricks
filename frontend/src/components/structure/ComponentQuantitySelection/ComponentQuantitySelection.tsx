@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
 
 import { Button } from "@/components/UI/button/button"
-import { type StructuralComponent } from "@/config/skeleton-data"
+import { type StructuralComponent } from "@/config/skeleton-data.types"
 
 import styles from "./ComponentQuantitySelection.module.scss"
 
@@ -23,10 +23,7 @@ const ComponentQuantitySelection: React.FC<ComponentQuantitySelectionProps> = ({
     let el: HTMLElement | null = rootRef.current
     while (el) {
       const style = window.getComputedStyle(el)
-      if (
-        (style.overflowY === "auto" || style.overflowY === "scroll") &&
-        el.scrollHeight > el.clientHeight
-      ) {
+      if ((style.overflowY === "auto" || style.overflowY === "scroll") && el.scrollHeight > el.clientHeight) {
         return el
       }
       el = el.parentElement
@@ -87,8 +84,7 @@ const ComponentQuantitySelection: React.FC<ComponentQuantitySelectionProps> = ({
           onClick={() => {
             scrollDrawerToTop()
             onBack()
-          }}
-        >
+          }}>
           חזור
         </Button>
         <Button
@@ -97,8 +93,7 @@ const ComponentQuantitySelection: React.FC<ComponentQuantitySelectionProps> = ({
             onNext(quantities)
           }}
           disabled={!hasSelectedComponents}
-          className={styles.nextButton}
-        >
+          className={styles.nextButton}>
           המשך
         </Button>
       </div>

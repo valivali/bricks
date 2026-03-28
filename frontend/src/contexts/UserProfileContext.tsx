@@ -1,9 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import React, { createContext, useContext } from "react"
+import React, { createContext } from "react"
 
 import type { UpdateProfileRequest, UserProfileDto } from "@/api/profile.api"
 import { profileApi } from "@/api/profile.api"
-import { useAuthContext } from "@/contexts/AuthContext"
+import { useAuthContext } from "@/hooks/useAuth"
 
 interface UserProfileContextType {
   profile: UserProfileDto | null
@@ -37,7 +37,7 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ c
   })
 
   const value: UserProfileContextType = {
-    profile: profile || null,
+    profile: profile ?? null,
     isLoading,
     refresh: () => {
       void refetch()
@@ -48,10 +48,4 @@ export const UserProfileProvider: React.FC<{ children: React.ReactNode }> = ({ c
   return <UserProfileContext.Provider value={value}>{children}</UserProfileContext.Provider>
 }
 
-export const useUserProfileContext = () => {
-  const context = useContext(UserProfileContext)
-  if (context === undefined) {
-    throw new Error("useUserProfileContext must be used within a UserProfileProvider")
-  }
-  return context
-}
+export { UserProfileContext }
